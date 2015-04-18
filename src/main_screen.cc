@@ -44,6 +44,10 @@ bool MainScreen::process_input(Input& input) {
       game_grid.drop(false);
     }
 
+  } else {
+
+    if (input.key_pressed(SDLK_r)) state = RESTARTING;
+
   }
 
   return true;
@@ -62,6 +66,12 @@ bool MainScreen::update(Graphics& graphics, unsigned int elapsed) {
         state = VICTORY;
         break;
     }
+
+  } else if (state == RESTARTING) {
+    game_grid = GameGrid(GameGrid::EASY);
+    game_grid.generate(graphics);
+
+    state = PLAYING;
   }
 
   return true;
