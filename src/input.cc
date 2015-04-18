@@ -9,13 +9,11 @@ void Input::clear() {
 }
 
 void Input::key_down(const SDL_Event& event) {
-  fprintf(stderr, "key pressed %u\n", event.key.keysym.sym);
   keys_pressed[event.key.keysym.sym] = true;
   keys_held[event.key.keysym.sym] = true;
 }
 
 void Input::key_up(const SDL_Event& event) {
-  fprintf(stderr, "key released %u\n", event.key.keysym.sym);
   keys_released[event.key.keysym.sym] = true;
   keys_held[event.key.keysym.sym] = false;
 }

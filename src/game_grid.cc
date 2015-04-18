@@ -44,7 +44,7 @@ int GameGrid::update(Graphics& graphics, unsigned int elapsed) {
   drop_counter += elapsed;
   move_counter += elapsed;
 
-  if (falling_pieces.empty() && move_counter > 100) {
+  if (active_piece && move_counter > 100) {
     move_counter = 0;
     if (_move != 0) {
       active_piece->slide(_move < 0);
@@ -71,28 +71,28 @@ int GameGrid::update(Graphics& graphics, unsigned int elapsed) {
     drop_counter = 0;
 
     if (falling_pieces.empty()) {
-      fprintf(stderr, "Active piece processing\n");
+      if (!active_piece) if (!spawn_candy(graphics)) return -1;
+
       active_piece->fall();
       if (collision(active_piece)) {
         // TODO play bump sound
         active_piece->fall(false);
-        fprintf(stderr, "Piece landed, committing\n");
 
         commit(active_piece);
+        active_piece.reset();
         process_matches();
-
-        if (!spawn_candy(graphics)) {
-          fprintf(stderr, "Nowhere to place candy, game over\n");
-          return -1;
-        }
       }
     } else {
-      fprintf(stderr, "Falling piece processing\n");
       std::list<boost::shared_ptr<CandyBlock> >::iterator i = falling_pieces.begin();
       while (i != falling_pieces.end()) {
-        bool active = true;
-
-        ++i;
+        (*i)->fall();
+        if (collision(*i)) {
+          (*i)->fall(false);
+          commit(*i);
+          i = falling_pieces.erase(i);
+        } else {
+          ++i;
+        }
       }
     }
   }
@@ -108,6 +108,10 @@ void GameGrid::draw(Graphics& graphics, unsigned int x, unsigned int y) {
   }
 
   if (active_piece) active_piece->draw(graphics, x, y);
+
+  for (std::list<boost::shared_ptr<CandyBlock> >::iterator i=falling_pieces.begin(); i != falling_pieces.end(); ++i) {
+    (*i)->draw(graphics, x, y);
+  }
 }
 
 boost::shared_ptr<GridPiece> GameGrid::piece(int x, int y) {
@@ -117,7 +121,7 @@ boost::shared_ptr<GridPiece> GameGrid::piece(int x, int y) {
 }
 
 unsigned int GameGrid::drop_threshold() {
-  return _drop ? 100 : 10000 / drop_speed;
+  return _drop && active_piece ? 100 : 10000 / drop_speed;
 }
 
 bool GameGrid::spawn_candy(Graphics& graphics) {
@@ -160,27 +164,49 @@ bool GameGrid::collision(boost::shared_ptr<CandyBlock> block) {
 }
 
 void GameGrid::release(int x, int y) {
-  fprintf(stderr, "Releasing block at %u, %u", x, y);
+  boost::shared_ptr<Candy> test = boost::dynamic_pointer_cast<Candy>(piece(x, y));
 
-  boost::shared_ptr<Candy> a = boost::dynamic_pointer_cast<Candy>(piece(x + 0, y + 0));
-  boost::shared_ptr<Candy> b = boost::dynamic_pointer_cast<Candy>(piece(-1, -1));
-  boost::shared_ptr<Candy> c = boost::dynamic_pointer_cast<Candy>(piece(-1, -1));
-  boost::shared_ptr<Candy> d = boost::dynamic_pointer_cast<Candy>(piece(-1, -1));
-  /* TODO sort this shit out
-  boost::shared_ptr<Candy> b = boost::dynamic_pointer_cast<Candy>(piece(x + 1, y + 0));
-  boost::shared_ptr<Candy> c = boost::dynamic_pointer_cast<Candy>(piece(x + 0, y + 1));
-  boost::shared_ptr<Candy> d = boost::dynamic_pointer_cast<Candy>(piece(x + 1, y + 1));
-  */
+  if (!test) return;
 
-  if (!a) return;
+  boost::shared_ptr<Candy> empty = boost::dynamic_pointer_cast<Candy>(piece(-1, -1));
 
-  boost::shared_ptr<CandyBlock> block(new CandyBlock(x, y, a, b, c, d));
-  falling_pieces.push_back(block);
+  if (test->connected(8)) {
+    boost::shared_ptr<Candy> above = boost::dynamic_pointer_cast<Candy>(piece(x, y - 1));
 
-  if (a) pieces[y + 0][x + 0].reset();
-  if (b) pieces[y + 0][x + 1].reset();
-  if (c) pieces[y + 1][x + 0].reset();
-  if (d) pieces[y + 1][x + 1].reset();
+    if (above->connected(4)) {
+
+      boost::shared_ptr<Candy> above_left = boost::dynamic_pointer_cast<Candy>(piece(x - 1, y - 1));
+
+      boost::shared_ptr<CandyBlock> block(new CandyBlock(x - 1, y - 1, above_left, above, empty, test));
+      falling_pieces.push_back(block);
+
+      pieces[y - 1][x - 1].reset();
+
+    } else {
+
+      boost::shared_ptr<Candy> above_right = boost::dynamic_pointer_cast<Candy>(piece((above->connected(2) ? x + 1 : -1), y - 1));
+      boost::shared_ptr<Candy> right = boost::dynamic_pointer_cast<Candy>(piece((test->connected(2) ? x + 1 : -1), y - 1));
+
+      boost::shared_ptr<CandyBlock> block(new CandyBlock(x, y - 1, above, above_right, test, right));
+      falling_pieces.push_back(block);
+
+      if (above_right) pieces[y - 1][x + 1].reset();
+      if (right) pieces[y][x + 1].reset();
+
+    }
+
+    pieces[y - 1][x].reset();
+
+  } else {
+    boost::shared_ptr<Candy> right = boost::dynamic_pointer_cast<Candy>(piece((test->connected(2) ? x + 1 : -1), y - 1));
+
+    boost::shared_ptr<CandyBlock> block(new CandyBlock(x, y, test, right, empty, empty));
+    falling_pieces.push_back(block);
+
+    if (right) pieces[y][x + 1].reset();
+  }
+
+  pieces[y][x].reset();
 }
 
 void GameGrid::commit(boost::shared_ptr<CandyBlock> block) {
@@ -206,7 +232,6 @@ int GameGrid::process_matches() {
           if (!test || test->color() != start->color()) {
             int length = j - ix;
             if (length >= 4) {
-              fprintf(stderr, "Found horizontal match %u long starting at %u, %u\n", length, ix, iy);
               for (int k = ix; k < j; ++k) {
                 matches.push_back(Match(k, iy));
               }
@@ -222,7 +247,6 @@ int GameGrid::process_matches() {
           if (!test || test->color() != start->color()) {
             int length = j - iy;
             if (length >= 4) {
-              fprintf(stderr, "Found vertical match %u long starting at %u, %u\n", length, ix, iy);
               for (int k = iy; k < j; ++k) {
                 matches.push_back(Match(ix, k));
               }
@@ -235,24 +259,27 @@ int GameGrid::process_matches() {
     }
   }
 
+  int count = 0;
+  unsigned int depth = 0;
   for (std::list<Match>::iterator i = matches.begin(); i != matches.end(); ++i) {
-    remove_piece((*i).x, (*i).y);
-  }
-
-  // TODO fall down bitches
-
-  for (int iy = 0; iy < 16; ++iy) {
-    for (int ix = 0; ix < 8; ++ix) {
-      // if (piece(ix, iy)) release(ix, iy);
+    if (remove_piece((*i).x, (*i).y)) {
+      if ((*i).y > depth) depth = (*i).y;
+      count++;
     }
   }
 
-  return 0;
+  for (int iy = depth; iy >= 0; --iy) {
+    for (int ix = 0; ix < 8; ++ix) {
+      if (piece(ix, iy)) release(ix, iy);
+    }
+  }
+
+  return count;
 }
 
-void GameGrid::remove_piece(int x, int y) {
-  if (x < 0 || x >= 8) return;
-  if (y < 0 || y >= 16) return;
+bool GameGrid::remove_piece(int x, int y) {
+  if (x < 0 || x >= 8) return false;
+  if (y < 0 || y >= 16) return false;
 
   if (piece(x, y)) {
     pieces[y][x].reset();
@@ -261,4 +288,6 @@ void GameGrid::remove_piece(int x, int y) {
     if (piece(x, y - 1)) piece(x, y - 1)->break_connection(1);
     if (piece(x, y + 1)) piece(x, y + 1)->break_connection(8);
   }
+
+  return true;
 }

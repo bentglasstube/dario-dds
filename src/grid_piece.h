@@ -14,6 +14,7 @@ class GridPiece {
     void set_connections(unsigned int connections);
     void rotate(bool clockwise=true);
 
+    bool connected(unsigned int dir) { return (connections & dir) == dir; }
     void make_connection(unsigned int dir) { connections |= dir; }
     void break_connection(unsigned int dir) { connections &= ~dir; }
 
