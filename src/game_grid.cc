@@ -4,18 +4,13 @@
 #include "graphics.h"
 #include "tooth.h"
 
-void GameGrid::generate(Graphics& graphics) {
-  for (int iy = 10; iy < 14; ++iy) {
-    for (int ix = 0; ix < 8; ++ix) {
-      Candy::Color color = static_cast<Candy::Color>(rand() % 5);
-      if (color == 0) continue;
-      pieces[iy][ix].reset(new Candy(graphics, color));
-    }
-  }
 
-  for (int iy = 14; iy < 16; ++iy) {
+void GameGrid::generate(Graphics& graphics) {
+  for (int iy = 13; iy < 16; ++iy) {
     for (int ix = 0; ix < 8; ++ix) {
-      pieces[iy][ix].reset(new Tooth(graphics, rand() % 2 == 1));
+      // TODO scale rotten % with difficulty
+      // TODO connections
+      pieces[iy][ix].reset(new Tooth(graphics, (rand() % 2) == 0));
     }
   }
 }
