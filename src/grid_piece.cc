@@ -41,4 +41,3 @@ void GridPiece::rotate(bool clockwise) {
     case 14: connections = clockwise ? 11 : 13; break;
   }
 }
-

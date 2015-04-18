@@ -38,6 +38,7 @@ class GameGrid {
     bool collision(int x, int y);
     void commit_active();
     int process_matches();
+    void remove_piece(int x, int y);
 
     boost::shared_ptr<GridPiece> pieces[16][8];
     unsigned int move_counter, drop_counter, drop_speed;

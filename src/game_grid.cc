@@ -219,10 +219,23 @@ int GameGrid::process_matches() {
   }
 
   for (std::list<Match>::iterator i = matches.begin(); i != matches.end(); ++i) {
-    pieces[(*i).y][(*i).x].reset();
+    remove_piece((*i).x, (*i).y);
   }
 
   // TODO fall down bitches
 
   return 0;
+}
+
+void GameGrid::remove_piece(int x, int y) {
+  if (x < 0 || x >= 8) return;
+  if (y < 0 || y >= 16) return;
+
+  if (piece(x, y)) {
+    pieces[y][x].reset();
+    if (piece(x - 1, y)) piece(x - 1, y)->break_connection(2);
+    if (piece(x + 1, y)) piece(x + 1, y)->break_connection(4);
+    if (piece(x, y - 1)) piece(x, y - 1)->break_connection(1);
+    if (piece(x, y + 1)) piece(x, y + 1)->break_connection(8);
+  }
 }
