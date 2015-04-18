@@ -20,9 +20,17 @@ $(BUILDDIR)/%.o: %.cc
 	$(CC) -c $(CFLAGS) -o $@ $<
 
 clean:
-	rm -rf $(BUILDDIR)
+	rm -rf $(BUILDDIR) ld32.{glc,mkv}
 
 run: all
 	./$(EXECUTABLE)
 
-.PHONY: all clean run
+video: ld32.mkv
+
+ld32.mkv: ld32.glc
+	glc-play $< -o - -y 1 |ffmpeg -i - -preset ultrafast -vcodec libx264 -y $@
+
+ld32.glc: $(EXECUTABLE)
+	glc-capture -pso $@ $(EXECUTABLE)
+
+.PHONY: all clean run video
