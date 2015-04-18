@@ -12,7 +12,7 @@ bool MainScreen::process_input(Input& input) {
     return false;
   }
 
-  if (input.key_pressed(SDLK_ESCAPE)) {
+  if (input.key_pressed(SDLK_ESCAPE) || input.key_pressed(SDLK_BACKQUOTE)) {
     return false;
   }
 
