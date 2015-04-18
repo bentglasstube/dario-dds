@@ -3,7 +3,7 @@
 #include "input.h"
 #include "text.h"
 
-MainScreen::MainScreen(Graphics& graphics) : game_grid(), state(PLAYING) {
+MainScreen::MainScreen(Graphics& graphics) : game_grid(GameGrid::EASY), state(PLAYING) {
   game_grid.generate(graphics);
 }
 
@@ -53,7 +53,15 @@ bool MainScreen::update(Graphics& graphics, unsigned int elapsed) {
   if (state == PLAYING) {
     int result = game_grid.update(graphics, elapsed);
 
-    if (result < 0) state = GAME_OVER;
+    switch (result) {
+      case -1:
+        state = GAME_OVER;
+        break;
+
+      case 1:
+        state = VICTORY;
+        break;
+    }
   }
 
   return true;
@@ -67,5 +75,8 @@ void MainScreen::draw(Graphics& graphics) {
   } else if (state == GAME_OVER) {
     Text text(graphics, "GAME OVER");
     text.draw(graphics, 44, 136);
+  } else if (state == VICTORY) {
+    Text text(graphics, "YOU WIN");
+    text.draw(graphics, 52, 136);
   }
 }

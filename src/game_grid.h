@@ -14,8 +14,9 @@ class GameGrid {
   public:
 
     enum Direction { UP, DOWN, LEFT, RIGHT };
+    enum Difficulty { EASY, HARD };
 
-    GameGrid();
+    GameGrid(Difficulty difficulty);
 
     void generate(Graphics& graphics);
     int update(Graphics& graphics, unsigned int elapsed);
@@ -45,6 +46,7 @@ class GameGrid {
     int process_matches();
     bool remove_piece(int x, int y);
     bool damage_tooth(int x, int y);
+    bool winner();
 
     boost::shared_ptr<GridPiece> pieces[16][8];
     unsigned int move_counter, drop_counter, drop_speed;
@@ -52,4 +54,5 @@ class GameGrid {
     int _move, _rotate;
     bool _drop;
     std::list<boost::shared_ptr<CandyBlock> > falling_pieces;
+    Difficulty difficulty;
 };

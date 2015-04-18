@@ -6,9 +6,10 @@
 #include "graphics.h"
 #include "tooth.h"
 
-GameGrid::GameGrid() :
+GameGrid::GameGrid(GameGrid::Difficulty difficulty) :
   move_counter(0), drop_counter(0), drop_speed(10),
-  _move(0), _rotate(0), _drop(false) {}
+  _move(0), _rotate(0), _drop(false),
+  difficulty(difficulty) {}
 
 void GameGrid::generate(Graphics& graphics) {
   for (int iy = 13; iy < 16; ++iy) {
@@ -96,8 +97,7 @@ int GameGrid::update(Graphics& graphics, unsigned int elapsed) {
     }
 
     process_matches();
-
-    // TODO check win condition
+    if (winner()) return 1;
   }
 
   return 0;
@@ -333,4 +333,29 @@ bool GameGrid::damage_tooth(int x, int y) {
   }
 
   return false;
+}
+
+bool GameGrid::winner() {
+
+  switch (difficulty) {
+    case HARD:
+      // Destroy all the teeth
+      for (int iy = 0; iy < 16; ++iy) {
+        for (int ix = 0; ix < 8; ++ix) {
+          if (tooth_piece(ix, iy)) return false;
+        }
+      }
+      return true;
+
+    case EASY:
+      // Get to the gums only
+      for (int ix = 0; ix < 8; ++ix) {
+        if (!tooth_piece(ix, 15)) return true;
+      }
+      return false;
+
+    default:
+      // Endless ??
+      return false;
+  }
 }
