@@ -121,7 +121,7 @@ boost::shared_ptr<GridPiece> GameGrid::piece(int x, int y) {
 }
 
 unsigned int GameGrid::drop_threshold() {
-  return _drop && active_piece ? 100 : 10000 / drop_speed;
+  return _drop || !active_piece ? 100 : 10000 / drop_speed;
 }
 
 bool GameGrid::spawn_candy(Graphics& graphics) {
