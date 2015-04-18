@@ -12,6 +12,7 @@ class GridPiece {
 
     void draw(Graphics& graphics, unsigned int x, unsigned int y);
     void set_connections(unsigned int connections);
+    void rotate(bool clockwise=true);
 
   protected:
 

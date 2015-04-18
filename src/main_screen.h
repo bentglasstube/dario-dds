@@ -8,7 +8,7 @@ class MainScreen : public Screen {
     MainScreen(Graphics& graphics);
 
     bool process_input(Input& input);
-    bool update(unsigned int elapsed);
+    bool update(Graphics& graphics, unsigned int elapsed);
     void draw(Graphics& graphics);
 
   private:

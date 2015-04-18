@@ -3,19 +3,36 @@
 #include <boost/shared_ptr.hpp>
 
 #include "grid_piece.h"
+#include "candy_block.h"
 
 class Graphics;
 
 class GameGrid {
   public:
 
+    enum Direction { UP, DOWN, LEFT, RIGHT };
+
+    GameGrid();
+
     void generate(Graphics& graphics);
-    int update(unsigned int elapsed);
+    int update(Graphics& graphics, unsigned int elapsed);
     void draw(Graphics& graphics, unsigned int x, unsigned int y);
 
-    // void spawn_candy();
+    void move(int dir) { _move = dir; }
+    void rotate(int dir) { _rotate = dir; }
+    void drop(bool y) { _drop = y; }
 
   private:
 
+    unsigned int drop_threshold();
+    bool spawn_candy(Graphics& graphics);
+    bool collision(int x, int y);
+    void commit_active();
+
     boost::shared_ptr<GridPiece> pieces[16][8];
+    unsigned int move_counter, drop_counter, drop_speed;
+    boost::shared_ptr<CandyBlock> active_piece;
+    int active_x, active_y;
+    int _move, _rotate;
+    bool _drop;
 };

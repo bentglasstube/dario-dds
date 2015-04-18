@@ -15,23 +15,31 @@ bool MainScreen::process_input(Input& input) {
     return false;
   }
 
-  /* TODO handle other input
-   *
-   * left/a  - move piece left
-   * right/b - move piece right
-   * down/s  - fast drop
-   * up/w/q  - rotate clockwise
-   * e       - rotate counterclockwise
-   * space   - pause
-   */
+  if (input.key_pressed(SDLK_LEFT) || input.key_pressed(SDLK_a)) {
+    game_grid.move(-1);
+  } else if (input.key_pressed(SDLK_RIGHT) || input.key_pressed(SDLK_d)) {
+    game_grid.move(1);
+  } else {
+    game_grid.move(0);
+  }
+
+  if (input.key_pressed(SDLK_q)) {
+    game_grid.rotate(-1);
+  } else if (input.key_pressed(SDLK_UP) || input.key_pressed(SDLK_w) || input.key_pressed(SDLK_e)) {
+    game_grid.rotate(1);
+  } else {
+    game_grid.rotate(0);
+  }
+
+  game_grid.drop(input.key_pressed(SDLK_DOWN) || input.key_pressed(SDLK_s));
 
   return true;
 }
 
-bool MainScreen::update(unsigned int elapsed) {
-  game_grid.update(elapsed);
+bool MainScreen::update(Graphics& graphics, unsigned int elapsed) {
+  int result = game_grid.update(graphics, elapsed);
 
-  return true;
+  return result >= 0;
 }
 
 void MainScreen::draw(Graphics& graphics) {

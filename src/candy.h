@@ -6,12 +6,7 @@ class Candy : public GridPiece {
 
   public:
 
-    enum Color {
-      GREEN  = 1,
-      BLUE   = 2,
-      YELLOW = 3,
-      RED    = 4,
-    };
+    enum Color { RED, BLUE, GREEN, YELLOW };
 
     Candy(Graphics& graphics, unsigned int connections, Color color);
 

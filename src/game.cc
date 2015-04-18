@@ -37,7 +37,7 @@ void Game::loop() {
     // TODO improve this process so that a screen can return a code to move on
     // to a different screen
     bool process = current_screen->process_input(input);
-    bool update = current_screen->update(SDL_GetTicks() - last_update);
+    bool update = current_screen->update(graphics, SDL_GetTicks() - last_update);
     running = process && update;
 
     last_update = SDL_GetTicks();
