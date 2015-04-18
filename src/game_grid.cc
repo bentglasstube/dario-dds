@@ -44,7 +44,7 @@ int GameGrid::update(Graphics& graphics, unsigned int elapsed) {
   move_counter += elapsed;
 
   if (move_counter > 100) {
-    move_counter -= 100;
+    move_counter = 0;
     if (_move != 0) {
       if (collision(active_x + _move, active_y)) {
         // TODO play bump sound
@@ -67,7 +67,7 @@ int GameGrid::update(Graphics& graphics, unsigned int elapsed) {
   }
 
   if (drop_counter > drop_threshold()) {
-    drop_counter -= drop_threshold();
+    drop_counter = 0;
 
     if (collision(active_x, active_y + 1)) {
       // TODO play bump sound
