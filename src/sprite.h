@@ -8,7 +8,7 @@ class Graphics;
 class Sprite {
   public:
 
-    Sprite(Graphics& graphics, const std::string& file, unsigned int sx, unsigned int sy, unsigned int w, unsigned int h);
+    Sprite(Graphics& graphics, const std::string& file, unsigned int x, unsigned int y, unsigned int w, unsigned int h);
 
     void draw(Graphics& graphics, unsigned int x, unsigned int y);
     virtual void update() {}

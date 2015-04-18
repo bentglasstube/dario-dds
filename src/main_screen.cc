@@ -1,7 +1,15 @@
 #include "main_screen.h"
 
+#include "graphics.h"
+#include "sprite.h"
+
 MainScreen::MainScreen(Graphics& graphics) {
-  // TODO load sprites
+  tooth_tl.reset(new Sprite(graphics, "teeth",  0,  0, 16, 16));
+  tooth_tc.reset(new Sprite(graphics, "teeth", 16,  0, 16, 16));
+  tooth_tr.reset(new Sprite(graphics, "teeth", 32,  0, 16, 16));
+  tooth_ml.reset(new Sprite(graphics, "teeth",  0, 16, 16, 16));
+  tooth_mc.reset(new Sprite(graphics, "teeth", 16, 16, 16, 16));
+  tooth_mr.reset(new Sprite(graphics, "teeth", 32, 16, 16, 16));
 }
 
 bool MainScreen::update(unsigned int elapsed) {
@@ -30,4 +38,16 @@ void MainScreen::draw(Graphics& graphics) {
    * draw UI
    *
    */
+
+  for (int i = 0; i < 4; ++i) {
+    tooth_tl->draw(graphics, 16 + 48 * i, 172);
+    tooth_tc->draw(graphics, 32 + 48 * i, 172);
+    tooth_tr->draw(graphics, 48 + 48 * i, 172);
+
+    for (int j = 0; j < 2; ++j) {
+      tooth_ml->draw(graphics, 16 + 48 * i, 188 + 16 * j);
+      tooth_mc->draw(graphics, 32 + 48 * i, 188 + 16 * j);
+      tooth_mr->draw(graphics, 48 + 48 * i, 188 + 16 * j);
+    }
+  }
 }

@@ -1,7 +1,5 @@
 #include "graphics.h"
 
-#include <SDL2/SDL.h>
-
 #include "game.h"
 
 namespace {
@@ -10,7 +8,7 @@ namespace {
 }
 
 Graphics::Graphics() {
-  int flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
+  int flags = SDL_WINDOW_OPENGL ; //| SDL_WINDOW_RESIZABLE;
 
   window = SDL_CreateWindow("Dr. Dario, DDS", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, flags);
   renderer = SDL_CreateRenderer(window, -1, 0);

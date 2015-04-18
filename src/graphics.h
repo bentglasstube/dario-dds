@@ -1,12 +1,8 @@
 #pragma once
 
+#include <SDL2/SDL.h>
 #include <string>
 #include <map>
-
-class SDL_Rect;
-class SDL_Renderer;
-class SDL_Texture;
-class SDL_Window;
 
 class Graphics {
   public:
