@@ -186,7 +186,7 @@ void GameGrid::release(int x, int y) {
     } else {
 
       boost::shared_ptr<Candy> above_right = boost::dynamic_pointer_cast<Candy>(piece((above->connected(2) ? x + 1 : -1), y - 1));
-      boost::shared_ptr<Candy> right = boost::dynamic_pointer_cast<Candy>(piece((test->connected(2) ? x + 1 : -1), y - 1));
+      boost::shared_ptr<Candy> right = boost::dynamic_pointer_cast<Candy>(piece((test->connected(2) ? x + 1 : -1), y));
 
       boost::shared_ptr<CandyBlock> block(new CandyBlock(x, y - 1, above, above_right, test, right));
       falling_pieces.push_back(block);
@@ -198,13 +198,27 @@ void GameGrid::release(int x, int y) {
 
     pieces[y - 1][x].reset();
 
+  } else if (test->connected(2)) {
+
+    boost::shared_ptr<Candy> right = boost::dynamic_pointer_cast<Candy>(piece(x + 1, y));
+
+    if (right->connected(8)) {
+      boost::shared_ptr<Candy> above_right = boost::dynamic_pointer_cast<Candy>(piece(x + 1, y - 1));
+
+      boost::shared_ptr<CandyBlock> block(new CandyBlock(x, y - 1, empty, above_right, test, right));
+      falling_pieces.push_back(block);
+
+      pieces[y - 1][x + 1].reset();
+    } else {
+      boost::shared_ptr<CandyBlock> block(new CandyBlock(x, y, test, right, empty, empty));
+      falling_pieces.push_back(block);
+    }
+
+    pieces[y][x + 1].reset();
+
   } else {
-    boost::shared_ptr<Candy> right = boost::dynamic_pointer_cast<Candy>(piece((test->connected(2) ? x + 1 : -1), y - 1));
-
-    boost::shared_ptr<CandyBlock> block(new CandyBlock(x, y, test, right, empty, empty));
+    boost::shared_ptr<CandyBlock> block(new CandyBlock(x, y, test, empty, empty, empty));
     falling_pieces.push_back(block);
-
-    if (right) pieces[y][x + 1].reset();
   }
 
   pieces[y][x].reset();
@@ -279,16 +293,15 @@ int GameGrid::process_matches() {
 }
 
 bool GameGrid::remove_piece(int x, int y) {
-  if (x < 0 || x >= 8) return false;
-  if (y < 0 || y >= 16) return false;
-
   if (piece(x, y)) {
     pieces[y][x].reset();
     if (piece(x - 1, y)) piece(x - 1, y)->break_connection(2);
     if (piece(x + 1, y)) piece(x + 1, y)->break_connection(4);
     if (piece(x, y - 1)) piece(x, y - 1)->break_connection(1);
     if (piece(x, y + 1)) piece(x, y + 1)->break_connection(8);
+
+    return true;
   }
 
-  return true;
+  return false;
 }
