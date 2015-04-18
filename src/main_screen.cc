@@ -1,6 +1,7 @@
 #include "main_screen.h"
 
 #include "input.h"
+#include "text.h"
 
 MainScreen::MainScreen(Graphics& graphics) : game_grid() {
   game_grid.generate(graphics);
@@ -45,5 +46,7 @@ bool MainScreen::update(Graphics& graphics, unsigned int elapsed) {
 void MainScreen::draw(Graphics& graphics) {
   game_grid.draw(graphics, 16, 16);
 
+  Text text(graphics, "Test 123!");
+  text.draw(graphics, 128, 16);
   // TODO draw ui
 }
