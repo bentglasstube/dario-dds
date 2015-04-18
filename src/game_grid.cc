@@ -275,17 +275,15 @@ int GameGrid::process_matches() {
   }
 
   int count = 0;
-  unsigned int depth = 0;
   for (std::list<Match>::iterator i = matches.begin(); i != matches.end(); ++i) {
-    if (remove_piece((*i).x, (*i).y)) {
-      if ((*i).y > depth) depth = (*i).y;
-      count++;
-    }
+    if (remove_piece((*i).x, (*i).y)) count++;
   }
 
-  for (int iy = depth; iy >= 0; --iy) {
-    for (int ix = 0; ix < 8; ++ix) {
-      if (piece(ix, iy)) release(ix, iy);
+  if (count > 0) {
+    for (int iy = 15; iy >= 0; --iy) {
+      for (int ix = 0; ix < 8; ++ix) {
+        if (piece(ix, iy)) release(ix, iy);
+      }
     }
   }
 
