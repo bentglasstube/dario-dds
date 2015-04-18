@@ -1,7 +1,6 @@
 #pragma once
 
-#include <boost/scoped_ptr.hpp>
-
+#include "game_grid.h"
 #include "screen.h"
 
 class Graphics;
@@ -15,12 +14,7 @@ class MainScreen : public Screen {
     void draw(Graphics& graphics);
 
   private:
+    GameGrid game_grid;
 
-    // TODO save all the game objects
-    boost::scoped_ptr<Sprite> tooth_tl;
-    boost::scoped_ptr<Sprite> tooth_tc;
-    boost::scoped_ptr<Sprite> tooth_tr;
-    boost::scoped_ptr<Sprite> tooth_ml;
-    boost::scoped_ptr<Sprite> tooth_mc;
-    boost::scoped_ptr<Sprite> tooth_mr;
+
 };
