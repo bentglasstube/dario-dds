@@ -121,6 +121,14 @@ boost::shared_ptr<GridPiece> GameGrid::piece(int x, int y) {
   return pieces[y][x];
 }
 
+boost::shared_ptr<Candy> GameGrid::candy_piece(int x, int y) {
+  return boost::dynamic_pointer_cast<Candy>(piece(x, y));
+}
+
+boost::shared_ptr<Tooth> GameGrid::tooth_piece(int x, int y) {
+  return boost::dynamic_pointer_cast<Tooth>(piece(x, y));
+}
+
 unsigned int GameGrid::drop_threshold() {
   return _drop || !active_piece ? 100 : 10000 / drop_speed;
 }
@@ -165,18 +173,18 @@ bool GameGrid::collision(boost::shared_ptr<CandyBlock> block) {
 }
 
 void GameGrid::release(int x, int y) {
-  boost::shared_ptr<Candy> test = boost::dynamic_pointer_cast<Candy>(piece(x, y));
+  boost::shared_ptr<Candy> test = candy_piece(x, y);
 
   if (!test) return;
 
-  boost::shared_ptr<Candy> empty = boost::dynamic_pointer_cast<Candy>(piece(-1, -1));
+  boost::shared_ptr<Candy> empty = candy_piece(-1, -1);
 
   if (test->connected(8)) {
-    boost::shared_ptr<Candy> above = boost::dynamic_pointer_cast<Candy>(piece(x, y - 1));
+    boost::shared_ptr<Candy> above = candy_piece(x, y - 1);
 
     if (above->connected(4)) {
 
-      boost::shared_ptr<Candy> above_left = boost::dynamic_pointer_cast<Candy>(piece(x - 1, y - 1));
+      boost::shared_ptr<Candy> above_left = candy_piece(x - 1, y - 1);
 
       boost::shared_ptr<CandyBlock> block(new CandyBlock(x - 1, y - 1, above_left, above, empty, test));
       falling_pieces.push_back(block);
@@ -185,8 +193,8 @@ void GameGrid::release(int x, int y) {
 
     } else {
 
-      boost::shared_ptr<Candy> above_right = boost::dynamic_pointer_cast<Candy>(piece((above->connected(2) ? x + 1 : -1), y - 1));
-      boost::shared_ptr<Candy> right = boost::dynamic_pointer_cast<Candy>(piece((test->connected(2) ? x + 1 : -1), y));
+      boost::shared_ptr<Candy> above_right = candy_piece((above->connected(2) ? x + 1 : -1), y - 1);
+      boost::shared_ptr<Candy> right = candy_piece((test->connected(2) ? x + 1 : -1), y);
 
       boost::shared_ptr<CandyBlock> block(new CandyBlock(x, y - 1, above, above_right, test, right));
       falling_pieces.push_back(block);
@@ -200,10 +208,10 @@ void GameGrid::release(int x, int y) {
 
   } else if (test->connected(2)) {
 
-    boost::shared_ptr<Candy> right = boost::dynamic_pointer_cast<Candy>(piece(x + 1, y));
+    boost::shared_ptr<Candy> right = candy_piece(x + 1, y);
 
     if (right->connected(8)) {
-      boost::shared_ptr<Candy> above_right = boost::dynamic_pointer_cast<Candy>(piece(x + 1, y - 1));
+      boost::shared_ptr<Candy> above_right = candy_piece(x + 1, y - 1);
 
       boost::shared_ptr<CandyBlock> block(new CandyBlock(x, y - 1, empty, above_right, test, right));
       falling_pieces.push_back(block);
@@ -238,12 +246,12 @@ int GameGrid::process_matches() {
 
   for (int iy = 0; iy < 16; ++iy) {
     for (int ix = 0; ix < 8; ++ix) {
-      boost::shared_ptr<Candy> start = boost::dynamic_pointer_cast<Candy>(piece(ix, iy));
+      boost::shared_ptr<Candy> start = candy_piece(ix, iy);
       if (!start) continue;
 
       if (ix < 5) {
         for (int j = ix; j <= 8; ++j) {
-          boost::shared_ptr<Candy> test = boost::dynamic_pointer_cast<Candy>(piece(j, iy));
+          boost::shared_ptr<Candy> test = candy_piece(j, iy);
           if (!test || test->color() != start->color()) {
             int length = j - ix;
             if (length >= 4) {
@@ -258,7 +266,7 @@ int GameGrid::process_matches() {
 
       if (iy < 13) {
         for (int j = iy; j <= 16; ++j) {
-          boost::shared_ptr<Candy> test = boost::dynamic_pointer_cast<Candy>(piece(ix, j));
+          boost::shared_ptr<Candy> test = candy_piece(ix, j);
           if (!test || test->color() != start->color()) {
             int length = j - iy;
             if (length >= 4) {

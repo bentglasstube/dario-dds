@@ -5,6 +5,7 @@
 
 #include "grid_piece.h"
 #include "candy_block.h"
+#include "tooth.h"
 
 class Graphics;
 
@@ -33,6 +34,9 @@ class GameGrid {
     };
 
     boost::shared_ptr<GridPiece> piece(int x, int y);
+    boost::shared_ptr<Candy> candy_piece(int x, int y);
+    boost::shared_ptr<Tooth> tooth_piece(int x, int y);
+
     unsigned int drop_threshold();
     bool spawn_candy(Graphics& graphics);
     bool collision(boost::shared_ptr<CandyBlock> block);
