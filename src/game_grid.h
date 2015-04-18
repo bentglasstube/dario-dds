@@ -1,6 +1,7 @@
 #pragma once
 
 #include <boost/shared_ptr.hpp>
+#include <list>
 
 #include "grid_piece.h"
 #include "candy_block.h"
@@ -8,6 +9,7 @@
 class Graphics;
 
 class GameGrid {
+
   public:
 
     enum Direction { UP, DOWN, LEFT, RIGHT };
@@ -24,10 +26,17 @@ class GameGrid {
 
   private:
 
+    struct Match {
+      Match(unsigned int x, unsigned int y) : x(x), y(y) {}
+      unsigned int x;
+      unsigned int y;
+    };
+
     unsigned int drop_threshold();
     bool spawn_candy(Graphics& graphics);
     bool collision(int x, int y);
     void commit_active();
+    int process_matches();
 
     boost::shared_ptr<GridPiece> pieces[16][8];
     unsigned int move_counter, drop_counter, drop_speed;

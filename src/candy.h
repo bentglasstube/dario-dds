@@ -10,9 +10,11 @@ class Candy : public GridPiece {
 
     Candy(Graphics& graphics, unsigned int connections, Color color);
 
+    Color color() { return _color; }
+
   private:
 
     void get_source(SDL_Rect* rect);
 
-    Color color;
+    Color _color;
 };

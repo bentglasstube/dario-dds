@@ -1,5 +1,7 @@
 #include "game_grid.h"
 
+#include <boost/pointer_cast.hpp>
+
 #include "candy.h"
 #include "graphics.h"
 #include "tooth.h"
@@ -74,6 +76,7 @@ int GameGrid::update(Graphics& graphics, unsigned int elapsed) {
       fprintf(stderr, "Piece landed, committing\n");
 
       commit_active();
+      process_matches();
 
       /* TODO make the candy drop and shit
        *
@@ -163,4 +166,80 @@ void GameGrid::commit_active() {
       if (active_piece->piece_at(ix, iy)) pieces[active_y + iy][active_x + ix] = active_piece->piece_at(ix, iy);
     }
   }
+}
+
+// TODO fix this bullshit code
+int GameGrid::process_matches() {
+    std::list <Match> matches;
+
+  for (int iy = 0; iy < 16; ++iy) {
+    for (int ix = 0; ix < 8; ++ix) {
+      boost::shared_ptr<Candy> start = boost::dynamic_pointer_cast<Candy>(pieces[iy][ix]);
+      if (start) {
+
+        if (ix < 5) {
+          fprintf(stderr, "Looking for %u horizontally ", start->color());
+          for (int j = ix; j < 8; ++j) {
+            boost::shared_ptr<Candy> test = boost::dynamic_pointer_cast<Candy>(pieces[iy][j]);
+            fprintf(stderr, "%d ", test ? test->color() : -1);
+            if (!test || test->color() != start->color()) {
+              int length = j - ix;
+              if (length >= 4) {
+                fprintf(stderr, "Found horizontal match %u long starting at %u, %u\n", length, ix, iy);
+                for (int k = ix; k < j; ++k) {
+                  matches.push_back(Match(k, iy));
+                }
+              }
+              break;
+            } else if (j == 7) {
+              int length = j - ix + 1;
+              if (length >= 4) {
+                fprintf(stderr, "Found horizontal match %u long starting at %u, %u\n", length, ix, iy);
+                for (int k = ix; k <= j; ++k) {
+                  matches.push_back(Match(k, iy));
+                }
+              }
+            }
+          }
+          fprintf(stderr, "\n");
+        }
+
+        if (iy < 13) {
+          fprintf(stderr, "Looking for %u vertically ", start->color());
+          for (int j = iy; j < 16; ++j) {
+            boost::shared_ptr<Candy> test = boost::dynamic_pointer_cast<Candy>(pieces[j][ix]);
+            fprintf(stderr, "%d ", test ? test->color() : -1);
+            if (!test || test->color() != start->color()) {
+              int length = j - iy;
+              if (length >= 4) {
+                fprintf(stderr, "Found vertical match %u long starting at %u, %u\n", length, ix, iy);
+                for (int k = iy; k < j; ++k) {
+                  matches.push_back(Match(ix, k));
+                }
+              }
+              break;
+            } else if (j == 15) {
+              int length = j - iy + 1;
+              if (length >= 4) {
+                fprintf(stderr, "Found vertical match %u long starting at %u, %u\n", length, ix, iy);
+                for (int k = iy; k <= j; ++k) {
+                  matches.push_back(Match(ix, k));
+                }
+              }
+            }
+          }
+          fprintf(stderr, "\n");
+        }
+
+      }
+    }
+  }
+
+  for (std::list<Match>::iterator i = matches.begin(); i != matches.end(); ++i) {
+    pieces[(*i).y][(*i).x].reset();
+  }
+
+  // TODO fall down bitches
+
+  return 0;
 }

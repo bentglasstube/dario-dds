@@ -2,7 +2,7 @@
 
 Candy::Candy(Graphics& graphics, unsigned int connections, Candy::Color color) :
   GridPiece(graphics, connections),
-  color(color) {}
+  _color(color) {}
 
 void Candy::get_source(SDL_Rect* rect) {
   unsigned int x = 0;
@@ -19,7 +19,7 @@ void Candy::get_source(SDL_Rect* rect) {
     case 12: x = 1; y = 1; break;
   }
 
-  switch (color) {
+  switch (_color) {
     case RED:    x += 4; y += 2; break;
     case BLUE:   x += 4; y += 0; break;
     case GREEN:  x += 0; y += 0; break;
