@@ -4,6 +4,10 @@
 #include <stdlib.h>
 #include <time.h>
 
+#include "screen.h"
+#include "main_screen.h"
+#include "input.h"
+
 namespace {
   const unsigned int FPS = 60;
   const unsigned int MSPF = 1000 / FPS;
@@ -20,24 +24,22 @@ Game::~Game() {
 
 void Game::loop() {
   Graphics graphics;
+  Input input;
 
   bool running = true;
   unsigned int last_update = SDL_GetTicks();
 
+  current_screen = new MainScreen(graphics);
+
   while (running) {
     const unsigned int start = SDL_GetTicks();
 
-    SDL_Event event;
+    // TODO improve this process so that a screen can return a code to move on
+    // to a different screen
+    bool process = current_screen->process_input(input);
+    bool update = current_screen->update(SDL_GetTicks() - last_update);
+    running = process && update;
 
-    while (SDL_PollEvent(&event)) {
-      switch(event.type) {
-        case SDL_QUIT:
-          running = false;
-          break;
-      }
-    }
-
-    // TODO update scene
     last_update = SDL_GetTicks();
     draw(graphics);
 
@@ -48,6 +50,7 @@ void Game::loop() {
 
 void Game::draw(Graphics& graphics) {
   graphics.clear();
-  // TODO draw scene
+  current_screen->draw(graphics);
+  // TODO draw FPS
   graphics.flip();
 }

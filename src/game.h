@@ -2,6 +2,8 @@
 
 #include "graphics.h"
 
+class Screen;
+
 class Game {
   public:
 
@@ -13,4 +15,5 @@ class Game {
   private:
 
     void draw(Graphics& graphics);
+    Screen* current_screen;
 };
