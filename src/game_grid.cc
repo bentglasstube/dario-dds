@@ -80,7 +80,6 @@ int GameGrid::update(Graphics& graphics, unsigned int elapsed) {
 
         commit(active_piece);
         active_piece.reset();
-        process_matches();
       }
     } else {
       std::list<boost::shared_ptr<CandyBlock> >::iterator i = falling_pieces.begin();
@@ -95,6 +94,8 @@ int GameGrid::update(Graphics& graphics, unsigned int elapsed) {
         }
       }
     }
+
+    process_matches();
   }
 
   return 0;
