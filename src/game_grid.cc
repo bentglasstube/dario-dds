@@ -28,7 +28,7 @@ void GameGrid::generate(Graphics& graphics) {
 
       if (iy == 13) connections &= ~8;
 
-      pieces[iy][ix].reset(new Tooth(graphics, connections, (rand() % 2) == 0));
+      pieces[iy][ix].reset(new Tooth(graphics, connections, false));
     }
   }
 
