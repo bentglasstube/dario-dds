@@ -14,7 +14,6 @@ GameGrid::GameGrid(GameGrid::Difficulty difficulty) :
 void GameGrid::generate(Graphics& graphics) {
   for (int iy = 13; iy < 16; ++iy) {
     for (int ix = 0; ix < 8; ++ix) {
-      // TODO scale rotten % with difficulty
       int connections = 15;
 
       switch (ix) {
@@ -32,6 +31,14 @@ void GameGrid::generate(Graphics& graphics) {
 
       pieces[iy][ix].reset(new Tooth(graphics, connections, false));
     }
+  }
+
+  // TODO scale auto-rotting with level
+  for (int i = 0; i < 20; ++i) {
+    int x = rand() % 8;
+    int y = rand() % 2 + 13;
+
+    damage_tooth(x, y);
   }
 
   // TODO spawn some candy on the teeth (difficulty scaled)
