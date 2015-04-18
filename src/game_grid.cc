@@ -8,7 +8,6 @@
 
 GameGrid::GameGrid() :
   move_counter(0), drop_counter(0), drop_speed(10),
-  active_x(0), active_y(0),
   _move(0), _rotate(0), _drop(false) {}
 
 void GameGrid::generate(Graphics& graphics) {
@@ -45,13 +44,13 @@ int GameGrid::update(Graphics& graphics, unsigned int elapsed) {
   drop_counter += elapsed;
   move_counter += elapsed;
 
-  if (move_counter > 100) {
+  if (falling_pieces.empty() && move_counter > 100) {
     move_counter = 0;
     if (_move != 0) {
-      if (collision(active_x + _move, active_y)) {
+      active_piece->slide(_move < 0);
+      if (collision(active_piece)) {
         // TODO play bump sound
-      } else {
-        active_x += _move;
+        active_piece->slide(_move > 0);
       }
       _move = 0;
     }
@@ -59,7 +58,7 @@ int GameGrid::update(Graphics& graphics, unsigned int elapsed) {
 
     if (_rotate != 0) {
       active_piece->rotate(_rotate > 0);
-      if (collision(active_x, active_y)) {
+      if (collision(active_piece)) {
         // TODO play bump sound
         active_piece->rotate(_rotate < 0);
       }
@@ -71,29 +70,30 @@ int GameGrid::update(Graphics& graphics, unsigned int elapsed) {
   if (drop_counter > drop_threshold()) {
     drop_counter = 0;
 
-    if (collision(active_x, active_y + 1)) {
-      // TODO play bump sound
-      fprintf(stderr, "Piece landed, committing\n");
+    if (falling_pieces.empty()) {
+      fprintf(stderr, "Active piece processing\n");
+      active_piece->fall();
+      if (collision(active_piece)) {
+        // TODO play bump sound
+        active_piece->fall(false);
+        fprintf(stderr, "Piece landed, committing\n");
 
-      commit_active();
-      process_matches();
+        commit(active_piece);
+        process_matches();
 
-      /* TODO make the candy drop and shit
-       *
-       *    check for matches
-       *      rot teeth
-       *      drop things down
-       *    start new candy falling
-       *    generate next candy
-       *
-       */
-
-      if (!spawn_candy(graphics)) {
-        fprintf(stderr, "Nowhere to place candy, game over\n");
-        return -1;
+        if (!spawn_candy(graphics)) {
+          fprintf(stderr, "Nowhere to place candy, game over\n");
+          return -1;
+        }
       }
     } else {
-      active_y++;
+      fprintf(stderr, "Falling piece processing\n");
+      std::list<boost::shared_ptr<CandyBlock> >::iterator i = falling_pieces.begin();
+      while (i != falling_pieces.end()) {
+        bool active = true;
+
+        ++i;
+      }
     }
   }
 
@@ -107,7 +107,7 @@ void GameGrid::draw(Graphics& graphics, unsigned int x, unsigned int y) {
     }
   }
 
-  if (active_piece) active_piece->draw(graphics, x + 16 * active_x, y + 16 * active_y);
+  if (active_piece) active_piece->draw(graphics, x, y);
 }
 
 boost::shared_ptr<GridPiece> GameGrid::piece(int x, int y) {
@@ -131,18 +131,11 @@ bool GameGrid::spawn_candy(Graphics& graphics) {
   else if (picker < 85) { shape = CandyBlock::THREE; }
   else                  { shape = CandyBlock::FOUR;  }
 
-  active_piece.reset(new CandyBlock(graphics, shape));
+  active_piece.reset(new CandyBlock(graphics, shape, 3, 0));
 
-  // sorry, this is insane
-  // it basically searches from the middle out for a spot to put the piece
-  // the idea is for the loop to iterate over the values 3, 4, 2, 5, 1, 6, 0, 7
-  for (int tx = 3; tx >= 0; tx = (tx > 3 ? 6 : 7) - tx) {
-    if (!collision(tx, 0)) {
-      active_x = tx;
-      active_y = 0;
-
-      return true;
-    }
+  for (int i = 0; i < 3; ++i) {
+    if (!collision(active_piece)) return true;
+    active_piece->rotate();
   }
 
   active_piece.reset();
@@ -150,15 +143,15 @@ bool GameGrid::spawn_candy(Graphics& graphics) {
   return false;
 }
 
-bool GameGrid::collision(int x, int y) {
-  if (!active_piece) return false;
+bool GameGrid::collision(boost::shared_ptr<CandyBlock> block) {
+  if (!block) return false;
 
   for (int iy = 0; iy < 2; ++iy) {
     for (int ix = 0; ix < 2; ++ix) {
-      if (active_piece->piece_at(ix, iy)) {
-        if (x + ix < 0 || x + ix >= 8) return true;
-        if (y + iy < 0 || y + iy >= 16) return true;
-        if (pieces[y + iy][x + ix]) return true;
+      if (block->piece_at(ix, iy)) {
+        if (block->get_x() + ix < 0 || block->get_x() + ix >= 8) return true;
+        if (block->get_y() + iy < 0 || block->get_y() + iy >= 16) return true;
+        if (pieces[block->get_y() + iy][block->get_x() + ix]) return true;
       }
     }
   }
@@ -166,10 +159,34 @@ bool GameGrid::collision(int x, int y) {
   return false;
 }
 
-void GameGrid::commit_active() {
+void GameGrid::release(int x, int y) {
+  fprintf(stderr, "Releasing block at %u, %u", x, y);
+
+  boost::shared_ptr<Candy> a = boost::dynamic_pointer_cast<Candy>(piece(x + 0, y + 0));
+  boost::shared_ptr<Candy> b = boost::dynamic_pointer_cast<Candy>(piece(-1, -1));
+  boost::shared_ptr<Candy> c = boost::dynamic_pointer_cast<Candy>(piece(-1, -1));
+  boost::shared_ptr<Candy> d = boost::dynamic_pointer_cast<Candy>(piece(-1, -1));
+  /* TODO sort this shit out
+  boost::shared_ptr<Candy> b = boost::dynamic_pointer_cast<Candy>(piece(x + 1, y + 0));
+  boost::shared_ptr<Candy> c = boost::dynamic_pointer_cast<Candy>(piece(x + 0, y + 1));
+  boost::shared_ptr<Candy> d = boost::dynamic_pointer_cast<Candy>(piece(x + 1, y + 1));
+  */
+
+  if (!a) return;
+
+  boost::shared_ptr<CandyBlock> block(new CandyBlock(x, y, a, b, c, d));
+  falling_pieces.push_back(block);
+
+  if (a) pieces[y + 0][x + 0].reset();
+  if (b) pieces[y + 0][x + 1].reset();
+  if (c) pieces[y + 1][x + 0].reset();
+  if (d) pieces[y + 1][x + 1].reset();
+}
+
+void GameGrid::commit(boost::shared_ptr<CandyBlock> block) {
   for (int iy = 0; iy < 2; ++iy) {
     for (int ix = 0; ix < 2; ++ix) {
-      if (active_piece->piece_at(ix, iy)) pieces[active_y + iy][active_x + ix] = active_piece->piece_at(ix, iy);
+      if (block->piece_at(ix, iy)) pieces[block->get_y() + iy][block->get_x() + ix] = block->piece_at(ix, iy);
     }
   }
 }
@@ -223,6 +240,12 @@ int GameGrid::process_matches() {
   }
 
   // TODO fall down bitches
+
+  for (int iy = 0; iy < 16; ++iy) {
+    for (int ix = 0; ix < 8; ++ix) {
+      // if (piece(ix, iy)) release(ix, iy);
+    }
+  }
 
   return 0;
 }

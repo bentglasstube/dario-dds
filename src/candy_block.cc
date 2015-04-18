@@ -2,7 +2,7 @@
 
 #define RAND_COLOR (static_cast<Candy::Color>(rand() % 4))
 
-CandyBlock::CandyBlock(Graphics& graphics, CandyBlock::Shape shape) {
+CandyBlock::CandyBlock(Graphics& graphics, CandyBlock::Shape shape, int x, int y) : x(x), y(y) {
   pieces[0][0].reset(new Candy(graphics, 1, RAND_COLOR));
   pieces[1][0].reset(new Candy(graphics, 8, RAND_COLOR));
 
@@ -16,12 +16,27 @@ CandyBlock::CandyBlock(Graphics& graphics, CandyBlock::Shape shape) {
       pieces[0][1]->set_connections(5);
     }
   }
+
+  int spin = rand() % 4;
+  for (int i = 0; i < spin; ++i) {
+    rotate();
+  }
+}
+
+CandyBlock::CandyBlock(
+    int x, int y,
+    boost::shared_ptr<Candy> a, boost::shared_ptr<Candy> b,
+    boost::shared_ptr<Candy> c, boost::shared_ptr<Candy> d) : x(x), y(y) {
+  pieces[0][0] = a;
+  pieces[0][1] = b;
+  pieces[1][0] = c;
+  pieces[1][1] = d;
 }
 
 void CandyBlock::draw(Graphics& graphics, unsigned int x, unsigned int y) {
   for (int iy = 0; iy < 2; ++iy) {
     for (int ix = 0; ix < 2; ++ix) {
-      if (pieces[iy][ix]) pieces[iy][ix]->draw(graphics, x + ix * 16, y + iy * 16);
+      if (pieces[iy][ix]) pieces[iy][ix]->draw(graphics, x + (this->x + ix) * 16, y + (this->y + iy) * 16);
     }
   }
 }
