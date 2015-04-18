@@ -13,6 +13,9 @@ class MainScreen : public Screen {
 
   private:
 
+    enum State { PLAYING, PAUSED, GAME_OVER };
+
     GameGrid game_grid;
+    State state;
 
 };
