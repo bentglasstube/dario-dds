@@ -96,6 +96,8 @@ int GameGrid::update(Graphics& graphics, unsigned int elapsed) {
     }
 
     process_matches();
+
+    // TODO check win condition
   }
 
   return 0;
@@ -284,7 +286,14 @@ int GameGrid::process_matches() {
 
   int count = 0;
   for (std::list<Match>::iterator i = matches.begin(); i != matches.end(); ++i) {
-    if (remove_piece((*i).x, (*i).y)) count++;
+    if (remove_piece((*i).x, (*i).y)) {
+      count++;
+
+      if (damage_tooth((*i).x, (*i).y - 1)) count++;
+      if (damage_tooth((*i).x, (*i).y + 1)) count++;
+      if (damage_tooth((*i).x - 1, (*i).y)) count++;
+      if (damage_tooth((*i).x + 1, (*i).y)) count++;
+    }
   }
 
   if (count > 0) {
@@ -307,6 +316,20 @@ bool GameGrid::remove_piece(int x, int y) {
     if (piece(x, y + 1)) piece(x, y + 1)->break_connection(8);
 
     return true;
+  }
+
+  return false;
+}
+
+bool GameGrid::damage_tooth(int x, int y) {
+  boost::shared_ptr<Tooth> tooth = tooth_piece(x, y);
+  if (tooth) {
+    if (tooth->is_rotten()) {
+      remove_piece(x, y);
+      return true;
+    } else {
+      tooth->rot();
+    }
   }
 
   return false;

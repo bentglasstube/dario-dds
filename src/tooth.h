@@ -7,6 +7,9 @@ class Tooth : public GridPiece {
 
     Tooth(Graphics& graphics, unsigned int connections, bool rotten);
 
+    bool is_rotten() { return rotten; }
+    void rot() { rotten = true; }
+
   private:
 
     void get_source(SDL_Rect* rect);

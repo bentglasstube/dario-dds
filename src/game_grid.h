@@ -44,6 +44,7 @@ class GameGrid {
     void commit(boost::shared_ptr<CandyBlock> block);
     int process_matches();
     bool remove_piece(int x, int y);
+    bool damage_tooth(int x, int y);
 
     boost::shared_ptr<GridPiece> pieces[16][8];
     unsigned int move_counter, drop_counter, drop_speed;
