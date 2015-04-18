@@ -44,13 +44,16 @@ int GameGrid::update(Graphics& graphics, unsigned int elapsed) {
   move_counter += elapsed;
 
   if (move_counter > 100) {
+    move_counter -= 100;
     if (_move != 0) {
       if (collision(active_x + _move, active_y)) {
         // TODO play bump sound
       } else {
         active_x += _move;
       }
+      _move = 0;
     }
+
 
     if (_rotate != 0) {
       active_piece->rotate(_rotate > 0);
@@ -58,6 +61,8 @@ int GameGrid::update(Graphics& graphics, unsigned int elapsed) {
         // TODO play bump sound
         active_piece->rotate(_rotate < 0);
       }
+
+      _rotate = 0;
     }
   }
 
@@ -109,6 +114,9 @@ unsigned int GameGrid::drop_threshold() {
 bool GameGrid::spawn_candy(Graphics& graphics) {
   CandyBlock::Shape shape;
   int picker = rand() % 100;
+
+  // stop fast drop for new pieces
+  _drop = false;
 
   if (picker < 50)      { shape = CandyBlock::TWO;   }
   else if (picker < 85) { shape = CandyBlock::THREE; }
