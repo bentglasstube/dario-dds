@@ -32,6 +32,7 @@ class GameGrid {
       unsigned int y;
     };
 
+    boost::shared_ptr<GridPiece> piece(int x, int y);
     unsigned int drop_threshold();
     bool spawn_candy(Graphics& graphics);
     bool collision(int x, int y);

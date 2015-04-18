@@ -110,6 +110,12 @@ void GameGrid::draw(Graphics& graphics, unsigned int x, unsigned int y) {
   if (active_piece) active_piece->draw(graphics, x + 16 * active_x, y + 16 * active_y);
 }
 
+boost::shared_ptr<GridPiece> GameGrid::piece(int x, int y) {
+  if (x < 0 || x >= 8) return boost::shared_ptr<GridPiece>();
+  if (y < 0 || y >= 16) return boost::shared_ptr<GridPiece>();
+  return pieces[y][x];
+}
+
 unsigned int GameGrid::drop_threshold() {
   return _drop ? 100 : 10000 / drop_speed;
 }
@@ -174,64 +180,41 @@ int GameGrid::process_matches() {
 
   for (int iy = 0; iy < 16; ++iy) {
     for (int ix = 0; ix < 8; ++ix) {
-      boost::shared_ptr<Candy> start = boost::dynamic_pointer_cast<Candy>(pieces[iy][ix]);
-      if (start) {
+      boost::shared_ptr<Candy> start = boost::dynamic_pointer_cast<Candy>(piece(ix, iy));
+      if (!start) continue;
 
-        if (ix < 5) {
-          fprintf(stderr, "Looking for %u horizontally ", start->color());
-          for (int j = ix; j < 8; ++j) {
-            boost::shared_ptr<Candy> test = boost::dynamic_pointer_cast<Candy>(pieces[iy][j]);
-            fprintf(stderr, "%d ", test ? test->color() : -1);
-            if (!test || test->color() != start->color()) {
-              int length = j - ix;
-              if (length >= 4) {
-                fprintf(stderr, "Found horizontal match %u long starting at %u, %u\n", length, ix, iy);
-                for (int k = ix; k < j; ++k) {
-                  matches.push_back(Match(k, iy));
-                }
-              }
-              break;
-            } else if (j == 7) {
-              int length = j - ix + 1;
-              if (length >= 4) {
-                fprintf(stderr, "Found horizontal match %u long starting at %u, %u\n", length, ix, iy);
-                for (int k = ix; k <= j; ++k) {
-                  matches.push_back(Match(k, iy));
-                }
+      if (ix < 5) {
+        for (int j = ix; j <= 8; ++j) {
+          boost::shared_ptr<Candy> test = boost::dynamic_pointer_cast<Candy>(piece(j, iy));
+          if (!test || test->color() != start->color()) {
+            int length = j - ix;
+            if (length >= 4) {
+              fprintf(stderr, "Found horizontal match %u long starting at %u, %u\n", length, ix, iy);
+              for (int k = ix; k < j; ++k) {
+                matches.push_back(Match(k, iy));
               }
             }
+            break;
           }
-          fprintf(stderr, "\n");
         }
-
-        if (iy < 13) {
-          fprintf(stderr, "Looking for %u vertically ", start->color());
-          for (int j = iy; j < 16; ++j) {
-            boost::shared_ptr<Candy> test = boost::dynamic_pointer_cast<Candy>(pieces[j][ix]);
-            fprintf(stderr, "%d ", test ? test->color() : -1);
-            if (!test || test->color() != start->color()) {
-              int length = j - iy;
-              if (length >= 4) {
-                fprintf(stderr, "Found vertical match %u long starting at %u, %u\n", length, ix, iy);
-                for (int k = iy; k < j; ++k) {
-                  matches.push_back(Match(ix, k));
-                }
-              }
-              break;
-            } else if (j == 15) {
-              int length = j - iy + 1;
-              if (length >= 4) {
-                fprintf(stderr, "Found vertical match %u long starting at %u, %u\n", length, ix, iy);
-                for (int k = iy; k <= j; ++k) {
-                  matches.push_back(Match(ix, k));
-                }
-              }
-            }
-          }
-          fprintf(stderr, "\n");
-        }
-
       }
+
+      if (iy < 13) {
+        for (int j = iy; j <= 16; ++j) {
+          boost::shared_ptr<Candy> test = boost::dynamic_pointer_cast<Candy>(piece(ix, j));
+          if (!test || test->color() != start->color()) {
+            int length = j - iy;
+            if (length >= 4) {
+              fprintf(stderr, "Found vertical match %u long starting at %u, %u\n", length, ix, iy);
+              for (int k = iy; k < j; ++k) {
+                matches.push_back(Match(ix, k));
+              }
+            }
+            break;
+          }
+        }
+      }
+
     }
   }
 
