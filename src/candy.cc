@@ -1,6 +1,8 @@
 #include "candy.h"
 
-Candy::Candy(Graphics& graphics, Candy::Color color) : GridPiece(graphics), color(color) {}
+Candy::Candy(Graphics& graphics, unsigned int connections, Candy::Color color) :
+  GridPiece(graphics, connections),
+  color(color) {}
 
 void Candy::get_source(SDL_Rect* rect) {
   unsigned int x = 0;

@@ -2,7 +2,7 @@
 
 #include "graphics.h"
 
-GridPiece::GridPiece(Graphics& graphics) : connections(0) {
+GridPiece::GridPiece(Graphics& graphics, unsigned int connections) : connections(connections) {
   texture = graphics.load_image("teeth", true);
 }
 

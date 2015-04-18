@@ -13,7 +13,7 @@ class Candy : public GridPiece {
       RED    = 4,
     };
 
-    Candy(Graphics& graphics, Color color);
+    Candy(Graphics& graphics, unsigned int connections, Color color);
 
   private:
 

@@ -10,7 +10,22 @@ void GameGrid::generate(Graphics& graphics) {
     for (int ix = 0; ix < 8; ++ix) {
       // TODO scale rotten % with difficulty
       // TODO connections
-      pieces[iy][ix].reset(new Tooth(graphics, (rand() % 2) == 0));
+      int connections = 15;
+
+      switch (ix) {
+        case 0:
+        case 4:
+          connections &= ~4;
+          break;
+        case 3:
+        case 7:
+          connections &= ~2;
+          break;
+      }
+
+      if (iy == 13) connections &= ~8;
+
+      pieces[iy][ix].reset(new Tooth(graphics, connections, (rand() % 2) == 0));
     }
   }
 }

@@ -1,6 +1,8 @@
 #include "tooth.h"
 
-Tooth::Tooth(Graphics& graphics, bool rotten) : GridPiece(graphics), rotten(rotten) {}
+Tooth::Tooth(Graphics& graphics, unsigned int connections, bool rotten) :
+  GridPiece(graphics, connections),
+  rotten(rotten) {}
 
 void Tooth::get_source(SDL_Rect* rect) {
   unsigned int x = (connections & 3) + (rotten ? 4 : 0);

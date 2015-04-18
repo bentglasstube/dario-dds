@@ -5,7 +5,7 @@
 class Tooth : public GridPiece {
   public:
 
-    Tooth(Graphics& graphics, bool rotten);
+    Tooth(Graphics& graphics, unsigned int connections, bool rotten);
 
   private:
 

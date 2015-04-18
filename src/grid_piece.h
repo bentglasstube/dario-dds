@@ -8,7 +8,7 @@ class GridPiece {
 
   public:
 
-    GridPiece(Graphics& graphcis);
+    GridPiece(Graphics& graphcis, unsigned int connections=0);
 
     void draw(Graphics& graphics, unsigned int x, unsigned int y);
     void set_connections(unsigned int connections);
