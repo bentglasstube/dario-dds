@@ -6,7 +6,7 @@
 Screen::Screen() {}
 Screen::~Screen() {}
 
-bool Screen::process_input(Input& input) {
+bool Screen::process_input(Audio& audio, Input& input) {
   SDL_Event event;
 
   input.clear();

@@ -48,7 +48,7 @@ void GameGrid::generate(Graphics& graphics) {
   }
 }
 
-int GameGrid::update(Graphics& graphics, unsigned int elapsed) {
+int GameGrid::update(Audio& audio, Graphics& graphics, unsigned int elapsed) {
   drop_counter += elapsed;
   move_counter += elapsed;
 

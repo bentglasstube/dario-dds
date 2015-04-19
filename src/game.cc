@@ -4,9 +4,11 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "screen.h"
-#include "main_screen.h"
+#include "audio.h"
+#include "graphics.h"
 #include "input.h"
+#include "main_screen.h"
+#include "screen.h"
 
 namespace {
   const unsigned int FPS = 60;
@@ -24,6 +26,7 @@ Game::~Game() {
 
 void Game::loop() {
   Graphics graphics;
+  Audio audio;
   Input input;
 
   bool running = true;
@@ -36,8 +39,8 @@ void Game::loop() {
 
     // TODO improve this process so that a screen can return a code to move on
     // to a different screen
-    bool process = current_screen->process_input(input);
-    bool update = current_screen->update(graphics, SDL_GetTicks() - last_update);
+    bool process = current_screen->process_input(audio, input);
+    bool update = current_screen->update(audio, graphics, SDL_GetTicks() - last_update);
     running = process && update;
 
     last_update = SDL_GetTicks();

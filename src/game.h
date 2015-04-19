@@ -1,8 +1,7 @@
 #pragma once
 
-#include "graphics.h"
-
 class Screen;
+class Graphics;
 
 class Game {
   public:

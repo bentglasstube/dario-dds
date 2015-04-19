@@ -1,5 +1,6 @@
 #pragma once
 
+class Audio;
 class Graphics;
 class Input;
 
@@ -9,7 +10,7 @@ class Screen {
     Screen();
     ~Screen();
 
-    virtual bool process_input(Input& input);
-    virtual bool update(Graphics& graphics, unsigned int elapsed) = 0;
+    virtual bool process_input(Audio& audio, Input& input);
+    virtual bool update(Audio& audio, Graphics& graphics, unsigned int elapsed) = 0;
     virtual void draw(Graphics& graphics) = 0;
 };

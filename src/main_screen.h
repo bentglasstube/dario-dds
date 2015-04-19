@@ -7,8 +7,8 @@ class MainScreen : public Screen {
   public:
     MainScreen(Graphics& graphics);
 
-    bool process_input(Input& input);
-    bool update(Graphics& graphics, unsigned int elapsed);
+    bool process_input(Audio& audio, Input& input);
+    bool update(Audio& audio, Graphics& graphics, unsigned int elapsed);
     void draw(Graphics& graphics);
 
   private:

@@ -1,5 +1,6 @@
 #include "main_screen.h"
 
+#include "audio.h"
 #include "input.h"
 #include "text.h"
 
@@ -7,8 +8,8 @@ MainScreen::MainScreen(Graphics& graphics) : game_grid(GameGrid::EASY), state(PL
   game_grid.generate(graphics);
 }
 
-bool MainScreen::process_input(Input& input) {
-  if (!Screen::process_input(input)) {
+bool MainScreen::process_input(Audio& audio, Input& input) {
+  if (!Screen::process_input(audio, input)) {
     return false;
   }
 
@@ -53,9 +54,9 @@ bool MainScreen::process_input(Input& input) {
   return true;
 }
 
-bool MainScreen::update(Graphics& graphics, unsigned int elapsed) {
+bool MainScreen::update(Audio& audio, Graphics& graphics, unsigned int elapsed) {
   if (state == PLAYING) {
-    int result = game_grid.update(graphics, elapsed);
+    int result = game_grid.update(audio, graphics, elapsed);
 
     switch (result) {
       case -1:

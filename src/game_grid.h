@@ -7,6 +7,7 @@
 #include "candy_block.h"
 #include "tooth.h"
 
+class Audio;
 class Graphics;
 
 class GameGrid {
@@ -19,7 +20,7 @@ class GameGrid {
     GameGrid(Difficulty difficulty);
 
     void generate(Graphics& graphics);
-    int update(Graphics& graphics, unsigned int elapsed);
+    int update(Audio& audio, Graphics& graphics, unsigned int elapsed);
     void draw(Graphics& graphics, unsigned int x, unsigned int y);
 
     void move(int dir) { _move = dir; }

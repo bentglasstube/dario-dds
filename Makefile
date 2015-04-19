@@ -4,7 +4,7 @@ OBJECTS=$(patsubst %.cc,$(BUILDDIR)/%.o,$(SOURCES))
 
 CC=clang++
 CFLAGS=-g -Wall -Wextra --std=c++03
-LDLIBS=`sdl2-config --cflags --libs`
+LDLIBS=`sdl2-config --cflags --libs` -lSDL2_mixer
 LDFLAGS=
 
 EXECUTABLE=$(BUILDDIR)/game
