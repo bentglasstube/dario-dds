@@ -10,7 +10,7 @@
 GameGrid::GameGrid() :
   move_counter(0), drop_counter(0), drop_speed(10),
   _move(0), _rotate(0), _drop(false),
-  difficulty(GameGrid::EASY) {}
+  difficulty(GameGrid::HARD) {}
 
 void GameGrid::generate(Graphics& graphics) {
   for (int iy = 13; iy < 16; ++iy) {
@@ -35,11 +35,14 @@ void GameGrid::generate(Graphics& graphics) {
   }
 
   // TODO scale auto-rotting with level
-  for (int i = 0; i < 20; ++i) {
+  for (int i = 0; i < 10; ++i) {
     int x = rand() % 8;
-    int y = rand() % 2 + 13;
-
-    damage_tooth(x, y);
+    for (int y = 13; y < 16; ++y) {
+      if (tooth_piece(x, y)) {
+        damage_tooth(x, y);
+        break;
+      }
+    }
   }
 
   // TODO spawn some candy on the teeth (difficulty scaled)

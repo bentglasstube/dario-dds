@@ -1,5 +1,6 @@
 #include "candy_block.h"
 
+#define FLIP(A, B) (rand() % 2 == 0 ? (A) : (B))
 CandyBlock::CandyBlock(Graphics& graphics, CandyBlock::Shape shape, int x, int y) : x(x), y(y) {
   Candy::Color a = static_cast<Candy::Color>(rand() % 4);
   Candy::Color b = static_cast<Candy::Color>(rand() % 4);
@@ -12,15 +13,15 @@ CandyBlock::CandyBlock(Graphics& graphics, CandyBlock::Shape shape, int x, int y
       break;
 
     case THREE:
-      pieces[0][0].reset(new Candy(graphics, 3, rand() % 2 == 0 ? a : b));
+      pieces[0][0].reset(new Candy(graphics, 3, FLIP(a, b)));
       pieces[1][0].reset(new Candy(graphics, 8, a));
       pieces[0][1].reset(new Candy(graphics, 4, b));
       break;
 
     case FOUR:
       pieces[0][0].reset(new Candy(graphics,  3, a));
-      pieces[1][0].reset(new Candy(graphics, 10, a));
-      pieces[0][1].reset(new Candy(graphics,  5, b));
+      pieces[1][0].reset(new Candy(graphics, 10, FLIP(a, b)));
+      pieces[0][1].reset(new Candy(graphics,  5, FLIP(a, b)));
       pieces[1][1].reset(new Candy(graphics, 12, b));
       break;
   }
