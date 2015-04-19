@@ -5,11 +5,8 @@
 #include "audio.h"
 #include "candy.h"
 #include "graphics.h"
+#include "input.h"
 #include "tooth.h"
-
-GameGrid::GameGrid() :
-  move_counter(0), drop_counter(0),
-  _move(0), _rotate(0), _drop(false), level(1) {}
 
 void GameGrid::generate(Graphics& graphics, unsigned int starting_level) {
   level = starting_level;
@@ -50,36 +47,46 @@ void GameGrid::generate(Graphics& graphics, unsigned int starting_level) {
   spawn_candy(graphics);
 }
 
-int GameGrid::update(Audio& audio, Graphics& graphics, unsigned int elapsed) {
+int GameGrid::update(Input& input, Audio& audio, Graphics& graphics, unsigned int elapsed) {
   drop_counter += elapsed;
-  move_counter += elapsed;
 
   if (winner() || loser()) return 0;
 
-  if (active_piece && move_counter > 100) {
-    move_counter = 0;
-    if (_move != 0) {
-      active_piece->slide(_move < 0);
+  if (active_piece) {
+
+    int move = 0;
+    if (input.key_pressed(SDLK_LEFT) || input.key_pressed(SDLK_a)) {
+      move = -1;
+    } else if (input.key_pressed(SDLK_RIGHT) || input.key_pressed(SDLK_d)) {
+      move = 1;
+    }
+
+    if (move != 0) {
+      active_piece->slide(move < 0);
       if (collision(active_piece)) {
         audio.play_sample("bump");
-        active_piece->slide(_move > 0);
+        active_piece->slide(move > 0);
       }
-      _move = 0;
     }
 
 
-    if (_rotate != 0) {
-      active_piece->rotate(_rotate > 0);
+    int rotate = 0;
+    if (input.key_pressed(SDLK_q)) {
+      rotate = -1;
+    } else if (input.key_pressed(SDLK_UP) || input.key_pressed(SDLK_w) || input.key_pressed(SDLK_e)) {
+      rotate = 1;
+    }
+
+    if (rotate != 0) {
+      active_piece->rotate(rotate > 0);
       if (collision(active_piece)) {
         audio.play_sample("bump");
-        active_piece->rotate(_rotate < 0);
+        active_piece->rotate(rotate < 0);
       }
-
-      _rotate = 0;
     }
   }
 
-  if (drop_counter > drop_threshold()) {
+  if (drop_counter > drop_threshold(input.key_held(SDLK_DOWN) || input.key_held(SDLK_s))) {
     drop_counter = 0;
 
     if (falling_pieces.empty()) {
@@ -155,8 +162,8 @@ boost::shared_ptr<Tooth> GameGrid::tooth_piece(int x, int y) {
   return boost::dynamic_pointer_cast<Tooth>(piece(x, y));
 }
 
-unsigned int GameGrid::drop_threshold() {
-  if (_drop || !active_piece) return 50;
+unsigned int GameGrid::drop_threshold(bool fast) {
+  if (fast || !active_piece) return 50;
   return level > 25 ? 50 : 2000 / level;
 }
 

@@ -18,19 +18,3 @@ void Input::key_up(const SDL_Event& event) {
   keys_held[event.key.keysym.sym] = false;
 }
 
-bool Input::any_key_pressed() {
-  return !keys_pressed.empty();
-}
-
-bool Input::key_pressed(SDL_Keycode key) {
-  return keys_pressed[key];
-}
-
-bool Input::key_released(SDL_Keycode key) {
-  return keys_released[key];
-}
-
-bool Input::key_held(SDL_Keycode key) {
-  return keys_held[key];
-}
-

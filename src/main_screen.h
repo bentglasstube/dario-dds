@@ -22,7 +22,7 @@ class MainScreen : public Screen {
 
     GameGrid game_grid;
     State state;
-    unsigned int score;
+    unsigned int score, choice;
 
     boost::scoped_ptr<Text> text;
     boost::scoped_ptr<Box> box;

@@ -15,6 +15,7 @@ void MainScreen::init(Audio& audio, Graphics& graphics) {
 
   state = PLAYING;
   score = 0;
+  choice = 0;
 
   text.reset(new Text(graphics));
   box.reset(new Box(graphics));
@@ -38,26 +39,8 @@ bool MainScreen::update(Input& input, Audio& audio, Graphics& graphics, unsigned
   }
 
   if (state == PLAYING) {
+    score += game_grid.update(input, audio, graphics, elapsed);
 
-    if (input.key_pressed(SDLK_LEFT) || input.key_pressed(SDLK_a)) {
-      game_grid.move(-1);
-    } else if (input.key_pressed(SDLK_RIGHT) || input.key_pressed(SDLK_d)) {
-      game_grid.move(1);
-    }
-
-    if (input.key_pressed(SDLK_q)) {
-      game_grid.rotate(-1);
-    } else if (input.key_pressed(SDLK_UP) || input.key_pressed(SDLK_w) || input.key_pressed(SDLK_e)) {
-      game_grid.rotate(1);
-    }
-
-    if (input.key_pressed(SDLK_DOWN) || input.key_pressed(SDLK_s)) {
-      game_grid.drop(true);
-    } else if (input.key_released(SDLK_DOWN) || input.key_released(SDLK_s)) {
-      game_grid.drop(false);
-    }
-
-    score += game_grid.update(audio, graphics, elapsed);
     int level = 1 + score / 1000;
     if (level > game_grid.get_level()) {
       audio.play_sample("levelup");

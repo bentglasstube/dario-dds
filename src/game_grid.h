@@ -9,26 +9,20 @@
 
 class Audio;
 class Graphics;
+class Input;
 
 class GameGrid {
 
   public:
 
-    enum Direction { UP, DOWN, LEFT, RIGHT };
-
-    GameGrid();
-
     void generate(Graphics& graphics, unsigned int starting_level);
-    int update(Audio& audio, Graphics& graphics, unsigned int elapsed);
+    int update(Input& input, Audio& audio, Graphics& graphics, unsigned int elapsed);
     void draw(Graphics& graphics, unsigned int x, unsigned int y);
     void draw_next_piece(Graphics& graphics, unsigned int x, unsigned int y) { next_piece->draw(graphics, x - 48, y); }
 
     bool winner();
     bool loser();
 
-    void move(int dir) { _move = dir; }
-    void rotate(int dir) { _rotate = dir; }
-    void drop(bool y) { _drop = y; }
     unsigned int get_level() { return level; }
     void level_up() { level++; }
 
@@ -44,7 +38,7 @@ class GameGrid {
     boost::shared_ptr<Candy> candy_piece(int x, int y);
     boost::shared_ptr<Tooth> tooth_piece(int x, int y);
 
-    unsigned int drop_threshold();
+    unsigned int drop_threshold(bool fast);
     CandyBlock* generate_candy(Graphics& graphics);
     void spawn_candy(Graphics& graphics);
     bool collision(boost::shared_ptr<CandyBlock> block);
@@ -55,10 +49,7 @@ class GameGrid {
     bool damage_tooth(int x, int y);
 
     boost::shared_ptr<GridPiece> pieces[16][8];
-    unsigned int move_counter, drop_counter, drop_speed;
+    unsigned int drop_counter, level;
     boost::shared_ptr<CandyBlock> active_piece, next_piece;
-    int _move, _rotate;
-    bool _drop;
     std::list<boost::shared_ptr<CandyBlock> > falling_pieces;
-    unsigned int level;
 };
