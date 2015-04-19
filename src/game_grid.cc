@@ -119,7 +119,6 @@ void GameGrid::draw(Graphics& graphics, unsigned int x, unsigned int y) {
   }
 
   if (active_piece) active_piece->draw(graphics, x, y);
-  if (next_piece)  next_piece->draw(graphics, x + 160, y);
 
   for (std::list<boost::shared_ptr<CandyBlock> >::iterator i=falling_pieces.begin(); i != falling_pieces.end(); ++i) {
     (*i)->draw(graphics, x, y);

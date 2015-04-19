@@ -77,7 +77,10 @@ bool MainScreen::update(Input& input, Audio& audio, Graphics& graphics, unsigned
 void MainScreen::draw(Graphics& graphics) {
   backdrop->draw(graphics);
 
+  text->draw(graphics, 512, 128, "Next");
+
   game_grid.draw(graphics, 256, 176);
+  game_grid.draw_next_piece(graphics, 512, 144);
 
   switch (state) {
 
@@ -97,8 +100,6 @@ void MainScreen::draw(Graphics& graphics) {
       break;
 
     case PLAYING:
-
-      text->draw(graphics, 464, 160, "Next");
 
       break;
 

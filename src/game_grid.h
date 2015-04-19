@@ -22,6 +22,7 @@ class GameGrid {
     void generate(Graphics& graphics);
     int update(Audio& audio, Graphics& graphics, unsigned int elapsed);
     void draw(Graphics& graphics, unsigned int x, unsigned int y);
+    void draw_next_piece(Graphics& graphics, unsigned int x, unsigned int y) { next_piece->draw(graphics, x - 48, y); }
 
     void move(int dir) { _move = dir; }
     void rotate(int dir) { _rotate = dir; }

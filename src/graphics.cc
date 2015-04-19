@@ -10,7 +10,7 @@ namespace {
 Graphics::Graphics() {
   int flags = SDL_WINDOW_OPENGL ; //| SDL_WINDOW_RESIZABLE;
 
-  window = SDL_CreateWindow("Dr. Dario, DDS", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, flags);
+  window = SDL_CreateWindow("Dario DDS", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, flags);
   renderer = SDL_CreateRenderer(window, -1, 0);
 
   SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest"); // retro!
