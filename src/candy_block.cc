@@ -70,6 +70,21 @@ void CandyBlock::rotate(bool clockwise) {
       if (pieces[iy][ix]) pieces[iy][ix]->rotate(clockwise);
     }
   }
+
+  // Slide the piece back to the top left if possible
+  if (!pieces[0][0]) {
+    if (!pieces[0][1]) {
+      pieces[0][0] = pieces[1][0];
+      pieces[0][1] = pieces[1][1];
+      pieces[1][0].reset();
+      pieces[1][1].reset();
+    } else if (!pieces[1][0]) {
+      pieces[0][0] = pieces[0][1];
+      pieces[1][0] = pieces[1][1];
+      pieces[0][1].reset();
+      pieces[1][1].reset();
+    }
+  }
 }
 
 boost::shared_ptr<Candy> CandyBlock::piece_at(unsigned int x, unsigned int y) {
