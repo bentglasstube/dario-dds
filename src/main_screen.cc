@@ -19,8 +19,10 @@ bool MainScreen::process_input(Audio& audio, Input& input) {
 
   if (input.key_pressed(SDLK_SPACE) || input.key_pressed(SDLK_RETURN)) {
     if (state == PAUSED) {
+      audio.play_sample("pause");
       state = PLAYING;
     } else if (state == PLAYING) {
+      audio.play_sample("pause");
       state = PAUSED;
     }
   }

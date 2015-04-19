@@ -44,7 +44,7 @@ class GameGrid {
     bool collision(boost::shared_ptr<CandyBlock> block);
     void release(int x, int y);
     void commit(boost::shared_ptr<CandyBlock> block);
-    int process_matches();
+    int process_matches(Audio& audio);
     bool remove_piece(int x, int y);
     bool damage_tooth(int x, int y);
     bool winner();

@@ -2,6 +2,7 @@
 
 #include <boost/pointer_cast.hpp>
 
+#include "audio.h"
 #include "candy.h"
 #include "graphics.h"
 #include "tooth.h"
@@ -57,7 +58,7 @@ int GameGrid::update(Audio& audio, Graphics& graphics, unsigned int elapsed) {
     if (_move != 0) {
       active_piece->slide(_move < 0);
       if (collision(active_piece)) {
-        // TODO play bump sound
+        audio.play_sample("bump");
         active_piece->slide(_move > 0);
       }
       _move = 0;
@@ -67,7 +68,7 @@ int GameGrid::update(Audio& audio, Graphics& graphics, unsigned int elapsed) {
     if (_rotate != 0) {
       active_piece->rotate(_rotate > 0);
       if (collision(active_piece)) {
-        // TODO play bump sound
+        audio.play_sample("bump");
         active_piece->rotate(_rotate < 0);
       }
 
@@ -83,7 +84,7 @@ int GameGrid::update(Audio& audio, Graphics& graphics, unsigned int elapsed) {
 
       active_piece->fall();
       if (collision(active_piece)) {
-        // TODO play bump sound
+        audio.play_sample("bump");
         active_piece->fall(false);
 
         commit(active_piece);
@@ -103,7 +104,7 @@ int GameGrid::update(Audio& audio, Graphics& graphics, unsigned int elapsed) {
       }
     }
 
-    process_matches();
+    process_matches(audio);
     if (winner()) return 1;
   }
 
@@ -250,7 +251,7 @@ void GameGrid::commit(boost::shared_ptr<CandyBlock> block) {
 }
 
 // TODO fix this bullshit code
-int GameGrid::process_matches() {
+int GameGrid::process_matches(Audio& audio) {
     std::list <Match> matches;
 
   for (int iy = 0; iy < 16; ++iy) {
@@ -291,27 +292,33 @@ int GameGrid::process_matches() {
     }
   }
 
-  int count = 0;
+  int candy_count = 0;
+  int tooth_count = 0;
   for (std::list<Match>::iterator i = matches.begin(); i != matches.end(); ++i) {
     if (remove_piece((*i).x, (*i).y)) {
-      count++;
+      candy_count++;
 
-      if (damage_tooth((*i).x, (*i).y - 1)) count++;
-      if (damage_tooth((*i).x, (*i).y + 1)) count++;
-      if (damage_tooth((*i).x - 1, (*i).y)) count++;
-      if (damage_tooth((*i).x + 1, (*i).y)) count++;
+      if (damage_tooth((*i).x, (*i).y - 1)) tooth_count++;
+      if (damage_tooth((*i).x, (*i).y + 1)) tooth_count++;
+      if (damage_tooth((*i).x - 1, (*i).y)) tooth_count++;
+      if (damage_tooth((*i).x + 1, (*i).y)) tooth_count++;
     }
   }
 
-  if (count > 0) {
+  if (candy_count > 0) {
     for (int iy = 15; iy >= 0; --iy) {
       for (int ix = 0; ix < 8; ++ix) {
         if (piece(ix, iy)) release(ix, iy);
       }
     }
+    if (tooth_count > 0) {
+      audio.play_sample("break");
+    } else {
+      audio.play_sample("clear");
+    }
   }
 
-  return count;
+  return candy_count + tooth_count;
 }
 
 bool GameGrid::remove_piece(int x, int y) {
