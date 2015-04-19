@@ -6,7 +6,8 @@ OBJECTS=$(patsubst %.cc,$(BUILDDIR)/%.o,$(SOURCES))
 APP_NAME=DrDario
 
 CC=clang++
-CFLAGS=-g -Wall -Wextra --std=c++03
+#CFLAGS=-g -Wall -Wextra --std=c++03
+CFLAGS=-g --std=c++03
 
 ifeq ($(UNAME), Linux)
 	LDLIBS=`sdl2-config --cflags --libs` -lSDL2_mixer
