@@ -32,6 +32,8 @@ void Game::loop() {
   bool running = true;
   unsigned int last_update = SDL_GetTicks();
 
+  audio.play_music("dario");
+
   current_screen = new MainScreen(graphics);
 
   while (running) {

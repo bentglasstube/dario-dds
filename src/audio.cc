@@ -7,20 +7,30 @@ Audio::Audio() {
 
 Audio::~Audio() {
   Mix_HaltChannel(-1);
+  Mix_HaltMusic();
 
   for (ChunkMap::iterator i = chunks.begin(); i != chunks.end(); ++i) {
     Mix_FreeChunk(i->second);
+  }
+
+  for (MusicMap::iterator i = musics.begin(); i != musics.end(); ++i) {
+    Mix_FreeMusic(i->second);
   }
 
   Mix_CloseAudio();
 }
 
 void Audio::play_sample(std::string name) {
-  Mix_Chunk* chunk = load_clip(name);
+  Mix_Chunk* chunk = load_chunk(name);
   Mix_PlayChannel(-1, chunk, 0);
 }
 
-Mix_Chunk* Audio::load_clip(std::string file) {
+void Audio::play_music(std::string name) {
+  Mix_Music* music = load_music(name);
+  Mix_PlayMusic(music, -1);
+}
+
+Mix_Chunk* Audio::load_chunk(std::string file) {
   const std::string path("content/" + file + ".wav");
   if (chunks.count(path) == 0) {
     Mix_Chunk* chunk = Mix_LoadWAV(path.c_str());
@@ -28,4 +38,14 @@ Mix_Chunk* Audio::load_clip(std::string file) {
   }
 
   return chunks[path];
+}
+
+Mix_Music* Audio::load_music(std::string file) {
+  const std::string path("content/" + file + ".ogg");
+  if (musics.count(path) == 0) {
+    Mix_Music* music = Mix_LoadMUS(path.c_str());
+    musics[path] = music;
+  }
+
+  return musics[path];
 }
