@@ -119,6 +119,7 @@ void GameGrid::draw(Graphics& graphics, unsigned int x, unsigned int y) {
   }
 
   if (active_piece) active_piece->draw(graphics, x, y);
+  if (next_piece)  next_piece->draw(graphics, x + 160, y);
 
   for (std::list<boost::shared_ptr<CandyBlock> >::iterator i=falling_pieces.begin(); i != falling_pieces.end(); ++i) {
     (*i)->draw(graphics, x, y);
@@ -143,18 +144,23 @@ unsigned int GameGrid::drop_threshold() {
   return _drop || !active_piece ? 100 : 10000 / drop_speed;
 }
 
-bool GameGrid::spawn_candy(Graphics& graphics) {
+CandyBlock* GameGrid::generate_candy(Graphics& graphics) {
   CandyBlock::Shape shape;
   int picker = rand() % 100;
-
-  // stop fast drop for new pieces
-  _drop = false;
 
   if (picker < 50)      { shape = CandyBlock::TWO;   }
   else if (picker < 85) { shape = CandyBlock::THREE; }
   else                  { shape = CandyBlock::FOUR;  }
 
-  active_piece.reset(new CandyBlock(graphics, shape, 3, 0));
+  return new CandyBlock(graphics, shape, 3, 0);
+}
+
+
+bool GameGrid::spawn_candy(Graphics& graphics) {
+  if (!next_piece) next_piece.reset(generate_candy(graphics));
+
+  active_piece = next_piece;
+  next_piece.reset(generate_candy(graphics));
 
   for (int i = 0; i < 3; ++i) {
     if (!collision(active_piece)) return true;

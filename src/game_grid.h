@@ -40,6 +40,7 @@ class GameGrid {
     boost::shared_ptr<Tooth> tooth_piece(int x, int y);
 
     unsigned int drop_threshold();
+    CandyBlock* generate_candy(Graphics& graphics);
     bool spawn_candy(Graphics& graphics);
     bool collision(boost::shared_ptr<CandyBlock> block);
     void release(int x, int y);
@@ -51,7 +52,7 @@ class GameGrid {
 
     boost::shared_ptr<GridPiece> pieces[16][8];
     unsigned int move_counter, drop_counter, drop_speed;
-    boost::shared_ptr<CandyBlock> active_piece;
+    boost::shared_ptr<CandyBlock> active_piece, next_piece;
     int _move, _rotate;
     bool _drop;
     std::list<boost::shared_ptr<CandyBlock> > falling_pieces;

@@ -98,7 +98,9 @@ void MainScreen::draw(Graphics& graphics) {
 
     case PLAYING:
 
-      break;    // nothing to do
+      text->draw(graphics, 464, 160, "Next");
+
+      break;
 
   }
 }
