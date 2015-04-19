@@ -8,12 +8,9 @@ class Text : public Sprite {
 
   public:
 
-    Text(Graphics& graphics, std::string text);
+    Text(Graphics& graphics);
 
-    void draw(Graphics& graphics, unsigned int x, unsigned int y);
+    void draw(Graphics& graphics, unsigned int x, unsigned int y, std::string text, bool centered=false);
 
-  private:
-
-    std::string text;
 };
 

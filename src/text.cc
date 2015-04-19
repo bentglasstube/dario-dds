@@ -1,8 +1,10 @@
 #include "text.h"
 
-Text::Text(Graphics &graphics, std::string text) : Sprite(graphics, "text", 0, 0, 8, 16), text(text) {}
+Text::Text(Graphics &graphics) : Sprite(graphics, "text", 0, 0, 8, 16) {}
 
-void Text::draw(Graphics& graphics, unsigned int x, unsigned int y) {
+void Text::draw(Graphics& graphics, unsigned int x, unsigned int y, std::string text, bool centered) {
+  if (centered) x -= 4 * text.length();
+
   for (std::string::iterator i = text.begin(); i != text.end(); ++i) {
     int n = 27;
     if ((*i) >= 'A' && (*i) <= 'Z') {

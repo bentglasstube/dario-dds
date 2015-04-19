@@ -11,6 +11,8 @@ void MainScreen::init(Audio& audio, Graphics& graphics) {
   game_grid.generate(graphics);
 
   state = PLAYING;
+
+  text.reset(new Text(graphics));
 }
 
 bool MainScreen::update(Input& input, Audio& audio, Graphics& graphics, unsigned int elapsed) {
@@ -77,18 +79,22 @@ void MainScreen::draw(Graphics& graphics) {
 
     case PAUSED:
 
-      Text(graphics, "PAUSE").draw(graphics, 60, 136);
+      text->draw(graphics, 320, 136, "PAUSE", true);
       break;
 
     case GAME_OVER:
 
-      Text(graphics, "GAME OVER").draw(graphics, 44, 136);
+      text->draw(graphics, 320, 136, "GAME OVER", true);
       break;
 
     case VICTORY:
 
-      Text(graphics, "YOU WIN").draw(graphics, 52, 136);
+      text->draw(graphics, 320, 136, "YOU WIN", true);
       break;
+
+    case PLAYING:
+
+      break;    // nothing to do
 
   }
 }

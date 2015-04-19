@@ -10,7 +10,7 @@ void TitleScreen::init(Audio& audio, Graphics& graphics) {
   audio.play_music("dario");
   counter = 0;
   backdrop.reset(new Backdrop(graphics, "title"));
-  text.reset(new Text(graphics, "Press any key"));
+  text.reset(new Text(graphics));
 }
 
 bool TitleScreen::update(Input& input, Audio& audio, Graphics& graphics, unsigned int elapsed) {
@@ -23,7 +23,7 @@ bool TitleScreen::update(Input& input, Audio& audio, Graphics& graphics, unsigne
 
 void TitleScreen::draw(Graphics& graphics) {
   backdrop->draw(graphics);
-  if (counter < 500) text->draw(graphics, 268, 392);
+  if (counter < 500) text->draw(graphics, 320, 392, "Press any key", true);
 }
 
 Screen* TitleScreen::next_screen() { return new MainScreen(); }
