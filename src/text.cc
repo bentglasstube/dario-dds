@@ -6,13 +6,19 @@ void Text::draw(Graphics& graphics, unsigned int x, unsigned int y, std::string 
   if (centered) x -= 4 * text.length();
 
   for (std::string::iterator i = text.begin(); i != text.end(); ++i) {
-    int n = 27;
+    int n = 29;
     if ((*i) >= 'A' && (*i) <= 'Z') {
       n = (*i) - 'A';
     } else if ((*i) >= 'a' && (*i) <= 'z') {
       n = (*i) - 'a';
     } else if ((*i) >= '0' && (*i) <= '9') {
       n = (*i) - '0' + 30;
+    } else if ((*i) == '.') {
+      n = 26;
+    } else if ((*i) == '!') {
+      n = 27;
+    } else if ((*i) == '?') {
+      n = 28;
     }
 
     rect.x = 8 * (n % 10);
