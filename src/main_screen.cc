@@ -4,14 +4,16 @@
 #include "input.h"
 #include "text.h"
 
-MainScreen::MainScreen(Graphics& graphics) : game_grid(GameGrid::EASY), state(PLAYING) {
+void MainScreen::init(Audio& audio, Graphics& graphics) {
+  audio.play_music("rootcanal");
+
+  game_grid = GameGrid();
   game_grid.generate(graphics);
+
+  state = PLAYING;
 }
 
-bool MainScreen::process_input(Audio& audio, Input& input) {
-  if (!Screen::process_input(audio, input)) {
-    return false;
-  }
+bool MainScreen::update(Input& input, Audio& audio, Graphics& graphics, unsigned int elapsed) {
 
   if (input.key_pressed(SDLK_ESCAPE) || input.key_pressed(SDLK_BACKQUOTE)) {
     return false;
@@ -47,20 +49,7 @@ bool MainScreen::process_input(Audio& audio, Input& input) {
       game_grid.drop(false);
     }
 
-  } else {
-
-    if (input.key_pressed(SDLK_r)) state = RESTARTING;
-
-  }
-
-  return true;
-}
-
-bool MainScreen::update(Audio& audio, Graphics& graphics, unsigned int elapsed) {
-  if (state == PLAYING) {
-    int result = game_grid.update(audio, graphics, elapsed);
-
-    switch (result) {
+    switch (game_grid.update(audio, graphics, elapsed)) {
       case -1:
         state = GAME_OVER;
         break;
@@ -70,11 +59,12 @@ bool MainScreen::update(Audio& audio, Graphics& graphics, unsigned int elapsed) 
         break;
     }
 
-  } else if (state == RESTARTING) {
-    game_grid = GameGrid(GameGrid::EASY);
-    game_grid.generate(graphics);
+  } else if (input.key_pressed(SDLK_r)) {
 
+    game_grid = GameGrid();
+    game_grid.generate(graphics);
     state = PLAYING;
+
   }
 
   return true;
@@ -82,14 +72,28 @@ bool MainScreen::update(Audio& audio, Graphics& graphics, unsigned int elapsed) 
 
 void MainScreen::draw(Graphics& graphics) {
   game_grid.draw(graphics, 16, 16);
-  if (state == PAUSED) {
-    Text text(graphics, "PAUSE");
-    text.draw(graphics, 60, 136);
-  } else if (state == GAME_OVER) {
-    Text text(graphics, "GAME OVER");
-    text.draw(graphics, 44, 136);
-  } else if (state == VICTORY) {
-    Text text(graphics, "YOU WIN");
-    text.draw(graphics, 52, 136);
+
+  switch (state) {
+
+    case PAUSED:
+
+      Text(graphics, "PAUSE").draw(graphics, 60, 136);
+      break;
+
+    case GAME_OVER:
+
+      Text(graphics, "GAME OVER").draw(graphics, 44, 136);
+      break;
+
+    case VICTORY:
+
+      Text(graphics, "YOU WIN").draw(graphics, 52, 136);
+      break;
+
   }
+}
+
+Screen * MainScreen::next_screen() {
+  // Always exit
+  return NULL;
 }

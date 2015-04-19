@@ -13,6 +13,7 @@ class Input {
     void key_down(const SDL_Event& event);
     void key_up(const SDL_Event& event);
 
+    bool any_key_pressed();
     bool key_pressed(SDL_Keycode key);
     bool key_released(SDL_Keycode key);
     bool key_held(SDL_Keycode key);

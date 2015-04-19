@@ -1,9 +1,13 @@
 #pragma once
 
-#include "game_grid.h"
+#include <boost/scoped_ptr.hpp>
+
+#include "text.h"
+#include "backdrop.h"
 #include "screen.h"
 
-class MainScreen : public Screen {
+class TitleScreen : public Screen {
+
   public:
 
     void init(Audio& audio, Graphics& graphics);
@@ -13,9 +17,8 @@ class MainScreen : public Screen {
 
   private:
 
-    enum State { PLAYING, PAUSED, GAME_OVER, VICTORY };
-
-    GameGrid game_grid;
-    State state;
+    unsigned int counter;
+    boost::scoped_ptr<Backdrop> backdrop;
+    boost::scoped_ptr<Text> text;
 
 };

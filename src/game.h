@@ -1,5 +1,7 @@
 #pragma once
 
+#include <boost/shared_ptr.hpp>
+
 class Screen;
 class Graphics;
 
@@ -13,6 +15,5 @@ class Game {
 
   private:
 
-    void draw(Graphics& graphics);
-    Screen* current_screen;
+    boost::shared_ptr<Screen> screen;
 };

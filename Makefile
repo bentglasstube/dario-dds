@@ -30,7 +30,7 @@ $(BUILDDIR)/%.o: %.cc
 	$(CC) -c $(CFLAGS) -o $@ $<
 
 clean:
-	rm -rf $(BUILDDIR) ld32.{glc,mkv} $(APP_NAME).app
+	rm -rf $(BUILDDIR) ld32.{glc,mkv} $(APP_NAME).app dario.tgz
 
 run: $(EXECUTABLE)
 	./$(EXECUTABLE)

@@ -7,10 +7,10 @@
 #include "graphics.h"
 #include "tooth.h"
 
-GameGrid::GameGrid(GameGrid::Difficulty difficulty) :
+GameGrid::GameGrid() :
   move_counter(0), drop_counter(0), drop_speed(10),
   _move(0), _rotate(0), _drop(false),
-  difficulty(difficulty) {}
+  difficulty(GameGrid::EASY) {}
 
 void GameGrid::generate(Graphics& graphics) {
   for (int iy = 13; iy < 16; ++iy) {

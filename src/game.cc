@@ -7,7 +7,7 @@
 #include "audio.h"
 #include "graphics.h"
 #include "input.h"
-#include "main_screen.h"
+#include "title_screen.h"
 #include "screen.h"
 
 namespace {
@@ -29,33 +29,34 @@ void Game::loop() {
   Audio audio;
   Input input;
 
-  bool running = true;
   unsigned int last_update = SDL_GetTicks();
 
-  audio.play_music("dario");
+  screen.reset(new TitleScreen());
+  screen->init(audio, graphics);
 
-  current_screen = new MainScreen(graphics);
-
-  while (running) {
+  while (true) {
     const unsigned int start = SDL_GetTicks();
 
-    // TODO improve this process so that a screen can return a code to move on
-    // to a different screen
-    bool process = current_screen->process_input(audio, input);
-    bool update = current_screen->update(audio, graphics, SDL_GetTicks() - last_update);
-    running = process && update;
+    if (!screen->process_input(input)) return;
+
+    if (screen->update(input, audio, graphics, SDL_GetTicks() - last_update)) {
+
+      graphics.clear();
+      screen->draw(graphics);
+      // TODO draw FPS
+      graphics.flip();
+
+    } else {
+
+      screen.reset(screen->next_screen());
+      if (!screen) return;
+      screen->init(audio, graphics);
+
+    }
 
     last_update = SDL_GetTicks();
-    draw(graphics);
 
     const unsigned int elapsed = SDL_GetTicks() - start;
     if (MSPF > elapsed) SDL_Delay(MSPF - elapsed);
   }
-}
-
-void Game::draw(Graphics& graphics) {
-  graphics.clear();
-  current_screen->draw(graphics);
-  // TODO draw FPS
-  graphics.flip();
 }

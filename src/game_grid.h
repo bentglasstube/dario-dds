@@ -17,7 +17,7 @@ class GameGrid {
     enum Direction { UP, DOWN, LEFT, RIGHT };
     enum Difficulty { EASY, HARD };
 
-    GameGrid(Difficulty difficulty);
+    GameGrid();
 
     void generate(Graphics& graphics);
     int update(Audio& audio, Graphics& graphics, unsigned int elapsed);

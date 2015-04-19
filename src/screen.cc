@@ -1,12 +1,8 @@
 #include "screen.h"
 
-#include "graphics.h"
 #include "input.h"
 
-Screen::Screen() {}
-Screen::~Screen() {}
-
-bool Screen::process_input(Audio& audio, Input& input) {
+bool Screen::process_input(Input& input) {
   SDL_Event event;
 
   input.clear();
