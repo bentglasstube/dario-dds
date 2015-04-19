@@ -36,4 +36,11 @@ ld32.glc: $(EXECUTABLE)
 debug: $(EXECUTABLE)
 	gdb $(EXECUTABLE)
 
-.PHONY: all clean run video debug
+package: $(EXECUTABLE)
+	mkdir dario
+	cp $(EXECUTABLE) README.md dario
+	cp -R content dario/content
+	tar zcf dario.tgz dario
+	rm -rf dario
+
+.PHONY: all clean run video debug package
