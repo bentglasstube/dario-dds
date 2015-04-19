@@ -1,20 +1,28 @@
 #include "candy_block.h"
 
-#define RAND_COLOR (static_cast<Candy::Color>(rand() % 4))
-
 CandyBlock::CandyBlock(Graphics& graphics, CandyBlock::Shape shape, int x, int y) : x(x), y(y) {
-  pieces[0][0].reset(new Candy(graphics, 1, RAND_COLOR));
-  pieces[1][0].reset(new Candy(graphics, 8, RAND_COLOR));
+  Candy::Color a = static_cast<Candy::Color>(rand() % 4);
+  Candy::Color b = static_cast<Candy::Color>(rand() % 4);
 
-  if (shape == THREE || shape == FOUR) {
-    pieces[0][1].reset(new Candy(graphics, 4, RAND_COLOR));
-    pieces[0][0]->set_connections(3);
+  switch (shape) {
 
-    if (shape == FOUR) {
-      pieces[1][1].reset(new Candy(graphics, 12, RAND_COLOR));
-      pieces[1][0]->set_connections(10);
-      pieces[0][1]->set_connections(5);
-    }
+    case TWO:
+      pieces[0][0].reset(new Candy(graphics, 1, a));
+      pieces[1][0].reset(new Candy(graphics, 8, b));
+      break;
+
+    case THREE:
+      pieces[0][0].reset(new Candy(graphics, 3, rand() % 2 == 0 ? a : b));
+      pieces[1][0].reset(new Candy(graphics, 8, a));
+      pieces[0][1].reset(new Candy(graphics, 4, b));
+      break;
+
+    case FOUR:
+      pieces[0][0].reset(new Candy(graphics,  3, a));
+      pieces[1][0].reset(new Candy(graphics, 10, a));
+      pieces[0][1].reset(new Candy(graphics,  5, b));
+      pieces[1][1].reset(new Candy(graphics, 12, b));
+      break;
   }
 
   int spin = rand() % 4;
