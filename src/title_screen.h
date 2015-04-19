@@ -2,7 +2,7 @@
 
 #include <boost/scoped_ptr.hpp>
 
-#include "text.h"
+#include "menu.h"
 #include "backdrop.h"
 #include "screen.h"
 
@@ -19,7 +19,6 @@ class TitleScreen : public Screen {
 
     unsigned int choice;
     boost::scoped_ptr<Backdrop> backdrop;
-    boost::scoped_ptr<Text> text;
-    boost::scoped_ptr<Sprite> tooth;
+    boost::scoped_ptr<Menu> menu;
 
 };

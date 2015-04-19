@@ -1,19 +1,19 @@
 #include "title_screen.h"
 
+#include <boost/assign/list_of.hpp>
+
 #include "audio.h"
 #include "graphics.h"
 #include "input.h"
 #include "main_screen.h"
 #include "settings.h"
-#include "text.h"
 
 void TitleScreen::init(Audio& audio, Graphics& graphics) {
   audio.play_music("dario");
 
   choice = 0;
   backdrop.reset(new Backdrop(graphics, "title"));
-  text.reset(new Text(graphics));
-  tooth.reset(new Sprite(graphics, "ui", 0, 0, 16, 16));
+  menu.reset(new Menu(graphics, boost::assign::list_of("Play")("Settings")("Quit")));
 }
 
 bool TitleScreen::update(Input& input, Audio& audio, Graphics& graphics, unsigned int elapsed) {
@@ -39,13 +39,7 @@ bool TitleScreen::update(Input& input, Audio& audio, Graphics& graphics, unsigne
 
 void TitleScreen::draw(Graphics& graphics) {
   backdrop->draw(graphics);
-
-  text->draw(graphics, 320, 400, "Play Game", true);
-  text->draw(graphics, 320, 420, "Settings", true);
-  text->draw(graphics, 320, 440, "Quit", true);
-
-  tooth->draw(graphics, 256, 400 + choice * 20);
-  tooth->draw(graphics, 368, 400 + choice * 20);
+  menu->draw(graphics, 400, choice);
 }
 
 Screen* TitleScreen::next_screen() {
