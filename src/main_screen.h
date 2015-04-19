@@ -2,6 +2,7 @@
 
 #include <boost/scoped_ptr.hpp>
 
+#include "backdrop.h"
 #include "box.h"
 #include "game_grid.h"
 #include "screen.h"
@@ -21,6 +22,8 @@ class MainScreen : public Screen {
 
     GameGrid game_grid;
     State state;
+
     boost::scoped_ptr<Text> text;
     boost::scoped_ptr<Box> box;
+    boost::scoped_ptr<Backdrop> backdrop;
 };

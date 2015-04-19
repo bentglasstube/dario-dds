@@ -14,6 +14,7 @@ void MainScreen::init(Audio& audio, Graphics& graphics) {
 
   text.reset(new Text(graphics));
   box.reset(new Box(graphics));
+  backdrop.reset(new Backdrop(graphics, "game"));
 }
 
 bool MainScreen::update(Input& input, Audio& audio, Graphics& graphics, unsigned int elapsed) {
@@ -74,9 +75,9 @@ bool MainScreen::update(Input& input, Audio& audio, Graphics& graphics, unsigned
 }
 
 void MainScreen::draw(Graphics& graphics) {
-  box->draw(graphics, 240, 96, 160, 288);
+  backdrop->draw(graphics);
 
-  game_grid.draw(graphics, 256, 112);
+  game_grid.draw(graphics, 256, 176);
 
   switch (state) {
 
