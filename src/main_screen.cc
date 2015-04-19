@@ -3,6 +3,7 @@
 #include "audio.h"
 #include "input.h"
 #include "text.h"
+#include "title_screen.h"
 
 void MainScreen::init(Audio& audio, Graphics& graphics) {
   audio.play_music("rootcanal");
@@ -106,7 +107,4 @@ void MainScreen::draw(Graphics& graphics) {
   }
 }
 
-Screen * MainScreen::next_screen() {
-  // Always exit
-  return NULL;
-}
+Screen * MainScreen::next_screen() { return new TitleScreen(); }
