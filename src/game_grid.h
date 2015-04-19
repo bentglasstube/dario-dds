@@ -15,7 +15,6 @@ class GameGrid {
   public:
 
     enum Direction { UP, DOWN, LEFT, RIGHT };
-    enum Difficulty { EASY, HARD };
 
     GameGrid();
 
@@ -24,10 +23,14 @@ class GameGrid {
     void draw(Graphics& graphics, unsigned int x, unsigned int y);
     void draw_next_piece(Graphics& graphics, unsigned int x, unsigned int y) { next_piece->draw(graphics, x - 48, y); }
 
+    bool winner();
+    bool loser();
+
     void move(int dir) { _move = dir; }
     void rotate(int dir) { _rotate = dir; }
     void drop(bool y) { _drop = y; }
     unsigned int get_level() { return level; }
+    void level_up() { level++; }
 
   private:
 
@@ -43,14 +46,13 @@ class GameGrid {
 
     unsigned int drop_threshold();
     CandyBlock* generate_candy(Graphics& graphics);
-    bool spawn_candy(Graphics& graphics);
+    void spawn_candy(Graphics& graphics);
     bool collision(boost::shared_ptr<CandyBlock> block);
     void release(int x, int y);
     void commit(boost::shared_ptr<CandyBlock> block);
     int process_matches(Audio& audio);
     bool remove_piece(int x, int y);
     bool damage_tooth(int x, int y);
-    bool winner();
 
     boost::shared_ptr<GridPiece> pieces[16][8];
     unsigned int move_counter, drop_counter, drop_speed;
@@ -58,6 +60,5 @@ class GameGrid {
     int _move, _rotate;
     bool _drop;
     std::list<boost::shared_ptr<CandyBlock> > falling_pieces;
-    Difficulty difficulty;
     unsigned int level;
 };

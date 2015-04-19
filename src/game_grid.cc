@@ -8,9 +8,8 @@
 #include "tooth.h"
 
 GameGrid::GameGrid() :
-  move_counter(0), drop_counter(0), drop_speed(10),
-  _move(0), _rotate(0), _drop(false),
-  difficulty(GameGrid::HARD), level(1) {}
+  move_counter(0), drop_counter(0),
+  _move(0), _rotate(0), _drop(false), level(1) {}
 
 void GameGrid::generate(Graphics& graphics, unsigned int starting_level) {
   level = starting_level;
@@ -48,14 +47,14 @@ void GameGrid::generate(Graphics& graphics, unsigned int starting_level) {
 
   // TODO spawn some candy on the teeth (difficulty scaled)
 
-  if (!spawn_candy(graphics)) {
-    fprintf(stderr, "Couldn't place initial candy, something went wrong\n");
-  }
+  spawn_candy(graphics);
 }
 
 int GameGrid::update(Audio& audio, Graphics& graphics, unsigned int elapsed) {
   drop_counter += elapsed;
   move_counter += elapsed;
+
+  if (winner() || loser()) return 0;
 
   if (active_piece && move_counter > 100) {
     move_counter = 0;
@@ -84,7 +83,8 @@ int GameGrid::update(Audio& audio, Graphics& graphics, unsigned int elapsed) {
     drop_counter = 0;
 
     if (falling_pieces.empty()) {
-      if (!active_piece) if (!spawn_candy(graphics)) return -1;
+      if (!active_piece) spawn_candy(graphics);
+      if (!active_piece) return 0;
 
       active_piece->fall();
       if (collision(active_piece)) {
@@ -108,8 +108,7 @@ int GameGrid::update(Audio& audio, Graphics& graphics, unsigned int elapsed) {
       }
     }
 
-    process_matches(audio);
-    if (winner()) return 1;
+    return process_matches(audio);
   }
 
   return 0;
@@ -129,6 +128,19 @@ void GameGrid::draw(Graphics& graphics, unsigned int x, unsigned int y) {
   }
 }
 
+bool GameGrid::winner() {
+  for (int iy = 0; iy < 16; ++iy) {
+    for (int ix = 0; ix < 8; ++ix) {
+      if (tooth_piece(ix, iy)) return false;
+    }
+  }
+  return true;
+}
+
+bool GameGrid::loser() {
+  return piece(3, 0) || piece(4, 0);
+}
+
 boost::shared_ptr<GridPiece> GameGrid::piece(int x, int y) {
   if (x < 0 || x >= 8) return boost::shared_ptr<GridPiece>();
   if (y < 0 || y >= 16) return boost::shared_ptr<GridPiece>();
@@ -144,7 +156,8 @@ boost::shared_ptr<Tooth> GameGrid::tooth_piece(int x, int y) {
 }
 
 unsigned int GameGrid::drop_threshold() {
-  return _drop || !active_piece ? 100 : 10000 / drop_speed;
+  if (_drop || !active_piece) return 50;
+  return level > 25 ? 50 : 2000 / level;
 }
 
 CandyBlock* GameGrid::generate_candy(Graphics& graphics) {
@@ -159,20 +172,18 @@ CandyBlock* GameGrid::generate_candy(Graphics& graphics) {
 }
 
 
-bool GameGrid::spawn_candy(Graphics& graphics) {
+void GameGrid::spawn_candy(Graphics& graphics) {
   if (!next_piece) next_piece.reset(generate_candy(graphics));
 
   active_piece = next_piece;
   next_piece.reset(generate_candy(graphics));
 
   for (int i = 0; i < 3; ++i) {
-    if (!collision(active_piece)) return true;
+    if (!collision(active_piece)) return;
     active_piece->rotate();
   }
 
   active_piece.reset();
-
-  return false;
 }
 
 bool GameGrid::collision(boost::shared_ptr<CandyBlock> block) {
@@ -327,7 +338,7 @@ int GameGrid::process_matches(Audio& audio) {
     }
   }
 
-  return candy_count + tooth_count;
+  return 10 * candy_count + 25 * tooth_count;
 }
 
 bool GameGrid::remove_piece(int x, int y) {
@@ -358,27 +369,4 @@ bool GameGrid::damage_tooth(int x, int y) {
   return false;
 }
 
-bool GameGrid::winner() {
 
-  switch (difficulty) {
-    case HARD:
-      // Destroy all the teeth
-      for (int iy = 0; iy < 16; ++iy) {
-        for (int ix = 0; ix < 8; ++ix) {
-          if (tooth_piece(ix, iy)) return false;
-        }
-      }
-      return true;
-
-    case EASY:
-      // Get to the gums only
-      for (int ix = 0; ix < 8; ++ix) {
-        if (!tooth_piece(ix, 15)) return true;
-      }
-      return false;
-
-    default:
-      // Endless ??
-      return false;
-  }
-}

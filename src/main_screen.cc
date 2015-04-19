@@ -1,6 +1,6 @@
 #include "main_screen.h"
 
-#include <boost/lexical_cast.hpp>
+#include <boost/format.hpp>
 
 #include "audio.h"
 #include "input.h"
@@ -14,6 +14,7 @@ void MainScreen::init(Audio& audio, Graphics& graphics) {
   game_grid.generate(graphics, 1);
 
   state = PLAYING;
+  score = 0;
 
   text.reset(new Text(graphics));
   box.reset(new Box(graphics));
@@ -56,20 +57,21 @@ bool MainScreen::update(Input& input, Audio& audio, Graphics& graphics, unsigned
       game_grid.drop(false);
     }
 
-    switch (game_grid.update(audio, graphics, elapsed)) {
-      case -1:
-        state = GAME_OVER;
-        break;
-
-      case 1:
-        state = VICTORY;
-        break;
+    score += game_grid.update(audio, graphics, elapsed);
+    int level = 1 + score / 1000;
+    if (level > game_grid.get_level()) {
+      audio.play_sample("levelup");
+      game_grid.level_up();
     }
 
+    if (game_grid.loser()) state = GAME_OVER;
+    if (game_grid.winner()) state = VICTORY;
+
   } else if (input.key_pressed(SDLK_r)) {
+    if (state != VICTORY) score = 0;
 
     game_grid = GameGrid();
-    game_grid.generate(graphics, 1);
+    game_grid.generate(graphics, 1 + score / 1000);
     state = PLAYING;
 
   }
@@ -82,11 +84,14 @@ void MainScreen::draw(Graphics& graphics) {
 
   game_grid.draw(graphics, 256, 176);
 
-  text->draw(graphics, 512, 128, "Next");
-  game_grid.draw_next_piece(graphics, 512, 144);
+  text->draw(graphics, 512, 64, "Score");
+  text->draw(graphics, 512, 80, boost::str(boost::format("% 6u") % score));
 
   text->draw(graphics, 512, 112, "Level");
-  text->draw(graphics, 560, 112, boost::lexical_cast<std::string>(game_grid.get_level()));
+  text->draw(graphics, 560, 112, boost::str(boost::format("% 2u") % game_grid.get_level()));
+
+  text->draw(graphics, 512, 128, "Next");
+  game_grid.draw_next_piece(graphics, 576, 128);
 
   switch (state) {
 
