@@ -2,3 +2,5 @@ build/
 *.glc
 *.mkv
 dario.tgz
+.DS_Store
+DrDario.app/

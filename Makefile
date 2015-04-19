@@ -1,11 +1,21 @@
+UNAME=$(shell uname)
+
 SOURCES=$(wildcard src/*.cc)
 BUILDDIR=build
 OBJECTS=$(patsubst %.cc,$(BUILDDIR)/%.o,$(SOURCES))
+APP_NAME=DrDario
 
 CC=clang++
 CFLAGS=-g -Wall -Wextra --std=c++03
-LDLIBS=`sdl2-config --cflags --libs` -lSDL2_mixer
-LDFLAGS=
+
+ifeq ($(UNAME), Linux)
+	LDLIBS=`sdl2-config --cflags --libs` -lSDL2_mixer
+	PACKAGE=dario.tgz
+endif
+ifeq ($(UNAME), Darwin)
+	LDLIBS=-framework SDL2 -framework SDL2_mixer -rpath @executable_path/../Frameworks
+	PACKAGE=$(APP_NAME).app/Contents/MacOS/game
+endif
 
 EXECUTABLE=$(BUILDDIR)/game
 
@@ -20,7 +30,7 @@ $(BUILDDIR)/%.o: %.cc
 	$(CC) -c $(CFLAGS) -o $@ $<
 
 clean:
-	rm -rf $(BUILDDIR) ld32.{glc,mkv}
+	rm -rf $(BUILDDIR) ld32.{glc,mkv} $(APP_NAME).app
 
 run: $(EXECUTABLE)
 	./$(EXECUTABLE)
@@ -36,11 +46,23 @@ ld32.glc: $(EXECUTABLE)
 debug: $(EXECUTABLE)
 	gdb $(EXECUTABLE)
 
-package: $(EXECUTABLE)
+package: $(PACKAGE)
+
+dario.tgz: $(EXECUTABLE)
 	mkdir dario
 	cp $(EXECUTABLE) README.md dario
 	cp -R content dario/content
 	tar zcf dario.tgz dario
 	rm -rf dario
+
+$(APP_NAME).app/Contents/MacOS/game: $(EXECUTABLE)
+	rm -rf $(APP_NAME).app
+	mkdir -p $(APP_NAME).app/Contents/{MacOS,Frameworks}
+	cp $(EXECUTABLE) $(APP_NAME).app/Contents/MacOS/game
+	cp launcher $(APP_NAME).app/Contents/MacOS/launcher
+	cp -R content $(APP_NAME).app/Contents/MacOS/content
+	cp Info.plist $(APP_NAME).app/Contents/Info.plist
+	cp -R /Library/Frameworks/SDL2.framework $(APP_NAME).app/Contents/Frameworks/SDL2.framework
+	cp -R /Library/Frameworks/SDL2_mixer.framework $(APP_NAME).app/Contents/Frameworks/SDL2_mixer.framework
 
 .PHONY: all clean run video debug package
