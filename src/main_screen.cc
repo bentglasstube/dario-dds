@@ -1,5 +1,7 @@
 #include "main_screen.h"
 
+#include <boost/lexical_cast.hpp>
+
 #include "audio.h"
 #include "input.h"
 #include "text.h"
@@ -9,7 +11,7 @@ void MainScreen::init(Audio& audio, Graphics& graphics) {
   audio.play_music("rootcanal");
 
   game_grid = GameGrid();
-  game_grid.generate(graphics);
+  game_grid.generate(graphics, 1);
 
   state = PLAYING;
 
@@ -67,7 +69,7 @@ bool MainScreen::update(Input& input, Audio& audio, Graphics& graphics, unsigned
   } else if (input.key_pressed(SDLK_r)) {
 
     game_grid = GameGrid();
-    game_grid.generate(graphics);
+    game_grid.generate(graphics, 1);
     state = PLAYING;
 
   }
@@ -78,26 +80,29 @@ bool MainScreen::update(Input& input, Audio& audio, Graphics& graphics, unsigned
 void MainScreen::draw(Graphics& graphics) {
   backdrop->draw(graphics);
 
-  text->draw(graphics, 512, 128, "Next");
-
   game_grid.draw(graphics, 256, 176);
+
+  text->draw(graphics, 512, 128, "Next");
   game_grid.draw_next_piece(graphics, 512, 144);
+
+  text->draw(graphics, 512, 112, "Level");
+  text->draw(graphics, 560, 112, boost::lexical_cast<std::string>(game_grid.get_level()));
 
   switch (state) {
 
     case PAUSED:
 
-      text->draw(graphics, 320, 232, "Paused", true);
+      text->draw(graphics, 320, 256, "Paused", true);
       break;
 
     case GAME_OVER:
 
-      text->draw(graphics, 320, 232, "Game Over", true);
+      text->draw(graphics, 320, 256, "Game Over", true);
       break;
 
     case VICTORY:
 
-      text->draw(graphics, 320, 232, "You Win!", true);
+      text->draw(graphics, 320, 256, "You Win!", true);
       break;
 
     case PLAYING:

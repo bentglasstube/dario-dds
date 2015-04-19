@@ -19,7 +19,7 @@ class GameGrid {
 
     GameGrid();
 
-    void generate(Graphics& graphics);
+    void generate(Graphics& graphics, unsigned int starting_level);
     int update(Audio& audio, Graphics& graphics, unsigned int elapsed);
     void draw(Graphics& graphics, unsigned int x, unsigned int y);
     void draw_next_piece(Graphics& graphics, unsigned int x, unsigned int y) { next_piece->draw(graphics, x - 48, y); }
@@ -27,6 +27,7 @@ class GameGrid {
     void move(int dir) { _move = dir; }
     void rotate(int dir) { _rotate = dir; }
     void drop(bool y) { _drop = y; }
+    unsigned int get_level() { return level; }
 
   private:
 
@@ -58,4 +59,5 @@ class GameGrid {
     bool _drop;
     std::list<boost::shared_ptr<CandyBlock> > falling_pieces;
     Difficulty difficulty;
+    unsigned int level;
 };

@@ -10,9 +10,11 @@
 GameGrid::GameGrid() :
   move_counter(0), drop_counter(0), drop_speed(10),
   _move(0), _rotate(0), _drop(false),
-  difficulty(GameGrid::HARD) {}
+  difficulty(GameGrid::HARD), level(1) {}
 
-void GameGrid::generate(Graphics& graphics) {
+void GameGrid::generate(Graphics& graphics, unsigned int starting_level) {
+  level = starting_level;
+
   for (int iy = 13; iy < 16; ++iy) {
     for (int ix = 0; ix < 8; ++ix) {
       int connections = 15;
@@ -34,8 +36,7 @@ void GameGrid::generate(Graphics& graphics) {
     }
   }
 
-  // TODO scale auto-rotting with level
-  for (int i = 0; i < 10; ++i) {
+  for (int i = 0; i < (15 - level); ++i) {
     int x = rand() % 8;
     for (int y = 13; y < 16; ++y) {
       if (tooth_piece(x, y)) {
