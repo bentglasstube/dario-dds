@@ -11,7 +11,7 @@ class Settings : public Screen {
   public:
 
     void init(Audio& audio, Graphics& graphics);
-    bool update(Input& input, Audio& audio, Graphics& graphics);
+    bool update(Input& input, Audio& audio, Graphics& graphics, unsigned int elapsed);
     void draw(Graphics& graphics);
     Screen* next_screen();
 

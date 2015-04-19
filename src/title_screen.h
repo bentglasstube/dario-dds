@@ -17,8 +17,9 @@ class TitleScreen : public Screen {
 
   private:
 
-    unsigned int counter;
+    unsigned int choice;
     boost::scoped_ptr<Backdrop> backdrop;
     boost::scoped_ptr<Text> text;
+    boost::scoped_ptr<Sprite> tooth;
 
 };

@@ -73,23 +73,23 @@ bool MainScreen::update(Input& input, Audio& audio, Graphics& graphics, unsigned
 }
 
 void MainScreen::draw(Graphics& graphics) {
-  game_grid.draw(graphics, 16, 16);
+  game_grid.draw(graphics, 256, 112);
 
   switch (state) {
 
     case PAUSED:
 
-      text->draw(graphics, 320, 136, "PAUSE", true);
+      text->draw(graphics, 320, 232, "Paused", true);
       break;
 
     case GAME_OVER:
 
-      text->draw(graphics, 320, 136, "GAME OVER", true);
+      text->draw(graphics, 320, 232, "Game Over", true);
       break;
 
     case VICTORY:
 
-      text->draw(graphics, 320, 136, "YOU WIN", true);
+      text->draw(graphics, 320, 232, "You Win!", true);
       break;
 
     case PLAYING:
