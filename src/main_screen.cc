@@ -37,7 +37,7 @@ bool MainScreen::update(Input& input, Audio& audio, Graphics& graphics, unsigned
   if (state == PLAYING) {
     score += game_grid.update(input, audio, graphics, elapsed);
 
-    int level = 1 + score / POINTS_PER_LEVEL;
+    unsigned int level = 1 + score / POINTS_PER_LEVEL;
     if (level > game_grid.get_level()) {
       audio.play_sample("levelup");
       game_grid.level_up();
