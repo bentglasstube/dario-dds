@@ -11,6 +11,8 @@
 void GameGrid::generate(Graphics& graphics, unsigned int starting_level) {
   level = starting_level;
 
+  falling_pieces.clear();
+
   for (int iy = 0; iy < 16; ++iy) {
     for (int ix = 0; ix < 8; ++ix) {
 
