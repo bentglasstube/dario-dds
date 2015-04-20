@@ -11,8 +11,15 @@
 void GameGrid::generate(Graphics& graphics, unsigned int starting_level) {
   level = starting_level;
 
-  for (int iy = 13; iy < 16; ++iy) {
+
+  for (int iy = 0; iy < 16; ++iy) {
     for (int ix = 0; ix < 8; ++ix) {
+
+      if (iy < 13) {
+        pieces[iy][ix].reset();
+        continue;
+      }
+
       int connections = 15;
 
       switch (ix) {

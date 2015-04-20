@@ -30,8 +30,9 @@ void Box::draw(Graphics& graphics, unsigned int x, unsigned int y, unsigned int 
   // sides
   graphics.blit(texture, _rect(&source, 32,  0,  4, 16), _rect(&dest, x + 16,  y, w - 32, 16));
   graphics.blit(texture, _rect(&source, 32, 16,  4, 16), _rect(&dest, x + 16, ey, w - 32, 16));
-
   graphics.blit(texture, _rect(&source, 16, 16, 16,  4), _rect(&dest,  x, y + 16, 16, h - 32));
   graphics.blit(texture, _rect(&source, 32, 16, 16,  4), _rect(&dest, ex, y + 16, 16, h - 32));
 
+  // middle
+  graphics.blit(texture, _rect(&source, 32, 16,  4,  4), _rect(&dest, x + 16, y + 16, w - 32, h - 32));
 }
