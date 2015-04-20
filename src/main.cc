@@ -6,5 +6,7 @@ int main(int argc, char* argv[]) {
   Game game;
   game.loop();
 
+  fprintf(stderr, "");
+
   return 0;
 }
