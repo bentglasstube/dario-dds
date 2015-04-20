@@ -11,7 +11,6 @@
 void GameGrid::generate(Graphics& graphics, unsigned int starting_level) {
   level = starting_level;
 
-
   for (int iy = 0; iy < 16; ++iy) {
     for (int ix = 0; ix < 8; ++ix) {
 
@@ -39,17 +38,27 @@ void GameGrid::generate(Graphics& graphics, unsigned int starting_level) {
     }
   }
 
-  for (int i = 0; i < (15 - level); ++i) {
+  int count = 2 * (level < 10 ? 10 - level : level - 10);
+  if (count > 20) count = 20;
+
+  for (int i = 0; i < count; ++i) {
     int x = rand() % 8;
-    for (int y = 13; y < 16; ++y) {
-      if (tooth_piece(x, y)) {
-        damage_tooth(x, y);
-        break;
+    if (level < 10) {
+      for (int y = 13; y < 16; ++y) {
+        if (tooth_piece(x, y)) {
+          damage_tooth(x, y);
+          break;
+        }
+      }
+    } else {
+      for (int y = 12; y >= 0; --y) {
+        if (!piece(x, y)) {
+          pieces[y][x].reset(new Candy(graphics, 0, static_cast<Candy::Color>(rand() % 4)));
+          break;
+        }
       }
     }
   }
-
-  // TODO spawn some candy on the teeth (difficulty scaled)
 
   spawn_candy(graphics);
 }
@@ -171,7 +180,7 @@ boost::shared_ptr<Tooth> GameGrid::tooth_piece(int x, int y) {
 
 unsigned int GameGrid::drop_threshold(bool fast) {
   if (fast || !active_piece) return 50;
-  return level > 25 ? 50 : 2000 / level;
+  return level > 10 ? 150 : 1500 / level;
 }
 
 CandyBlock* GameGrid::generate_candy(Graphics& graphics) {
