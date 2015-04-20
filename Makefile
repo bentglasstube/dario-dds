@@ -66,4 +66,10 @@ $(APP_NAME).app/Contents/MacOS/game: $(EXECUTABLE)
 	cp -R /Library/Frameworks/SDL2.framework $(APP_NAME).app/Contents/Frameworks/SDL2.framework
 	cp -R /Library/Frameworks/SDL2_mixer.framework $(APP_NAME).app/Contents/Frameworks/SDL2_mixer.framework
 
-.PHONY: all clean run video debug package
+install: $(EXECUTABLE)
+	mkdir -p $(DESTDIR)/usr/share/dario
+	cp -r content $(DESTDIR)/usr/share/dario/
+	cp $(EXECUTABLE) $(DESTDIR)/usr/share/dario/dario
+	install -D -m755  runner $(DESTDIR)/usr/bin/dario
+
+.PHONY: all clean run video debug package install
