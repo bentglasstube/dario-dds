@@ -9,7 +9,7 @@ void Menu::draw(Graphics& graphics, unsigned int y, unsigned int choice) {
   int ty = y;
 
   for (std::list<std::string>::iterator i = options.begin(); i != options.end(); ++i) {
-    text->draw(graphics, 320, ty, (*i), true);
+    text->draw(graphics, 320, ty, (*i), Text::CENTER);
     ty += 16;
   }
 

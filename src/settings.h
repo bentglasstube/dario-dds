@@ -4,6 +4,7 @@
 
 #include "backdrop.h"
 #include "screen.h"
+#include "sprite.h"
 #include "text.h"
 
 class Settings : public Screen {
@@ -17,7 +18,14 @@ class Settings : public Screen {
 
   private:
 
+    void change(bool increase, Audio& audio);
+
     boost::scoped_ptr<Backdrop> backdrop;
     boost::scoped_ptr<Text> text;
+    boost::scoped_ptr<Sprite> tooth;
+    boost::scoped_ptr<Sprite> left;
+    boost::scoped_ptr<Sprite> right;
+
+    int choice, value[4], min[4], max[4];
 
 };

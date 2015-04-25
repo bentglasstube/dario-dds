@@ -124,7 +124,7 @@ void MainScreen::draw(Graphics& graphics) {
     Box box(graphics);
     box.draw(graphics, 224, 224, 192, 128);
 
-    text->draw(graphics, 320, 256, title, true);
+    text->draw(graphics, 320, 256, title, Text::CENTER);
 
     Menu menu(graphics, options);
     menu.draw(graphics, 288, choice);
