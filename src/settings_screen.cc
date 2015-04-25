@@ -12,7 +12,7 @@ void SettingsScreen::init(Audio& audio, Graphics& graphics) {
 
   backdrop.reset(new Backdrop(graphics, "settings"));
   text.reset(new Text(graphics));
-  tooth.reset(new Sprite(graphics, "ui", 0, 0, 16, 16));
+  tooth.reset(new ToothSprite(graphics));
   left.reset(new Sprite(graphics, "ui", 16, 32, 16, 16));
   right.reset(new Sprite(graphics, "ui", 32, 32, 16, 16));
 

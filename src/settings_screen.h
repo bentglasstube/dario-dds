@@ -6,6 +6,7 @@
 #include "screen.h"
 #include "sprite.h"
 #include "text.h"
+#include "tooth_sprite.h"
 
 class SettingsScreen : public Screen {
 
@@ -22,7 +23,7 @@ class SettingsScreen : public Screen {
 
     boost::scoped_ptr<Backdrop> backdrop;
     boost::scoped_ptr<Text> text;
-    boost::scoped_ptr<Sprite> tooth;
+    boost::scoped_ptr<ToothSprite> tooth;
     boost::scoped_ptr<Sprite> left;
     boost::scoped_ptr<Sprite> right;
 

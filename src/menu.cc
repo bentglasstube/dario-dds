@@ -2,7 +2,7 @@
 
 Menu::Menu(Graphics& graphics, std::list<std::string> options) : options(options) {
   text.reset(new Text(graphics));
-  tooth.reset(new Sprite(graphics, "ui", 0, 0, 16, 16));
+  tooth.reset(new ToothSprite(graphics));
 }
 
 void Menu::draw(Graphics& graphics, unsigned int y, unsigned int choice) {

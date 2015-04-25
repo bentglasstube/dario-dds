@@ -1,14 +1,13 @@
 # todo
 
+ * fix ui alignment and such
+ * animate candy/teeh removal
  * process matches after spawning candies
  * loss condition fix (rapid piece spawning issue)
- * fix ui alignment and such
-
- * settings!
- * spinning teeth
-
+ * combos!
  * Allow rotating if you can "push off"
     only for the two piece!
+ * improve tooth graphics
 
 # probably not going to happen :(
 
