@@ -1,4 +1,4 @@
-#include "settings.h"
+#include "settings_screen.h"
 
 #include <boost/format.hpp>
 
@@ -6,7 +6,7 @@
 #include "input.h"
 #include "title_screen.h"
 
-void Settings::init(Audio& audio, Graphics& graphics) {
+void SettingsScreen::init(Audio& audio, Graphics& graphics) {
   audio.play_music("waitingroom");
 
   backdrop.reset(new Backdrop(graphics, "settings"));
@@ -27,7 +27,7 @@ void Settings::init(Audio& audio, Graphics& graphics) {
   max[3] = 20;
 }
 
-bool Settings::update(Input& input, Audio& audio, Graphics& graphics, unsigned int elapsed) {
+bool SettingsScreen::update(Input& input, Audio& audio, Graphics& graphics, unsigned int elapsed) {
   if (input.key_pressed(SDLK_ESCAPE) || input.key_pressed(SDLK_BACKQUOTE)) return false;
 
   if (input.key_pressed(SDLK_w) || input.key_pressed(SDLK_UP)) {
@@ -53,7 +53,7 @@ bool Settings::update(Input& input, Audio& audio, Graphics& graphics, unsigned i
   return true;
 }
 
-void Settings::draw(Graphics& graphics) {
+void SettingsScreen::draw(Graphics& graphics) {
   backdrop->draw(graphics);
 
   text->draw(graphics, 176, 240, "SFX Volume");
@@ -97,11 +97,11 @@ void Settings::draw(Graphics& graphics) {
   }
 }
 
-Screen* Settings::next_screen() {
+Screen* SettingsScreen::next_screen() {
   return new TitleScreen();
 }
 
-void Settings::change(bool increase, Audio& audio) {
+void SettingsScreen::change(bool increase, Audio& audio) {
   if (choice > 3) return;
 
   if (increase) {

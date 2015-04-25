@@ -7,7 +7,7 @@
 #include "sprite.h"
 #include "text.h"
 
-class Settings : public Screen {
+class SettingsScreen : public Screen {
 
   public:
 
