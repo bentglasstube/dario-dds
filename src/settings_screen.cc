@@ -4,6 +4,7 @@
 
 #include "audio.h"
 #include "input.h"
+#include "settings.h"
 #include "title_screen.h"
 
 void SettingsScreen::init(Audio& audio, Graphics& graphics) {
@@ -15,9 +16,10 @@ void SettingsScreen::init(Audio& audio, Graphics& graphics) {
   left.reset(new Sprite(graphics, "ui", 16, 32, 16, 16));
   right.reset(new Sprite(graphics, "ui", 32, 32, 16, 16));
 
-  value[0] = value[1] = 10;
-  value[2] = 0;
-  value[3] = 1;
+  value[0] = Settings::get_instance().sfx_volume;
+  value[1] = Settings::get_instance().music_volume;
+  value[2] = Settings::get_instance().music_track;
+  value[3] = Settings::get_instance().starting_level;
 
   min[0] = min[1] = min[2] = 0;
   min[3] = 1;
@@ -49,6 +51,11 @@ bool SettingsScreen::update(Input& input, Audio& audio, Graphics& graphics, unsi
   if (input.key_pressed(SDLK_SPACE) || input.key_pressed(SDLK_RETURN)) {
     if (choice == 4) return false;
   }
+
+  Settings::get_instance().sfx_volume     = value[0];
+  Settings::get_instance().music_volume   = value[1];
+  Settings::get_instance().music_track    = value[2];
+  Settings::get_instance().starting_level = value[3];
 
   return true;
 }

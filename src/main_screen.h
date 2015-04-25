@@ -20,9 +20,9 @@ class MainScreen : public Screen {
 
     enum State { PLAYING, PAUSED, GAME_OVER, VICTORY };
 
-    GameGrid game_grid;
     State state;
-    unsigned int score, choice;
+    unsigned int score, choice, starting_level;
+    GameGrid game_grid;
 
     boost::scoped_ptr<Text> text;
     boost::scoped_ptr<Box> box;
