@@ -4,3 +4,5 @@ dario.tgz
 .DS_Store
 DrDario.app/
 res/music/*.wav
+*.app
+*.dmg
