@@ -31,15 +31,18 @@ $(BUILDDIR)/%.o: %.cc
 	$(CC) -c $(CFLAGS) -o $@ $<
 
 clean:
-	rm -rf $(BUILDDIR) ld32.{glc,mkv} $(APP_NAME).app dario.tgz
+	rm -rf $(BUILDDIR) ld32.* $(APP_NAME).app dario.tgz
 
 run: $(EXECUTABLE)
 	./$(EXECUTABLE)
 
 video: ld32.mkv
 
-ld32.mkv: ld32.glc
-	glc-play $< -o - -y 1 |ffmpeg -i - -preset ultrafast -vcodec libx264 -y $@
+ld32.mkv: ld32.glc ld32.wav
+	glc-play $< -o - -y 1 |ffmpeg -i - -preset ultrafast -i ld32.wav -acodec flac -vcodec libx264 -y $@
+
+ld32.wav: ld32.glc
+	glc-play $< -a 1 -o $@
 
 ld32.glc: $(EXECUTABLE)
 	glc-capture -pso $@ $(EXECUTABLE)
