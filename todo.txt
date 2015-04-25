@@ -1,6 +1,5 @@
 # todo
 
- * fix ui alignment and such
  * animate candy/teeh removal
  * process matches after spawning candies
  * loss condition fix (rapid piece spawning issue)

@@ -97,14 +97,14 @@ void MainScreen::draw(Graphics& graphics) {
 
   game_grid.draw(graphics, 256, 176);
 
-  text->draw(graphics, 512, 64, "Score");
-  text->draw(graphics, 512, 80, boost::str(boost::format("% 6u") % score));
+  text->draw(graphics, 512, 112, "Score");
+  text->draw(graphics, 560, 112, boost::str(boost::format("%u") % score));
 
-  text->draw(graphics, 512, 112, "Level");
-  text->draw(graphics, 560, 112, boost::str(boost::format("% 2u") % game_grid.get_level()));
+  text->draw(graphics, 512, 96, "Level");
+  text->draw(graphics, 560, 96, boost::str(boost::format("%u") % game_grid.get_level()));
 
   text->draw(graphics, 512, 128, "Next");
-  game_grid.draw_next_piece(graphics, 576, 128);
+  game_grid.draw_next_piece(graphics, 560, 128);
 
   std::string title;
   std::list<std::string> options;
