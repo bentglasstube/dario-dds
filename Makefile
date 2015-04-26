@@ -38,7 +38,7 @@ run: $(EXECUTABLE)
 video: ld32.mkv
 
 ld32.mkv: ld32.glc ld32.wav
-	glc-play $< -o - -y 1 |ffmpeg -i - -preset ultrafast -i ld32.wav -acodec flac -vcodec libx264 -y $@
+	glc-play $< -o - -y 1 |ffmpeg -i - -i ld32.wav -acodec flac -vcodec libx264 -y $@
 
 ld32.wav: ld32.glc
 	glc-play $< -a 1 -o $@
