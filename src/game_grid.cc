@@ -387,11 +387,7 @@ int GameGrid::process_matches(Audio& audio, Graphics& graphics) {
 bool GameGrid::remove_piece(Graphics& graphics, int x, int y) {
   if (piece(x, y)) {
 
-    if (candy_piece(x, y)) {
-      crumbles.push_back(boost::shared_ptr<Crumble>(new Crumble(graphics, static_cast<Crumble::Color>(candy_piece(x, y)->color()), x, y)));
-    } else if (tooth_piece(x, y)) {
-      crumbles.push_back(boost::shared_ptr<Crumble>(new Crumble(graphics, Crumble::ROTTEN_TEETH, x, y)));
-    }
+    crumbles.push_back(boost::shared_ptr<Crumble>(new Crumble(graphics, x, y)));
 
     pieces[y][x].reset();
 
@@ -413,7 +409,6 @@ bool GameGrid::damage_tooth(Graphics& graphics, int x, int y) {
       remove_piece(graphics, x, y);
       return true;
     } else {
-      crumbles.push_back(boost::shared_ptr<Crumble>(new Crumble(graphics, Crumble::TEETH, x, y)));
       tooth->rot();
     }
   }

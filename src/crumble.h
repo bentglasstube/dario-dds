@@ -8,13 +8,7 @@ class Crumble : public Sprite {
 
   public:
 
-    enum Color {
-      RED, YELLOW, ORANGE, WHITE,
-      GREEN, BLUE, PURPLE, BLACK,
-      TEETH, ROTTEN_TEETH,
-    };
-
-    Crumble(Graphics& graphics, Color color, unsigned int x, unsigned int y);
+    Crumble(Graphics& graphics, unsigned int x, unsigned int y);
 
     bool update(unsigned int elapsed);
     void draw(Graphics& graphics, unsigned int x, unsigned int y);
