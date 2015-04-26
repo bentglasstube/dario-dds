@@ -177,7 +177,7 @@ bool GameGrid::winner() {
       if (tooth_piece(ix, iy)) return false;
     }
   }
-  return true;
+  return falling_pieces.empty() && crumbles.empty();
 }
 
 bool GameGrid::loser() {
