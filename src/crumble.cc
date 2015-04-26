@@ -2,6 +2,8 @@
 
 #include "graphics.h"
 
+#define FRAME_LENGTH 25
+
 Crumble::Crumble(Graphics& graphics, Crumble::Color color, unsigned int x, unsigned int y) :
   Sprite(graphics, "teeth", 0, 0, 16, 16),
   x(x), y(y), counter(0) {
@@ -26,12 +28,12 @@ Crumble::Crumble(Graphics& graphics, Crumble::Color color, unsigned int x, unsig
 }
 
 bool Crumble::update(unsigned int elapsed) {
-  if (counter < 25 && counter + elapsed > 25) rect.x++;
-  if (counter < 50 && counter + elapsed > 50) rect.x++;
+  if (counter < FRAME_LENGTH  && counter + elapsed > FRAME_LENGTH ) rect.x += 16;
+  if (counter < 2 * FRAME_LENGTH  && counter + elapsed > 2 * FRAME_LENGTH ) rect.x += 16;
 
   counter += elapsed;
 
-  return counter < 75;
+  return counter < 3 * FRAME_LENGTH;
 }
 
 void Crumble::draw(Graphics& graphics, unsigned int x, unsigned int y) {
