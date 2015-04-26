@@ -8,6 +8,8 @@
 #include "input.h"
 #include "tooth.h"
 
+#define RAND_COLOR static_cast<Candy::Color>((rand() % 2 ) * 4 + rand() % 2)
+
 void GameGrid::generate(Graphics& graphics, unsigned int starting_level) {
   level = starting_level;
 
@@ -55,7 +57,7 @@ void GameGrid::generate(Graphics& graphics, unsigned int starting_level) {
     } else {
       for (int y = 12; y >= 0; --y) {
         if (!piece(x, y)) {
-          pieces[y][x].reset(new Candy(graphics, 0, static_cast<Candy::Color>(rand() % 4)));
+          pieces[y][x].reset(new Candy(graphics, 0, RAND_COLOR));
           break;
         }
       }
