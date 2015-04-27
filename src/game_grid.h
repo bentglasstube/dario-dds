@@ -31,9 +31,9 @@ class GameGrid {
   private:
 
     struct Match {
-      Match(unsigned int x, unsigned int y) : x(x), y(y) {}
-      unsigned int x;
-      unsigned int y;
+      Match(unsigned int x, unsigned int y, unsigned int length, bool horizontal) : x(x), y(y), length(length), horizontal(horizontal) {}
+      unsigned int x, y, length;
+      bool horizontal;
     };
 
     boost::shared_ptr<GridPiece> piece(int x, int y);

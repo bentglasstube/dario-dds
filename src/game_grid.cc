@@ -344,11 +344,7 @@ int GameGrid::process_matches(Audio& audio, Graphics& graphics) {
           boost::shared_ptr<Candy> test = candy_piece(j, iy);
           if (!test || test->color() != start->color()) {
             int length = j - ix;
-            if (length >= 4) {
-              for (int k = ix; k < j; ++k) {
-                matches.push_back(Match(k, iy));
-              }
-            }
+            if (length >= 4) matches.push_back(Match(ix, iy, length, true));
             break;
           }
         }
@@ -359,11 +355,7 @@ int GameGrid::process_matches(Audio& audio, Graphics& graphics) {
           boost::shared_ptr<Candy> test = candy_piece(ix, j);
           if (!test || test->color() != start->color()) {
             int length = j - iy;
-            if (length >= 4) {
-              for (int k = iy; k < j; ++k) {
-                matches.push_back(Match(ix, k));
-              }
-            }
+            if (length >= 4) matches.push_back(Match(ix, iy, length, false));
             break;
           }
         }
@@ -375,21 +367,37 @@ int GameGrid::process_matches(Audio& audio, Graphics& graphics) {
   int candy_count = 0;
   int tooth_count = 0;
   for (std::list<Match>::iterator i = matches.begin(); i != matches.end(); ++i) {
-    if (remove_piece(graphics, (*i).x, (*i).y)) {
+    Match m = (*i);
+
+    fprintf(stderr, "%s match at %u,%u length %u\n", m.horizontal ? "Horz" : "Vert", m.x, m.y, m.length);
+    if (candy_piece(m.x, m.y)) {
+
+      for (int j = 0; j < m.length; ++j) {
+        unsigned int px = m.x + (m.horizontal ? j : 0);
+        unsigned int py = m.y + (m.horizontal ? 0 : j);
+
+        if (remove_piece(graphics, px, py)) {
+          candy_count++;
+
+          if (damage_tooth(graphics, px, py - 1)) tooth_count++;
+          if (damage_tooth(graphics, px, py + 1)) tooth_count++;
+          if (damage_tooth(graphics, px - 1, py)) tooth_count++;
+          if (damage_tooth(graphics, px + 1, py)) tooth_count++;
+        }
+      }
+
       if (combo > 1) {
+        unsigned int fx = m.x + (m.horizontal ? m.length / 2 : 0);
+        unsigned int fy = m.y + (m.horizontal ? 0 : m.length / 2);
+
         floating_texts.push_back(
           boost::shared_ptr<FloatingText>(
-            new FloatingText(graphics, (*i).x, (*i).y, boost::str(boost::format("%ux Combo") % combo))
+            new FloatingText(graphics, fx, fy, boost::str(boost::format("%ux Combo") % combo))
           )
         );
       }
 
-      candy_count++;
-
-      if (damage_tooth(graphics, (*i).x, (*i).y - 1)) tooth_count++;
-      if (damage_tooth(graphics, (*i).x, (*i).y + 1)) tooth_count++;
-      if (damage_tooth(graphics, (*i).x - 1, (*i).y)) tooth_count++;
-      if (damage_tooth(graphics, (*i).x + 1, (*i).y)) tooth_count++;
+      combo++;
     }
   }
 
@@ -407,7 +415,6 @@ int GameGrid::process_matches(Audio& audio, Graphics& graphics) {
   }
 
   int score = (10 * candy_count + 25 * tooth_count) * combo;
-  if (score > 0) ++combo;
   return score;
 }
 
