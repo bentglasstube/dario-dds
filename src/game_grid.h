@@ -5,6 +5,7 @@
 
 #include "candy_block.h"
 #include "crumble.h"
+#include "floating_text.h"
 #include "grid_piece.h"
 #include "tooth.h"
 
@@ -50,8 +51,9 @@ class GameGrid {
     bool damage_tooth(Graphics& graphics, int x, int y);
 
     boost::shared_ptr<GridPiece> pieces[16][8];
-    unsigned int drop_counter, level;
+    unsigned int drop_counter, level, combo;
     boost::shared_ptr<CandyBlock> active_piece, next_piece;
     std::list<boost::shared_ptr<CandyBlock> > falling_pieces;
     std::list<boost::shared_ptr<Crumble> > crumbles;
+    std::list<boost::shared_ptr<FloatingText> > floating_texts;
 };

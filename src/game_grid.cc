@@ -1,5 +1,6 @@
 #include "game_grid.h"
 
+#include <boost/format.hpp>
 #include <boost/pointer_cast.hpp>
 
 #include "audio.h"
@@ -66,6 +67,7 @@ void GameGrid::generate(Graphics& graphics, unsigned int starting_level) {
 
   // process_matches(audio, graphics);
   crumbles.clear();
+  floating_texts.clear();
 
   spawn_candy(graphics);
 }
@@ -150,6 +152,15 @@ int GameGrid::update(Input& input, Audio& audio, Graphics& graphics, unsigned in
     }
   }
 
+  std::list<boost::shared_ptr<FloatingText> >::iterator j = floating_texts.begin();
+  while (j != floating_texts.end()) {
+    if ((*j)->update(elapsed)) {
+      ++j;
+    } else {
+      j = floating_texts.erase(j);
+    }
+  }
+
   return 0;
 }
 
@@ -167,6 +178,10 @@ void GameGrid::draw(Graphics& graphics, unsigned int x, unsigned int y) {
   }
 
   for (std::list<boost::shared_ptr<Crumble> >::iterator i = crumbles.begin(); i != crumbles.end(); ++i) {
+    (*i)->draw(graphics, x, y);
+  }
+
+  for (std::list<boost::shared_ptr<FloatingText> >::iterator i = floating_texts.begin(); i != floating_texts.end(); ++i) {
     (*i)->draw(graphics, x, y);
   }
 }
@@ -220,6 +235,8 @@ void GameGrid::spawn_candy(Graphics& graphics) {
 
   active_piece = next_piece;
   next_piece.reset(generate_candy(graphics));
+
+  combo = 1;
 
   for (int i = 0; i < 3; ++i) {
     if (!collision(active_piece)) return;
@@ -359,6 +376,14 @@ int GameGrid::process_matches(Audio& audio, Graphics& graphics) {
   int tooth_count = 0;
   for (std::list<Match>::iterator i = matches.begin(); i != matches.end(); ++i) {
     if (remove_piece(graphics, (*i).x, (*i).y)) {
+      if (combo > 1) {
+        floating_texts.push_back(
+          boost::shared_ptr<FloatingText>(
+            new FloatingText(graphics, (*i).x, (*i).y, boost::str(boost::format("%ux Combo") % combo))
+          )
+        );
+      }
+
       candy_count++;
 
       if (damage_tooth(graphics, (*i).x, (*i).y - 1)) tooth_count++;
@@ -381,7 +406,9 @@ int GameGrid::process_matches(Audio& audio, Graphics& graphics) {
     }
   }
 
-  return 10 * candy_count + 25 * tooth_count;
+  int score = (10 * candy_count + 25 * tooth_count) * combo;
+  if (score > 0) ++combo;
+  return score;
 }
 
 bool GameGrid::remove_piece(Graphics& graphics, int x, int y) {
