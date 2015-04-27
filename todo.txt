@@ -1,6 +1,6 @@
+ * fix combo text
  * process matches after spawning candies
  * loss condition fix (rapid piece spawning issue)
- * combos!
  * falling pieces buggy
  * Allow rotating if you can "push off"
     only for the two piece!
@@ -19,3 +19,4 @@
 
  * building saliva level that washes away candies
  * wiggly roots that bump candy away
+ * random tool intervention or powerups
