@@ -364,13 +364,16 @@ int GameGrid::process_matches(Audio& audio, Graphics& graphics) {
     }
   }
 
-  int candy_count = 0;
-  int tooth_count = 0;
+  int score = 0;
+
   for (std::list<Match>::iterator i = matches.begin(); i != matches.end(); ++i) {
     Match m = (*i);
 
     fprintf(stderr, "%s match at %u,%u length %u\n", m.horizontal ? "Horz" : "Vert", m.x, m.y, m.length);
     if (candy_piece(m.x, m.y)) {
+
+      int candy_count = 0;
+      int tooth_count = 0;
 
       for (int j = 0; j < m.length; ++j) {
         unsigned int px = m.x + (m.horizontal ? j : 0);
@@ -397,24 +400,20 @@ int GameGrid::process_matches(Audio& audio, Graphics& graphics) {
         );
       }
 
-      combo++;
+      score += (10 * candy_count + 25 * tooth_count) * combo;
+      audio.play_sample(tooth_count > 0 ? "break" : "clear");
+      ++combo;
     }
   }
 
-  if (candy_count > 0) {
+  if (score > 0) {
     for (int iy = 15; iy >= 0; --iy) {
       for (int ix = 0; ix < 8; ++ix) {
         if (piece(ix, iy)) release(ix, iy);
       }
     }
-    if (tooth_count > 0) {
-      audio.play_sample("break");
-    } else {
-      audio.play_sample("clear");
-    }
   }
 
-  int score = (10 * candy_count + 25 * tooth_count) * combo;
   return score;
 }
 
