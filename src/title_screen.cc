@@ -6,7 +6,7 @@
 #include "graphics.h"
 #include "input.h"
 #include "main_screen.h"
-#include "settings.h"
+#include "settings_screen.h"
 
 void TitleScreen::init(Audio& audio, Graphics& graphics) {
   audio.play_music("dario");
@@ -45,7 +45,7 @@ void TitleScreen::draw(Graphics& graphics) {
 Screen* TitleScreen::next_screen() {
   switch (choice) {
     case 0: return new MainScreen();
-    case 1: return new Settings();
+    case 1: return new SettingsScreen();
     default: return NULL;
   }
 }

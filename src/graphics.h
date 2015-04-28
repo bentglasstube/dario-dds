@@ -14,6 +14,8 @@ class Graphics {
     void flip();
     void clear();
 
+    void toggle_full_screen();
+
     SDL_Texture* load_image(std::string file, bool transparency=false);
 
   private:
@@ -22,4 +24,5 @@ class Graphics {
     TextureMap textures;
     SDL_Window* window;
     SDL_Renderer* renderer;
+    bool fullscreen;
 };

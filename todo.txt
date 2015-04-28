@@ -1,0 +1,22 @@
+ * fix combo text
+ * process matches after spawning candies
+ * loss condition fix (rapid piece spawning issue)
+ * falling pieces buggy
+ * Allow rotating if you can "push off"
+    only for the two piece!
+ * improve tooth graphics
+ * increase number of colors with level
+ * get rid of "magic numbers"
+ * controller support
+ * braces that block all your shit
+ * endless mode with growing teeth
+ * toothpastes that move around and block things
+ * multiplayer / versus
+ * Progression
+   - patient dialog
+   - randomized patients
+   - some kind of story
+
+ * building saliva level that washes away candies
+ * wiggly roots that bump candy away
+ * random tool intervention or powerups

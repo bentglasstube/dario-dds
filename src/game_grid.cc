@@ -1,5 +1,6 @@
 #include "game_grid.h"
 
+#include <boost/format.hpp>
 #include <boost/pointer_cast.hpp>
 
 #include "audio.h"
@@ -7,6 +8,8 @@
 #include "graphics.h"
 #include "input.h"
 #include "tooth.h"
+
+#define RAND_COLOR static_cast<Candy::Color>((rand() % 2 ) * 4 + rand() % 2)
 
 void GameGrid::generate(Graphics& graphics, unsigned int starting_level) {
   level = starting_level;
@@ -48,19 +51,23 @@ void GameGrid::generate(Graphics& graphics, unsigned int starting_level) {
     if (level < 10) {
       for (int y = 13; y < 16; ++y) {
         if (tooth_piece(x, y)) {
-          damage_tooth(x, y);
+          damage_tooth(graphics, x, y);
           break;
         }
       }
     } else {
       for (int y = 12; y >= 0; --y) {
         if (!piece(x, y)) {
-          pieces[y][x].reset(new Candy(graphics, 0, static_cast<Candy::Color>(rand() % 4)));
+          pieces[y][x].reset(new Candy(graphics, 0, RAND_COLOR));
           break;
         }
       }
     }
   }
+
+  // process_matches(audio, graphics);
+  crumbles.clear();
+  floating_texts.clear();
 
   spawn_candy(graphics);
 }
@@ -133,7 +140,25 @@ int GameGrid::update(Input& input, Audio& audio, Graphics& graphics, unsigned in
       }
     }
 
-    return process_matches(audio);
+    return process_matches(audio, graphics);
+  }
+
+  std::list<boost::shared_ptr<Crumble> >::iterator i = crumbles.begin();
+  while (i != crumbles.end()) {
+    if ((*i)->update(elapsed)) {
+      ++i;
+    } else {
+      i = crumbles.erase(i);
+    }
+  }
+
+  std::list<boost::shared_ptr<FloatingText> >::iterator j = floating_texts.begin();
+  while (j != floating_texts.end()) {
+    if ((*j)->update(elapsed)) {
+      ++j;
+    } else {
+      j = floating_texts.erase(j);
+    }
   }
 
   return 0;
@@ -151,6 +176,14 @@ void GameGrid::draw(Graphics& graphics, unsigned int x, unsigned int y) {
   for (std::list<boost::shared_ptr<CandyBlock> >::iterator i=falling_pieces.begin(); i != falling_pieces.end(); ++i) {
     (*i)->draw(graphics, x, y);
   }
+
+  for (std::list<boost::shared_ptr<Crumble> >::iterator i = crumbles.begin(); i != crumbles.end(); ++i) {
+    (*i)->draw(graphics, x, y);
+  }
+
+  for (std::list<boost::shared_ptr<FloatingText> >::iterator i = floating_texts.begin(); i != floating_texts.end(); ++i) {
+    (*i)->draw(graphics, x, y);
+  }
 }
 
 bool GameGrid::winner() {
@@ -159,7 +192,7 @@ bool GameGrid::winner() {
       if (tooth_piece(ix, iy)) return false;
     }
   }
-  return true;
+  return falling_pieces.empty() && crumbles.empty() && floating_texts.empty();
 }
 
 bool GameGrid::loser() {
@@ -202,6 +235,8 @@ void GameGrid::spawn_candy(Graphics& graphics) {
 
   active_piece = next_piece;
   next_piece.reset(generate_candy(graphics));
+
+  combo = 1;
 
   for (int i = 0; i < 3; ++i) {
     if (!collision(active_piece)) return;
@@ -296,7 +331,7 @@ void GameGrid::commit(boost::shared_ptr<CandyBlock> block) {
 }
 
 // TODO fix this bullshit code
-int GameGrid::process_matches(Audio& audio) {
+int GameGrid::process_matches(Audio& audio, Graphics& graphics) {
     std::list <Match> matches;
 
   for (int iy = 0; iy < 16; ++iy) {
@@ -309,11 +344,7 @@ int GameGrid::process_matches(Audio& audio) {
           boost::shared_ptr<Candy> test = candy_piece(j, iy);
           if (!test || test->color() != start->color()) {
             int length = j - ix;
-            if (length >= 4) {
-              for (int k = ix; k < j; ++k) {
-                matches.push_back(Match(k, iy));
-              }
-            }
+            if (length >= 4) matches.push_back(Match(ix, iy, length, true));
             break;
           }
         }
@@ -324,11 +355,7 @@ int GameGrid::process_matches(Audio& audio) {
           boost::shared_ptr<Candy> test = candy_piece(ix, j);
           if (!test || test->color() != start->color()) {
             int length = j - iy;
-            if (length >= 4) {
-              for (int k = iy; k < j; ++k) {
-                matches.push_back(Match(ix, k));
-              }
-            }
+            if (length >= 4) matches.push_back(Match(ix, iy, length, false));
             break;
           }
         }
@@ -337,38 +364,66 @@ int GameGrid::process_matches(Audio& audio) {
     }
   }
 
-  int candy_count = 0;
-  int tooth_count = 0;
-  for (std::list<Match>::iterator i = matches.begin(); i != matches.end(); ++i) {
-    if (remove_piece((*i).x, (*i).y)) {
-      candy_count++;
+  int score = 0;
 
-      if (damage_tooth((*i).x, (*i).y - 1)) tooth_count++;
-      if (damage_tooth((*i).x, (*i).y + 1)) tooth_count++;
-      if (damage_tooth((*i).x - 1, (*i).y)) tooth_count++;
-      if (damage_tooth((*i).x + 1, (*i).y)) tooth_count++;
+  for (std::list<Match>::iterator i = matches.begin(); i != matches.end(); ++i) {
+    Match m = (*i);
+
+    fprintf(stderr, "%s match at %u,%u length %u\n", m.horizontal ? "Horz" : "Vert", m.x, m.y, m.length);
+    if (candy_piece(m.x, m.y)) {
+
+      int candy_count = 0;
+      int tooth_count = 0;
+
+      for (int j = 0; j < m.length; ++j) {
+        unsigned int px = m.x + (m.horizontal ? j : 0);
+        unsigned int py = m.y + (m.horizontal ? 0 : j);
+
+        if (remove_piece(graphics, px, py)) {
+          candy_count++;
+
+          if (damage_tooth(graphics, px, py - 1)) tooth_count++;
+          if (damage_tooth(graphics, px, py + 1)) tooth_count++;
+          if (damage_tooth(graphics, px - 1, py)) tooth_count++;
+          if (damage_tooth(graphics, px + 1, py)) tooth_count++;
+        }
+      }
+
+      if (combo > 1) {
+        unsigned int fx = m.x + (m.horizontal ? m.length / 2 : 0);
+        unsigned int fy = m.y + (m.horizontal ? 0 : m.length / 2);
+
+        floating_texts.push_back(
+          boost::shared_ptr<FloatingText>(
+            new FloatingText(graphics, fx, fy, boost::str(boost::format("%ux Combo") % combo))
+          )
+        );
+      }
+
+      score += (10 * candy_count + 25 * tooth_count) * combo;
+      audio.play_sample(tooth_count > 0 ? "break" : "clear");
+      ++combo;
     }
   }
 
-  if (candy_count > 0) {
+  if (score > 0) {
     for (int iy = 15; iy >= 0; --iy) {
       for (int ix = 0; ix < 8; ++ix) {
         if (piece(ix, iy)) release(ix, iy);
       }
     }
-    if (tooth_count > 0) {
-      audio.play_sample("break");
-    } else {
-      audio.play_sample("clear");
-    }
   }
 
-  return 10 * candy_count + 25 * tooth_count;
+  return score;
 }
 
-bool GameGrid::remove_piece(int x, int y) {
+bool GameGrid::remove_piece(Graphics& graphics, int x, int y) {
   if (piece(x, y)) {
+
+    crumbles.push_back(boost::shared_ptr<Crumble>(new Crumble(graphics, x, y)));
+
     pieces[y][x].reset();
+
     if (piece(x - 1, y)) piece(x - 1, y)->break_connection(2);
     if (piece(x + 1, y)) piece(x + 1, y)->break_connection(4);
     if (piece(x, y - 1)) piece(x, y - 1)->break_connection(1);
@@ -380,11 +435,11 @@ bool GameGrid::remove_piece(int x, int y) {
   return false;
 }
 
-bool GameGrid::damage_tooth(int x, int y) {
+bool GameGrid::damage_tooth(Graphics& graphics, int x, int y) {
   boost::shared_ptr<Tooth> tooth = tooth_piece(x, y);
   if (tooth) {
     if (tooth->is_rotten()) {
-      remove_piece(x, y);
+      remove_piece(graphics, x, y);
       return true;
     } else {
       tooth->rot();

@@ -1,23 +1,22 @@
 #pragma once
 
-#include <boost/scoped_ptr.hpp>
-
-#include "backdrop.h"
-#include "screen.h"
-#include "text.h"
-
-class Settings : public Screen {
+class Settings {
 
   public:
 
-    void init(Audio& audio, Graphics& graphics);
-    bool update(Input& input, Audio& audio, Graphics& graphics, unsigned int elapsed);
-    void draw(Graphics& graphics);
-    Screen* next_screen();
+    static Settings& get_instance() {
+      static Settings instance;
+      return instance;
+    }
+
+    unsigned int sfx_volume, music_volume, music_track, starting_level;
 
   private:
 
-    boost::scoped_ptr<Backdrop> backdrop;
-    boost::scoped_ptr<Text> text;
+    Settings() : sfx_volume(10), music_volume(10), music_track(0), starting_level(1) {}
+
+    // Deliberatlye unimplemented
+    Settings(Settings const&);
+    void operator=(Settings const&);
 
 };

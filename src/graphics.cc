@@ -8,13 +8,15 @@ namespace {
 }
 
 Graphics::Graphics() {
-  int flags = SDL_WINDOW_OPENGL ; //| SDL_WINDOW_RESIZABLE;
+  int flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_FULLSCREEN_DESKTOP;
 
   window = SDL_CreateWindow("Dario DDS", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, flags);
   renderer = SDL_CreateRenderer(window, -1, 0);
 
   SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest"); // retro!
   SDL_RenderSetLogicalSize(renderer, width, height);
+
+  fullscreen = false;
 }
 
 Graphics::~Graphics() {
@@ -37,6 +39,11 @@ void Graphics::flip() {
 void Graphics::clear() {
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
   SDL_RenderClear(renderer);
+}
+
+void Graphics::toggle_full_screen() {
+  fullscreen = !fullscreen;
+  SDL_SetWindowFullscreen(window, fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0);
 }
 
 SDL_Texture* Graphics::load_image(std::string file, bool transparency) {

@@ -4,8 +4,8 @@
 #include <list>
 #include <string>
 
-#include "sprite.h"
 #include "text.h"
+#include "tooth_sprite.h"
 
 class Menu {
 
@@ -19,5 +19,5 @@ class Menu {
 
     std::list<std::string> options;
     boost::scoped_ptr<Text> text;
-    boost::scoped_ptr<Sprite> tooth;
+    boost::scoped_ptr<ToothSprite> tooth;
 };

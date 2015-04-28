@@ -6,6 +6,7 @@
 #include "audio.h"
 #include "input.h"
 #include "menu.h"
+#include "settings.h"
 #include "text.h"
 #include "title_screen.h"
 
@@ -14,14 +15,26 @@ namespace {
 }
 
 void MainScreen::init(Audio& audio, Graphics& graphics) {
-  audio.play_music("rootcanal");
+  // TODO improve random track play
+  unsigned int track = Settings::get_instance().music_track;
+  if (track == 0) track = 1 + rand() % 3;
 
-  game_grid = GameGrid();
-  game_grid.generate(graphics, 1);
+  switch (track) {
+    case 1: audio.play_music("rootcanal"); break;
+    case 2: audio.play_music("novacaine"); break;
+    case 3: audio.play_music("fillings");  break;
+  }
+
+  audio.sfx_volume(Settings::get_instance().sfx_volume);
+  audio.music_volume(Settings::get_instance().music_volume);
 
   state = PLAYING;
   score = 0;
   choice = 0;
+  starting_level = Settings::get_instance().starting_level;
+
+  game_grid = GameGrid();
+  game_grid.generate(graphics, starting_level);
 
   text.reset(new Text(graphics));
   box.reset(new Box(graphics));
@@ -69,7 +82,7 @@ bool MainScreen::update(Input& input, Audio& audio, Graphics& graphics, unsigned
         // Restart and Continue are the same thing really, but we need to reset
         // the score if restarting
         if (state == GAME_OVER) score = 0;
-        game_grid.generate(graphics, 1 + score / POINTS_PER_LEVEL);
+        game_grid.generate(graphics, starting_level + score / POINTS_PER_LEVEL);
       }
 
       state = PLAYING;
@@ -84,14 +97,14 @@ void MainScreen::draw(Graphics& graphics) {
 
   game_grid.draw(graphics, 256, 176);
 
-  text->draw(graphics, 512, 64, "Score");
-  text->draw(graphics, 512, 80, boost::str(boost::format("% 6u") % score));
+  text->draw(graphics, 512, 112, "Score");
+  text->draw(graphics, 560, 112, boost::str(boost::format("%u") % score));
 
-  text->draw(graphics, 512, 112, "Level");
-  text->draw(graphics, 560, 112, boost::str(boost::format("% 2u") % game_grid.get_level()));
+  text->draw(graphics, 512, 96, "Level");
+  text->draw(graphics, 560, 96, boost::str(boost::format("%u") % game_grid.get_level()));
 
   text->draw(graphics, 512, 128, "Next");
-  game_grid.draw_next_piece(graphics, 576, 128);
+  game_grid.draw_next_piece(graphics, 560, 128);
 
   std::string title;
   std::list<std::string> options;
@@ -124,7 +137,7 @@ void MainScreen::draw(Graphics& graphics) {
     Box box(graphics);
     box.draw(graphics, 224, 224, 192, 128);
 
-    text->draw(graphics, 320, 256, title, true);
+    text->draw(graphics, 320, 256, title, Text::CENTER);
 
     Menu menu(graphics, options);
     menu.draw(graphics, 288, choice);

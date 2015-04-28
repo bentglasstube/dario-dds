@@ -21,10 +21,14 @@ void Candy::get_source(SDL_Rect* rect) {
   }
 
   switch (_color) {
-    case RED:    x += 3; y += 3; break;
-    case BLUE:   x += 3; y += 0; break;
-    case GREEN:  x += 0; y += 0; break;
-    case YELLOW: x += 0; y += 3; break;
+    case RED:    x += 0; y += 0; break;
+    case YELLOW: x += 3; y += 0; break;
+    case ORANGE: x += 6; y += 0; break;
+    case WHITE:  x += 9; y += 0; break;
+    case GREEN:  x += 0; y += 4; break;
+    case BLUE:   x += 3; y += 4; break;
+    case PURPLE: x += 6; y += 4; break;
+    case BLACK:  x += 9; y += 4; break;
   }
 
   rect->x = 16 * x;
