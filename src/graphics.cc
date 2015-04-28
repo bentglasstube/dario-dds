@@ -16,7 +16,7 @@ Graphics::Graphics() {
   SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest"); // retro!
   SDL_RenderSetLogicalSize(renderer, width, height);
 
-  fullscreen = false;
+  fullscreen = true;
 }
 
 Graphics::~Graphics() {
