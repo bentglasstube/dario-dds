@@ -1,4 +1,5 @@
- * fix combo text
+ * fix random music playback
+ * controller support
  * process matches after spawning candies
  * loss condition fix (rapid piece spawning issue)
  * falling pieces buggy
@@ -7,7 +8,6 @@
  * improve tooth graphics
  * increase number of colors with level
  * get rid of "magic numbers"
- * controller support
  * braces that block all your shit
  * endless mode with growing teeth
  * toothpastes that move around and block things
