@@ -70,15 +70,19 @@ $(APP_NAME).dmg: template.dmg $(APP_NAME).app
 	hdiutil convert template.dmg -quiet -format UDZO -imagekey zlib-level=9 -o "$@"
 	rmdir working
 
-$(APP_NAME).app: $(EXECUTABLE) launcher $(CONTENT) Info.plist
+$(APP_NAME).app: $(EXECUTABLE) launcher $(CONTENT) Info.plist build/icon.icns
 	rm -rf $(APP_NAME).app
-	mkdir -p $(APP_NAME).app/Contents/{MacOS,Frameworks}
+	mkdir -p $(APP_NAME).app/Contents/{MacOS,Frameworks,Resources}
 	cp $(EXECUTABLE) $(APP_NAME).app/Contents/MacOS/game
 	cp launcher $(APP_NAME).app/Contents/MacOS/launcher
 	cp -R content $(APP_NAME).app/Contents/MacOS/content
 	cp Info.plist $(APP_NAME).app/Contents/Info.plist
 	cp -R /Library/Frameworks/SDL2.framework $(APP_NAME).app/Contents/Frameworks/SDL2.framework
 	cp -R /Library/Frameworks/SDL2_mixer.framework $(APP_NAME).app/Contents/Frameworks/SDL2_mixer.framework
+	cp build/icon.icns $(APP_NAME).app/Contents/Resources/icon.icns
+
+build/icon.icns: res/icon/icon.iconset/*
+	iconutil -c icns -o $@ res/icon/icon.iconset
 
 install: $(EXECUTABLE)
 	mkdir -p $(DESTDIR)/usr/share/dario
