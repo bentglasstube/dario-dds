@@ -1,0 +1,25 @@
+OBJDIR = build
+SRCDIR = src
+
+all: dario.exe
+
+package: dario.zip
+
+{$(SRCDIR)}.cc{$(OBJDIR)}.obj: 
+	-mkdir $(OBJDIR)
+	cl /c /IC:\Development\boost_1_57_0 /I"C:\Development\SDL2-2.0.3\include" /Zi /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D _MBCS /Gm- /EHsc /MT /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"build\\" /Fd"build\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt $<
+
+dario.exe: $(OBJDIR)\*.obj
+	link /ERRORREPORT:PROMPT /OUT:"dario.exe" /LIBPATH:"C:\Development\SDL2-2.0.3\lib\x86" SDL2.lib SDL2main.lib SDL2_mixer.lib /NODEFAULTLIB:msvcrt /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"build\ld32.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"build\ld32.lib" /MACHINE:X86 /SAFESEH $(OBJDIR)/*.obj
+
+dario.zip: dario.exe content\* *.dll README.md
+	7za a dario.zip dario.exe content\* *.dll README.md
+
+run: dario.exe
+	dario.exe
+
+clean:
+	-rd /S /Q build
+	-erase dario.exe dario.zip
+
+.PHONY: all package run clean
