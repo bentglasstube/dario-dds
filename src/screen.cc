@@ -26,7 +26,8 @@ bool Screen::process_input(Input& input) {
         break;
 
       case SDL_JOYAXISMOTION:
-        input.joy_axis(event);
+        // This is horrifyingly fast so leave it out for now
+        // input.joy_axis(event);
         break;
 
       case SDL_JOYHATMOTION:
