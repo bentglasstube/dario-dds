@@ -39,7 +39,7 @@ void Game::loop() {
 
     if (!screen->process_input(input)) return;
 
-    if (input.key_pressed(SDLK_f)) graphics.toggle_full_screen();
+    if (input.key_pressed(Input::FULLSCREEN)) graphics.toggle_full_screen();
 
     if (screen->update(input, audio, graphics, SDL_GetTicks() - last_update)) {
 

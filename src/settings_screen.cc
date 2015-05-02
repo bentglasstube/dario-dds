@@ -30,25 +30,25 @@ void SettingsScreen::init(Audio& audio, Graphics& graphics) {
 }
 
 bool SettingsScreen::update(Input& input, Audio& audio, Graphics& graphics, unsigned int elapsed) {
-  if (input.key_pressed(SDLK_ESCAPE) || input.key_pressed(SDLK_BACKQUOTE)) return false;
+  if (input.key_pressed(Input::BACK)) return false;
 
-  if (input.key_pressed(SDLK_w) || input.key_pressed(SDLK_UP)) {
+  if (input.key_pressed(Input::UP)) {
     choice = (choice + 4) % 5;
   }
 
-  if (input.key_pressed(SDLK_s) || input.key_pressed(SDLK_DOWN)) {
+  if (input.key_pressed(Input::DOWN)) {
     choice = (choice + 1) % 5;
   }
 
-  if (input.key_pressed(SDLK_a) || input.key_pressed(SDLK_LEFT)) {
+  if (input.key_pressed(Input::LEFT)) {
     change(false, audio);
   }
 
-  if (input.key_pressed(SDLK_d) || input.key_pressed(SDLK_RIGHT)) {
+  if (input.key_pressed(Input::RIGHT)) {
     change(true, audio);
   }
 
-  if (input.key_pressed(SDLK_SPACE) || input.key_pressed(SDLK_RETURN)) {
+  if (input.key_pressed(Input::ACCEPT)) {
     if (choice == 4) return false;
   }
 

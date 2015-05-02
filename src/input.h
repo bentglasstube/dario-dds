@@ -6,21 +6,31 @@
 class Input {
   public:
 
-    Input();
-    ~Input();
+    enum Action {
+      NONE             = 0,
+      LEFT             = 1,
+      RIGHT            = 2,
+      UP               = 3,
+      DOWN             = 4,
+      ACCEPT           = 5,
+      BACK             = 6,
+      CLOCKWISE        = 3,  // same as up
+      COUNTERCLOCKWISE = 7,
+      FULLSCREEN       = 8,
+    };
 
     void clear();
     void key_down(const SDL_Event& event);
     void key_up(const SDL_Event& event);
 
-    bool any_key_pressed() { return !keys_pressed.empty(); }
-
-    bool key_pressed(SDL_Keycode key) { return keys_pressed[key]; }
-    bool key_released(SDL_Keycode key) { return keys_released[key]; }
-    bool key_held(SDL_Keycode key) { return keys_held[key]; }
+    bool key_pressed(Action key) { return keys_pressed[key]; }
+    bool key_released(Action key) { return keys_released[key]; }
+    bool key_held(Action key) { return keys_held[key]; }
 
   private:
-    std::map<SDL_Keycode, bool> keys_held;
-    std::map<SDL_Keycode, bool> keys_pressed;
-    std::map<SDL_Keycode, bool> keys_released;
+    Action mapping(const SDL_Keycode key);
+
+    std::map<Action, bool> keys_held;
+    std::map<Action, bool> keys_pressed;
+    std::map<Action, bool> keys_released;
 };

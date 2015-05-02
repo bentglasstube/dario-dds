@@ -80,9 +80,9 @@ int GameGrid::update(Input& input, Audio& audio, Graphics& graphics, unsigned in
   if (active_piece) {
 
     int move = 0;
-    if (input.key_pressed(SDLK_LEFT) || input.key_pressed(SDLK_a)) {
+    if (input.key_pressed(Input::LEFT)) {
       move = -1;
-    } else if (input.key_pressed(SDLK_RIGHT) || input.key_pressed(SDLK_d)) {
+    } else if (input.key_pressed(Input::RIGHT)) {
       move = 1;
     }
 
@@ -96,9 +96,9 @@ int GameGrid::update(Input& input, Audio& audio, Graphics& graphics, unsigned in
 
 
     int rotate = 0;
-    if (input.key_pressed(SDLK_q)) {
+    if (input.key_pressed(Input::COUNTERCLOCKWISE)) {
       rotate = -1;
-    } else if (input.key_pressed(SDLK_UP) || input.key_pressed(SDLK_w) || input.key_pressed(SDLK_e)) {
+    } else if (input.key_pressed(Input::CLOCKWISE)) {
       rotate = 1;
     }
 
@@ -111,7 +111,7 @@ int GameGrid::update(Input& input, Audio& audio, Graphics& graphics, unsigned in
     }
   }
 
-  if (drop_counter > drop_threshold(input.key_held(SDLK_DOWN) || input.key_held(SDLK_s))) {
+  if (drop_counter > drop_threshold(input.key_held(Input::DOWN))) {
     drop_counter = 0;
 
     if (falling_pieces.empty()) {

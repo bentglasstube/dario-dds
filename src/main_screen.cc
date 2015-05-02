@@ -43,7 +43,7 @@ void MainScreen::init(Audio& audio, Graphics& graphics) {
 
 bool MainScreen::update(Input& input, Audio& audio, Graphics& graphics, unsigned int elapsed) {
 
-  if (input.key_pressed(SDLK_ESCAPE) || input.key_pressed(SDLK_BACKQUOTE)) {
+  if (input.key_pressed(Input::BACK)) {
     return false;
   }
 
@@ -56,7 +56,7 @@ bool MainScreen::update(Input& input, Audio& audio, Graphics& graphics, unsigned
       game_grid.level_up();
     }
 
-    if (input.key_pressed(SDLK_SPACE) || input.key_pressed(SDLK_RETURN)) {
+    if (input.key_pressed(Input::ACCEPT)) {
       audio.play_sample("paused");
       state = PAUSED;
     }
@@ -66,13 +66,13 @@ bool MainScreen::update(Input& input, Audio& audio, Graphics& graphics, unsigned
 
   } else {
     // these are the same because there are always only 2 options
-    if (input.key_pressed(SDLK_w) || input.key_pressed(SDLK_UP)) {
+    if (input.key_pressed(Input::UP)) {
       choice = (choice + 1) % 2;
-    } else if (input.key_pressed(SDLK_s) || input.key_pressed(SDLK_DOWN)) {
+    } else if (input.key_pressed(Input::DOWN)) {
       choice = (choice + 1) % 2;
     }
 
-    if (input.key_pressed(SDLK_SPACE) || input.key_pressed(SDLK_RETURN)) {
+    if (input.key_pressed(Input::ACCEPT)) {
       if (choice == 1) return false;
 
       if (state == PAUSED) {

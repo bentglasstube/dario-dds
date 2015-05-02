@@ -17,20 +17,20 @@ void TitleScreen::init(Audio& audio, Graphics& graphics) {
 }
 
 bool TitleScreen::update(Input& input, Audio& audio, Graphics& graphics, unsigned int elapsed) {
-  if (input.key_pressed(SDLK_ESCAPE) || input.key_pressed(SDLK_BACKQUOTE)) {
+  if (input.key_pressed(Input::BACK)) {
     choice = 2;
     return false;
   }
 
-  if (input.key_pressed(SDLK_UP) || input.key_pressed(SDLK_w)) {
+  if (input.key_pressed(Input::UP)) {
     choice = (choice + 2) % 3;
   }
 
-  if (input.key_pressed(SDLK_DOWN) || input.key_pressed(SDLK_s)) {
+  if (input.key_pressed(Input::DOWN)) {
     choice = (choice + 1) % 3;
   }
 
-  if (input.key_pressed(SDLK_SPACE) || input.key_pressed(SDLK_RETURN)) {
+  if (input.key_pressed(Input::ACCEPT)) {
     return false;
   }
 
