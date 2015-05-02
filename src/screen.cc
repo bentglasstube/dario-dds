@@ -17,9 +17,24 @@ bool Screen::process_input(Input& input) {
         input.key_up(event);
         break;
 
+      case SDL_JOYBUTTONDOWN:
+        input.joy_down(event);
+        break;
+
+      case SDL_JOYBUTTONUP:
+        input.joy_up(event);
+        break;
+
+      case SDL_JOYAXISMOTION:
+        input.joy_axis(event);
+        break;
+
+      case SDL_JOYHATMOTION:
+        input.joy_hat(event);
+        break;
+
       case SDL_QUIT:
         return false;
-
     }
   }
 
