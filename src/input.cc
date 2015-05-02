@@ -157,12 +157,12 @@ Input::Action Input::key_mapping(const SDL_Keycode key) {
 Input::Action Input::joy_mapping(const Uint8 button) {
   switch (button) {
     case 0:
-    case 2:
+    case 3:
     case 4:
       return Input::COUNTERCLOCKWISE;
 
     case 1:
-    case 3:
+    case 2:
     case 5:
       return Input::CLOCKWISE;
 
