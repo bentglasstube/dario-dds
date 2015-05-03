@@ -30,7 +30,7 @@ bool TitleScreen::update(Input& input, Audio& audio, Graphics& graphics, unsigne
     choice = (choice + 1) % 3;
   }
 
-  if (input.key_pressed(Input::ACCEPT)) {
+  if (input.key_pressed(Input::ACCEPT) || input.key_pressed(Input::COUNTERCLOCKWISE)) {
     return false;
   }
 

@@ -96,7 +96,7 @@ int GameGrid::update(Input& input, Audio& audio, Graphics& graphics, unsigned in
 
 
     int rotate = 0;
-    if (input.key_pressed(Input::COUNTERCLOCKWISE)) {
+    if (input.key_pressed(Input::COUNTERCLOCKWISE) || input.key_pressed(Input::UP)) {
       rotate = -1;
     } else if (input.key_pressed(Input::CLOCKWISE)) {
       rotate = 1;

@@ -6,18 +6,7 @@
 class Input {
   public:
 
-    enum Action {
-      NONE             = 0,
-      LEFT             = 1,
-      RIGHT            = 2,
-      UP               = 3,
-      DOWN             = 4,
-      ACCEPT           = 5,
-      BACK             = 6,
-      CLOCKWISE        = 3,  // same as up
-      COUNTERCLOCKWISE = 7,
-      FULLSCREEN       = 8,
-    };
+    enum Action { NONE, LEFT, RIGHT, UP, DOWN, ACCEPT, BACK, CLOCKWISE, COUNTERCLOCKWISE, FULLSCREEN };
 
     Input();
     ~Input();

@@ -72,7 +72,7 @@ bool MainScreen::update(Input& input, Audio& audio, Graphics& graphics, unsigned
       choice = (choice + 1) % 2;
     }
 
-    if (input.key_pressed(Input::ACCEPT)) {
+    if (input.key_pressed(Input::ACCEPT) || input.key_pressed(Input::COUNTERCLOCKWISE)) {
       if (choice == 1) return false;
 
       if (state == PAUSED) {

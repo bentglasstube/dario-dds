@@ -48,7 +48,7 @@ bool SettingsScreen::update(Input& input, Audio& audio, Graphics& graphics, unsi
     change(true, audio);
   }
 
-  if (input.key_pressed(Input::ACCEPT)) {
+  if (input.key_pressed(Input::ACCEPT) || input.key_pressed(Input::COUNTERCLOCKWISE)) {
     if (choice == 4) return false;
   }
 
