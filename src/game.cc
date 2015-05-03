@@ -12,6 +12,8 @@
 #include "title_screen.h"
 #include "screen.h"
 
+#define SHOW_FPS false
+
 namespace {
   const unsigned int FPS = 60;
   const unsigned int MSPF = 1000 / FPS;
@@ -56,7 +58,8 @@ void Game::loop() {
       screen->draw(graphics);
       float fps = 1000.0f / (SDL_GetTicks() - last_frame);
       last_frame = SDL_GetTicks();
-      text.draw(graphics, 640, 464, boost::str(boost::format("%.1f FPS") % fps), Text::RIGHT);
+
+      if (SHOW_FPS) text.draw(graphics, 640, 464, boost::str(boost::format("%.1f FPS") % fps), Text::RIGHT);
 
       graphics.flip();
 
