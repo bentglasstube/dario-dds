@@ -33,6 +33,10 @@ bool Screen::process_input(Input& input) {
         input.joy_hat(event);
         break;
 
+      case SDL_WINDOWEVENT:
+        if (event.window.event == SDL_WINDOWEVENT_FOCUS_LOST) lost_focus();
+        break;
+
       case SDL_QUIT:
         return false;
     }

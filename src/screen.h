@@ -15,4 +15,7 @@ class Screen {
 
     bool process_input(Input& input);
 
+  protected:
+
+    virtual void lost_focus() {}
 };

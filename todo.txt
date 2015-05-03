@@ -1,4 +1,3 @@
- * pause when lose focus
  * add window icon
  * fix random music playback
  * falling pieces buggy

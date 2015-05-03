@@ -20,6 +20,8 @@ class MainScreen : public Screen {
 
     enum State { PLAYING, PAUSED, GAME_OVER, VICTORY };
 
+    void lost_focus() { if (state == PLAYING) state = PAUSED; }
+
     State state;
     unsigned int score, choice, starting_level;
     GameGrid game_grid;
