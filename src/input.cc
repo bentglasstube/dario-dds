@@ -1,6 +1,6 @@
 #include "input.h"
 
-#define JOY_DEAD_ZONE 3200
+#define JOY_DEAD_ZONE 16000
 
 Input::Input() : joystick(NULL) {
   for (int i = 0; i < SDL_NumJoysticks(); ++i) {
