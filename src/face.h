@@ -19,6 +19,6 @@ class Face {
     SDL_Texture* texture;
     SDL_Rect rect;
 
-    int tone, moustache;
+    int tone, moustache, nose;
     bool freckles, piercing;
 };
