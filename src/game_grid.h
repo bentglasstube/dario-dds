@@ -51,7 +51,8 @@ class GameGrid {
     bool damage_tooth(Graphics& graphics, int x, int y);
 
     boost::shared_ptr<GridPiece> pieces[16][8];
-    unsigned int drop_counter, level, combo;
+    unsigned int last_move, last_rotate, drop_counter, level, combo;
+    int move, rotate;
     boost::shared_ptr<CandyBlock> active_piece, next_piece;
     std::list<boost::shared_ptr<CandyBlock> > falling_pieces;
     std::list<boost::shared_ptr<Crumble> > crumbles;

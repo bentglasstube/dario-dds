@@ -10,9 +10,13 @@
 #include "tooth.h"
 
 #define RAND_COLOR static_cast<Candy::Color>((rand() % 2 ) * 4 + rand() % 2)
+#define MOVE_TIMER 150
+#define ROTATE_TIMER 150
 
 void GameGrid::generate(Graphics& graphics, unsigned int starting_level) {
   level = starting_level;
+  last_move = last_rotate = drop_counter = 0;
+  move = rotate = 0;
 
   falling_pieces.clear();
 
@@ -79,36 +83,43 @@ int GameGrid::update(Input& input, Audio& audio, Graphics& graphics, unsigned in
 
   if (active_piece) {
 
-    int move = 0;
-    if (input.key_pressed(Input::LEFT)) {
-      move = -1;
-    } else if (input.key_pressed(Input::RIGHT)) {
-      move = 1;
+    if (SDL_GetTicks() - last_move > MOVE_TIMER) {
+      if (input.key_held(Input::LEFT)) {
+        move = -1;
+      } else if (input.key_held(Input::RIGHT)) {
+        move = 1;
+      }
+
+      if (move != 0) {
+        active_piece->slide(move < 0);
+        if (collision(active_piece)) {
+          audio.play_sample("bump");
+          active_piece->slide(move > 0);
+        }
+        move = 0;
+        last_move = SDL_GetTicks();
+      }
+
     }
 
-    if (move != 0) {
-      active_piece->slide(move < 0);
-      if (collision(active_piece)) {
-        audio.play_sample("bump");
-        active_piece->slide(move > 0);
+    if (SDL_GetTicks() - last_rotate > ROTATE_TIMER) {
+      if (input.key_held(Input::COUNTERCLOCKWISE) || input.key_held(Input::UP)) {
+        rotate = -1;
+      } else if (input.key_held(Input::CLOCKWISE)) {
+        rotate = 1;
+      }
+
+      if (rotate != 0) {
+        active_piece->rotate(rotate > 0);
+        if (collision(active_piece)) {
+          audio.play_sample("bump");
+          active_piece->rotate(rotate < 0);
+        }
+        rotate = 0;
+        last_rotate = SDL_GetTicks();
       }
     }
 
-
-    int rotate = 0;
-    if (input.key_pressed(Input::COUNTERCLOCKWISE) || input.key_pressed(Input::UP)) {
-      rotate = -1;
-    } else if (input.key_pressed(Input::CLOCKWISE)) {
-      rotate = 1;
-    }
-
-    if (rotate != 0) {
-      active_piece->rotate(rotate > 0);
-      if (collision(active_piece)) {
-        audio.play_sample("bump");
-        active_piece->rotate(rotate < 0);
-      }
-    }
   }
 
   if (drop_counter > drop_threshold(input.key_held(Input::DOWN))) {

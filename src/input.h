@@ -3,6 +3,8 @@
 #include <map>
 #include <SDL2/SDL.h>
 
+#define MAX_AXES 64
+
 class Input {
   public:
 
@@ -25,6 +27,7 @@ class Input {
   private:
     void press_key(const Action key) { keys_pressed[key] = true; keys_held[key] = true; }
     void release_key(const Action key) { keys_held[key] = false; }
+    void process_axis(int cur, int prev, Action neg, Action pos);
 
     Action key_mapping(const SDL_Keycode key);
     Action joy_mapping(const Uint8 button);
@@ -33,4 +36,5 @@ class Input {
     std::map<Action, bool> keys_pressed;
 
     SDL_Joystick* joystick;
+    int axis_prev[MAX_AXES], hat_prev_x, hat_prev_y;
 };

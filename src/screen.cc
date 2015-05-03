@@ -10,7 +10,7 @@ bool Screen::process_input(Input& input) {
   while (SDL_PollEvent(&event)) {
     switch (event.type) {
       case SDL_KEYDOWN:
-        input.key_down(event);
+        if (event.key.repeat == 0) input.key_down(event);
         break;
 
       case SDL_KEYUP:

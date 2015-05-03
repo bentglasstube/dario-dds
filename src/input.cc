@@ -2,10 +2,14 @@
 
 #define JOY_DEAD_ZONE 16000
 
-Input::Input() : joystick(NULL) {
+Input::Input() : joystick(NULL), hat_prev_x(0), hat_prev_y(0) {
   for (int i = 0; i < SDL_NumJoysticks(); ++i) {
     joystick = SDL_JoystickOpen(i);
     break;
+  }
+
+  for (int i = 0; i < MAX_AXES; ++i) {
+    axis_prev[i] = 0;
   }
 }
 
@@ -14,6 +18,8 @@ Input::~Input() {
 }
 
 void Input::joy_axis(const SDL_Event& event) {
+  if (event.jaxis.axis >= MAX_AXES) return;
+
   int dir = 0;
   if (event.jaxis.value < -JOY_DEAD_ZONE) dir = -1;
   if (event.jaxis.value >  JOY_DEAD_ZONE) dir =  1;
@@ -42,22 +48,8 @@ void Input::joy_axis(const SDL_Event& event) {
       break;
   }
 
-  switch (dir) {
-    case -1:
-      press_key(neg);
-      release_key(pos);
-      break;
-
-    case 0:
-      release_key(neg);
-      release_key(pos);
-      break;
-
-    case 1:
-      press_key(pos);
-      release_key(neg);
-      break;
-  }
+  process_axis(dir, axis_prev[event.jaxis.axis], neg, pos);
+  axis_prev[event.jaxis.axis] = dir;
 }
 
 void Input::joy_hat(const SDL_Event& event) {
@@ -75,40 +67,32 @@ void Input::joy_hat(const SDL_Event& event) {
     case SDL_HAT_RIGHTDOWN: x =  1; y =  1; break;
   }
 
-  switch (x) {
+  process_axis(x, hat_prev_x, Input::LEFT, Input::RIGHT);
+  hat_prev_x = x;
+
+  process_axis(y, hat_prev_y, Input::UP, Input::DOWN);
+  hat_prev_y = y;
+}
+
+void Input::process_axis(int cur, int prev, Action neg, Action pos) {
+  if (cur == prev) return;
+
+  switch(cur) {
     case -1:
-      press_key(Input::LEFT);
-      release_key(Input::RIGHT);
+      press_key(neg);
+      if (prev == 1) release_key(pos);
       break;
 
     case 0:
-      release_key(Input::LEFT);
-      release_key(Input::RIGHT);
+      if (prev == -1) release_key(neg);
+      if (prev ==  1) release_key(pos);
       break;
 
     case 1:
-      release_key(Input::LEFT);
-      press_key(Input::RIGHT);
+      if (prev == -1) release_key(neg);
+      press_key(pos);
       break;
   }
-
-  switch (y) {
-    case -1:
-      press_key(Input::UP);
-      release_key(Input::DOWN);
-      break;
-
-    case 0:
-      release_key(Input::UP);
-      release_key(Input::DOWN);
-      break;
-
-    case 1:
-      release_key(Input::UP);
-      press_key(Input::DOWN);
-      break;
-  }
-
 }
 
 Input::Action Input::key_mapping(const SDL_Keycode key) {
