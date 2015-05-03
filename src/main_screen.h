@@ -4,6 +4,7 @@
 
 #include "backdrop.h"
 #include "box.h"
+#include "face.h"
 #include "game_grid.h"
 #include "screen.h"
 #include "text.h"
@@ -25,6 +26,7 @@ class MainScreen : public Screen {
 
     State state;
     unsigned int score, choice, starting_level;
+    boost::scoped_ptr<Face> face;
     GameGrid game_grid;
 
     boost::scoped_ptr<Text> text;

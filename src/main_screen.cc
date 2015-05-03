@@ -23,6 +23,8 @@ void MainScreen::init(Graphics& graphics) {
   game_grid = GameGrid();
   game_grid.generate(graphics, starting_level);
 
+  face.reset(new Face(graphics));
+
   text.reset(new Text(graphics));
   box.reset(new Box(graphics));
   backdrop.reset(new Backdrop(graphics, "game"));
@@ -72,6 +74,7 @@ bool MainScreen::update(Input& input, Audio& audio, Graphics& graphics, unsigned
         // the score if restarting
         if (state == GAME_OVER) score = 0;
         game_grid.generate(graphics, starting_level + score / POINTS_PER_LEVEL);
+        face->reroll();
       }
 
       state = PLAYING;
@@ -83,6 +86,8 @@ bool MainScreen::update(Input& input, Audio& audio, Graphics& graphics, unsigned
 
 void MainScreen::draw(Graphics& graphics) {
   backdrop->draw(graphics);
+
+  face->draw(graphics, 208, 0);
 
   game_grid.draw(graphics, 256, 176);
 

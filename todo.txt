@@ -13,7 +13,6 @@
  * multiplayer / versus
  * Progression
    - patient dialog
-   - randomized patients
    - some kind of story
 
  * building saliva level that washes away candies
