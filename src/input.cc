@@ -1,5 +1,7 @@
 #include "input.h"
 
+#define JOY_DEAD_ZONE 3200
+
 Input::Input() : joystick(NULL) {
   for (int i = 0; i < SDL_NumJoysticks(); ++i) {
     joystick = SDL_JoystickOpen(i);
@@ -18,8 +20,8 @@ void Input::clear() {
 
 void Input::joy_axis(const SDL_Event& event) {
   int dir = 0;
-  if (event.jaxis.value < -3200) dir = -1;
-  if (event.jaxis.value >  3200) dir =  1;
+  if (event.jaxis.value < -JOY_DEAD_ZONE) dir = -1;
+  if (event.jaxis.value >  JOY_DEAD_ZONE) dir =  1;
 
   Input::Action neg, pos;
 
