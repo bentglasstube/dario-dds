@@ -1,5 +1,6 @@
 #include "game.h"
 
+#include <boost/format.hpp>
 #include <SDL2/SDL.h>
 #include <stdlib.h>
 #include <time.h>
@@ -7,6 +8,7 @@
 #include "audio.h"
 #include "graphics.h"
 #include "input.h"
+#include "text.h"
 #include "title_screen.h"
 #include "screen.h"
 
@@ -29,7 +31,10 @@ void Game::loop() {
   Audio audio;
   Input input;
 
+  Text text(graphics);
+
   unsigned int last_update = SDL_GetTicks();
+  unsigned int last_frame = SDL_GetTicks();
 
   screen.reset(new TitleScreen());
   screen->init(audio, graphics);
@@ -44,8 +49,12 @@ void Game::loop() {
     if (screen->update(input, audio, graphics, SDL_GetTicks() - last_update)) {
 
       graphics.clear();
+
       screen->draw(graphics);
-      // TODO draw FPS
+      float fps = 1000.0f / (SDL_GetTicks() - last_frame);
+      last_frame = SDL_GetTicks();
+      text.draw(graphics, 640, 464, boost::str(boost::format("%.1f FPS") % fps), Text::RIGHT);
+
       graphics.flip();
 
     } else {
