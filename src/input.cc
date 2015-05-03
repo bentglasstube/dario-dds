@@ -13,11 +13,6 @@ Input::~Input() {
   if (joystick != NULL) SDL_JoystickClose(joystick);
 }
 
-void Input::clear() {
-  keys_pressed.clear();
-  keys_released.clear();
-}
-
 void Input::joy_axis(const SDL_Event& event) {
   int dir = 0;
   if (event.jaxis.value < -JOY_DEAD_ZONE) dir = -1;
