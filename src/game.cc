@@ -37,10 +37,13 @@ void Game::loop() {
   unsigned int last_frame = SDL_GetTicks();
 
   screen.reset(new TitleScreen());
-  screen->init(audio, graphics);
+  screen->init(graphics);
 
   while (true) {
     const unsigned int start = SDL_GetTicks();
+
+    // Start music if it's not playing
+    if (Mix_PlayingMusic() == 0) audio.play_music(screen->get_music_track());
 
     if (!screen->process_input(input)) return;
 
@@ -61,8 +64,9 @@ void Game::loop() {
 
       screen.reset(screen->next_screen());
       if (!screen) return;
-      screen->init(audio, graphics);
+      screen->init(graphics);
 
+      audio.stop_music();
     }
 
     last_update = SDL_GetTicks();

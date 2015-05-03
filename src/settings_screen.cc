@@ -7,9 +7,7 @@
 #include "settings.h"
 #include "title_screen.h"
 
-void SettingsScreen::init(Audio& audio, Graphics& graphics) {
-  audio.play_music("waitingroom");
-
+void SettingsScreen::init(Graphics& graphics) {
   backdrop.reset(new Backdrop(graphics, "settings"));
   text.reset(new Text(graphics));
   tooth.reset(new ToothSprite(graphics));

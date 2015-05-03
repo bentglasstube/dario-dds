@@ -4,6 +4,8 @@
 #include <string>
 #include <map>
 
+#define FADE_TIME 500
+
 class Audio {
 
   public:
@@ -18,7 +20,7 @@ class Audio {
     void resume() { Mix_Resume(-1); }
 
     void play_music(std::string name);
-    void stop_music() { Mix_FadeOutMusic(1000); }
+    void stop_music() { Mix_FadeOutMusic(FADE_TIME); }
     void music_volume(int volume) { Mix_VolumeMusic(MIX_MAX_VOLUME * volume / 10); }
 
   private:

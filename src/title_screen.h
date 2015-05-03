@@ -10,10 +10,11 @@ class TitleScreen : public Screen {
 
   public:
 
-    void init(Audio& audio, Graphics& graphics);
+    void init(Graphics& graphics);
     bool update(Input& input, Audio& audio, Graphics& graphics, unsigned int elapsed);
     void draw(Graphics& graphics);
     Screen* next_screen();
+    std::string get_music_track() { return "dario"; }
 
   private:
 

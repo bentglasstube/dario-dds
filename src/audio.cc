@@ -27,7 +27,7 @@ void Audio::play_sample(std::string name) {
 
 void Audio::play_music(std::string name) {
   Mix_Music* music = load_music(name);
-  Mix_PlayMusic(music, -1);
+  Mix_FadeInMusic(music, 1, FADE_TIME);
 }
 
 Mix_Chunk* Audio::load_chunk(std::string file) {

@@ -8,9 +8,7 @@
 #include "main_screen.h"
 #include "settings_screen.h"
 
-void TitleScreen::init(Audio& audio, Graphics& graphics) {
-  audio.play_music("dario");
-
+void TitleScreen::init(Graphics& graphics) {
   choice = 0;
   backdrop.reset(new Backdrop(graphics, "title"));
   menu.reset(new Menu(graphics, boost::assign::list_of("Play")("Settings")("Quit")));

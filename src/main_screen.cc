@@ -14,20 +14,7 @@ namespace {
   const unsigned int POINTS_PER_LEVEL = 1000;
 }
 
-void MainScreen::init(Audio& audio, Graphics& graphics) {
-  // TODO improve random track play
-  unsigned int track = Settings::get_instance().music_track;
-  if (track == 0) track = 1 + rand() % 3;
-
-  switch (track) {
-    case 1: audio.play_music("rootcanal"); break;
-    case 2: audio.play_music("novacaine"); break;
-    case 3: audio.play_music("fillings");  break;
-  }
-
-  audio.sfx_volume(Settings::get_instance().sfx_volume);
-  audio.music_volume(Settings::get_instance().music_volume);
-
+void MainScreen::init(Graphics& graphics) {
   state = PLAYING;
   score = 0;
   choice = 0;
@@ -42,6 +29,8 @@ void MainScreen::init(Audio& audio, Graphics& graphics) {
 }
 
 bool MainScreen::update(Input& input, Audio& audio, Graphics& graphics, unsigned int elapsed) {
+  audio.sfx_volume(Settings::get_instance().sfx_volume);
+  audio.music_volume(Settings::get_instance().music_volume);
 
   if (input.key_pressed(Input::BACK)) {
     return false;
@@ -145,3 +134,16 @@ void MainScreen::draw(Graphics& graphics) {
 }
 
 Screen * MainScreen::next_screen() { return new TitleScreen(); }
+
+std::string MainScreen::get_music_track() {
+  unsigned int track = Settings::get_instance().music_track;
+  if (track == 0) track = 1 + rand() % 3;
+
+  switch (track) {
+    case 1: return "rootcanal";
+    case 2: return "novacaine";
+    case 3: return "fillings";
+  }
+
+  return "";
+}

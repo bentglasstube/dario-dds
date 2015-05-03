@@ -1,5 +1,3 @@
- * add window icon
- * fix random music playback
  * falling pieces buggy
  * process matches after spawning candies
  * loss condition fix (rapid piece spawning issue)
