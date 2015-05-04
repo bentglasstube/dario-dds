@@ -1,18 +1,39 @@
+; vim: ft=markdown textwidth=40
+
+ * barf when you lose
+ * fix make dependencies
+ * random hair
  * falling pieces buggy
- * process matches after spawning candies
- * loss condition fix (rapid piece spawning issue)
+ * bug when processing matches
+   - if a match's first piece is removed
+     by another match the former will be
+     disregarded, example:
+
+       o      This vertical match will
+       o      not be cleared because
+       o      the bottom one is gone
+      oooo    after clearing the other
+
+ * process matches after spawning
+   candies
+ * loss condition fix (rapid piece
+   spawning issue)
+   - This could be solved easily by
+     removing the weird shapes
  * improve tooth graphics
  * increase number of colors with level
    - possibly then remove weird shapes
  * get rid of "magic numbers"
  * braces that block all your shit
  * endless mode with growing teeth
- * toothpastes that move around and block things
+ * toothpastes that move around and
+   block things
  * multiplayer / versus
  * Progression
    - patient dialog
    - some kind of story
 
- * building saliva level that washes away candies
+ * building saliva level that washes
+   away candies
  * wiggly roots that bump candy away
  * random tool intervention or powerups
