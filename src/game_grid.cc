@@ -112,8 +112,12 @@ int GameGrid::update(Input& input, Audio& audio, Graphics& graphics, unsigned in
       if (rotate != 0) {
         active_piece->rotate(rotate > 0);
         if (collision(active_piece)) {
-          audio.play_sample("bump");
-          active_piece->rotate(rotate < 0);
+          active_piece->slide(true); // try to "push off"
+          if (collision(active_piece)) {
+            audio.play_sample("bump");
+            active_piece->slide(false);
+            active_piece->rotate(rotate < 0);
+          }
         }
         rotate = 0;
         last_rotate = SDL_GetTicks();

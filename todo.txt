@@ -1,8 +1,6 @@
  * falling pieces buggy
  * process matches after spawning candies
  * loss condition fix (rapid piece spawning issue)
- * Allow rotating if you can "push off"
-    only for the two piece!
  * improve tooth graphics
  * increase number of colors with level
    - possibly then remove weird shapes
