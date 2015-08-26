@@ -11,9 +11,9 @@ teeth in the mouth.
 
 ### Controls ###
 
-Left/Right/A/D - Move candy
-Up/Q/W/E       - Rotate candy
-Down/S         - Fast drop candy
-Space          - Pause
-R              - Restart (only when not playing)
-Escape         - Quit
+    Left/Right/A/D - Move candy
+    Up/Q/W/E       - Rotate candy
+    Down/S         - Fast drop candy
+    Space          - Pause
+    R              - Restart (only when not playing)
+    Escape         - Quit
