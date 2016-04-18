@@ -9,6 +9,7 @@ APP_NAME=Dario
 CC=clang++
 CFLAGS=-g --std=c++03
 #CFLAGS+=-Wall -Wextra
+LDFLAGS=-static-libstdc++ -static-libgcc
 
 ifeq ($(UNAME), Linux)
 	LDLIBS=`sdl2-config --cflags --libs` -lSDL2_mixer
