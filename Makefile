@@ -8,7 +8,7 @@ NAME=dario
 APP_NAME=Dario
 
 CC=clang++
-CFLAGS=-O3 --std=c++03 -Wall -Wextra -pedantic
+CFLAGS=-O3 --std=c++03 -Wall -Wextra -pedantic -Werror
 
 ifeq ($(UNAME), Linux)
 	PACKAGE=$(NAME)-linux.tgz
