@@ -40,10 +40,12 @@ void Input::joy_axis(const SDL_Event& event) {
       break;
 
     case 4:
+      neg = Input::NONE;
       pos = Input::CLOCKWISE;
       break;
 
     case 5:
+      neg = Input::NONE;
       pos = Input::COUNTERCLOCKWISE;
       break;
   }
