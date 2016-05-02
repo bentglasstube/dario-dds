@@ -1,18 +1,21 @@
 #pragma once
 
+#include <SDL2/SDL.h>
 #include <string>
 
-#include "sprite.h"
+#include "graphics.h"
 
-class Text : public Sprite {
-
+class Text {
   public:
 
     enum Alignment { LEFT, CENTER, RIGHT };
 
     Text(Graphics& graphics);
 
-    void draw(Graphics& graphics, unsigned int x, unsigned int y, std::string text, Alignment alignment=LEFT);
+    void draw(Graphics& graphics, unsigned int x, unsigned int y, const std::string& text, Alignment alignment=LEFT);
 
+  private:
+
+    SDL_Texture* texture;
 };
 
