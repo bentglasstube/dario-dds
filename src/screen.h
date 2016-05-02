@@ -10,7 +10,7 @@ class Screen {
 
   public:
 
-    virtual void init(Graphics& graphics) {}
+    virtual void init(Graphics&) {}
     virtual bool update(Input& input, Audio& audio, Graphics& graphics, unsigned int elapsed) = 0;
     virtual void draw(Graphics& graphics) = 0;
     virtual Screen* next_screen() = 0;
