@@ -17,22 +17,22 @@ class GameGrid {
 
   public:
 
-    void generate(Graphics& graphics, unsigned int starting_level);
-    int update(Input& input, Audio& audio, Graphics& graphics, unsigned int elapsed);
-    void draw(Graphics& graphics, unsigned int x, unsigned int y);
-    void draw_next_piece(Graphics& graphics, unsigned int x, unsigned int y) { next_piece->draw(graphics, x - 48, y); }
+    void generate(Graphics& graphics, int starting_level);
+    int update(Input& input, Audio& audio, Graphics& graphics, int elapsed);
+    void draw(Graphics& graphics, int x, int y);
+    void draw_next_piece(Graphics& graphics, int x, int y) { next_piece->draw(graphics, x - 48, y); }
 
     bool winner();
     bool loser();
 
-    unsigned int get_level() { return level; }
+    int get_level() { return level; }
     void level_up() { level++; }
 
   private:
 
     struct Match {
-      Match(unsigned int x, unsigned int y, unsigned int length, bool horizontal) : x(x), y(y), length(length), horizontal(horizontal) {}
-      unsigned int x, y, length;
+      Match(int x, int y, int length, bool horizontal) : x(x), y(y), length(length), horizontal(horizontal) {}
+      int x, y, length;
       bool horizontal;
     };
 
@@ -40,7 +40,7 @@ class GameGrid {
     boost::shared_ptr<Candy> candy_piece(int x, int y);
     boost::shared_ptr<Tooth> tooth_piece(int x, int y);
 
-    unsigned int drop_threshold(bool fast);
+    int drop_threshold(bool fast);
     CandyBlock* generate_candy(Graphics& graphics);
     void spawn_candy(Graphics& graphics);
     bool collision(boost::shared_ptr<CandyBlock> block);
@@ -51,7 +51,7 @@ class GameGrid {
     bool damage_tooth(Graphics& graphics, int x, int y);
 
     boost::shared_ptr<GridPiece> pieces[16][8];
-    unsigned int last_move, last_rotate, drop_counter, level, combo;
+    int last_move, last_rotate, drop_counter, level, combo;
     int move, rotate;
     boost::shared_ptr<CandyBlock> active_piece, next_piece;
     std::list<boost::shared_ptr<CandyBlock> > falling_pieces;

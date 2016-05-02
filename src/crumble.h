@@ -8,12 +8,12 @@ class Crumble : public Sprite {
 
   public:
 
-    Crumble(Graphics& graphics, unsigned int x, unsigned int y);
+    Crumble(Graphics& graphics, int x, int y);
 
-    bool update(unsigned int elapsed);
-    void draw(Graphics& graphics, unsigned int x, unsigned int y);
+    bool update(int elapsed);
+    void draw(Graphics& graphics, int x, int y);
 
   private:
 
-    unsigned int x, y, counter;
+    int x, y, counter;
 };

@@ -13,7 +13,7 @@ class MainScreen : public Screen {
   public:
 
     void init(Graphics& graphics);
-    bool update(Input& input, Audio& audio, Graphics& graphics, unsigned int elapsed);
+    bool update(Input& input, Audio& audio, Graphics& graphics, int elapsed);
     void draw(Graphics& graphics);
     Screen* next_screen();
     std::string get_music_track();
@@ -25,7 +25,7 @@ class MainScreen : public Screen {
     void lost_focus() { if (state == PLAYING) state = PAUSED; }
 
     State state;
-    unsigned int score, choice, starting_level;
+    int score, choice, starting_level;
     boost::scoped_ptr<Face> face;
     GameGrid game_grid;
 

@@ -10,7 +10,7 @@ class Box {
 
     Box(Graphics& graphics);
 
-    void draw(Graphics& graphics, unsigned int x, unsigned int y, unsigned int w, unsigned int h);
+    void draw(Graphics& graphics, int x, int y, int w, int h);
 
   private:
 

@@ -11,7 +11,7 @@ class Candy : public GridPiece {
       GREEN, BLUE, PURPLE, BLACK
     };
 
-    Candy(Graphics& graphics, unsigned int connections, Color color);
+    Candy(Graphics& graphics, int connections, Color color);
 
     Color color() { return _color; }
 

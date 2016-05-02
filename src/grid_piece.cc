@@ -2,11 +2,11 @@
 
 #include "graphics.h"
 
-GridPiece::GridPiece(Graphics& graphics, unsigned int connections) : connections(connections) {
+GridPiece::GridPiece(Graphics& graphics, int connections) : connections(connections) {
   texture = graphics.load_image("teeth", true);
 }
 
-void GridPiece::draw(Graphics& graphics, unsigned int x, unsigned int y) {
+void GridPiece::draw(Graphics& graphics, int x, int y) {
   SDL_Rect source, dest;
 
   get_source(&source);
@@ -19,7 +19,7 @@ void GridPiece::draw(Graphics& graphics, unsigned int x, unsigned int y) {
   graphics.blit(texture, &source, &dest);
 }
 
-void GridPiece::set_connections(unsigned int connections) {
+void GridPiece::set_connections(int connections) {
   this->connections = connections;
 }
 

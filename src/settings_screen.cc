@@ -27,7 +27,7 @@ void SettingsScreen::init(Graphics& graphics) {
   max[3] = 20;
 }
 
-bool SettingsScreen::update(Input& input, Audio& audio, Graphics&, unsigned int) {
+bool SettingsScreen::update(Input& input, Audio& audio, Graphics&, int) {
   if (input.key_pressed(Input::BACK)) return false;
 
   if (input.key_pressed(Input::UP)) {

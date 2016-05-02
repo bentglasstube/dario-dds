@@ -10,7 +10,7 @@ class ToothSprite : public Sprite {
 
     ToothSprite(Graphics& graphics);
 
-    void draw(Graphics& graphics, unsigned int x, unsigned int y);
+    void draw(Graphics& graphics, int x, int y);
 
   private:
 

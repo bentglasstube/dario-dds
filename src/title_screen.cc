@@ -14,7 +14,7 @@ void TitleScreen::init(Graphics& graphics) {
   menu.reset(new Menu(graphics, boost::assign::list_of("Play")("Settings")("Quit")));
 }
 
-bool TitleScreen::update(Input& input, Audio&, Graphics&, unsigned int) {
+bool TitleScreen::update(Input& input, Audio&, Graphics&, int) {
   if (input.key_pressed(Input::BACK)) {
     choice = 2;
     return false;

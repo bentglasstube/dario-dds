@@ -5,7 +5,7 @@ Menu::Menu(Graphics& graphics, std::list<std::string> options) : options(options
   tooth.reset(new ToothSprite(graphics));
 }
 
-void Menu::draw(Graphics& graphics, unsigned int y, unsigned int choice) {
+void Menu::draw(Graphics& graphics, int y, int choice) {
   int ty = y;
 
   for (std::list<std::string>::iterator i = options.begin(); i != options.end(); ++i) {

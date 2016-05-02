@@ -1,12 +1,12 @@
 #include "candy.h"
 
-Candy::Candy(Graphics& graphics, unsigned int connections, Candy::Color color) :
+Candy::Candy(Graphics& graphics, int connections, Candy::Color color) :
   GridPiece(graphics, connections),
   _color(color) {}
 
 void Candy::get_source(SDL_Rect* rect) {
-  unsigned int x = 2;
-  unsigned int y = 2;
+  int x = 2;
+  int y = 2;
 
   switch (connections) {
     case  0: x = 2, y = 2; break;

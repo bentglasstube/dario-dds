@@ -8,19 +8,19 @@ class GridPiece {
 
   public:
 
-    GridPiece(Graphics& graphics, unsigned int connections=0);
+    GridPiece(Graphics& graphics, int connections=0);
 
-    void draw(Graphics& graphics, unsigned int x, unsigned int y);
-    void set_connections(unsigned int connections);
+    void draw(Graphics& graphics, int x, int y);
+    void set_connections(int connections);
     void rotate(bool clockwise=true);
 
-    bool connected(unsigned int dir) { return (connections & dir) == dir; }
-    void make_connection(unsigned int dir) { connections |= dir; }
-    void break_connection(unsigned int dir) { connections &= ~dir; }
+    bool connected(int dir) { return (connections & dir) == dir; }
+    void make_connection(int dir) { connections |= dir; }
+    void break_connection(int dir) { connections &= ~dir; }
 
   protected:
 
-    unsigned int connections;
+    int connections;
 
   private:
 

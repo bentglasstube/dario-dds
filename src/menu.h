@@ -13,7 +13,7 @@ class Menu {
 
     Menu(Graphics& graphics, std::list<std::string> options);
 
-    void draw(Graphics& graphics, unsigned int y, unsigned int choice);
+    void draw(Graphics& graphics, int y, int choice);
 
   private:
 

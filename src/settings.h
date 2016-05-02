@@ -9,7 +9,7 @@ class Settings {
       return instance;
     }
 
-    unsigned int sfx_volume, music_volume, music_track, starting_level;
+    int sfx_volume, music_volume, music_track, starting_level;
 
   private:
 

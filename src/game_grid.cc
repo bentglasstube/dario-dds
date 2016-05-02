@@ -13,7 +13,7 @@
 #define MOVE_TIMER 150
 #define ROTATE_TIMER 150
 
-void GameGrid::generate(Graphics& graphics, unsigned int starting_level) {
+void GameGrid::generate(Graphics& graphics, int starting_level) {
   level = starting_level;
   last_move = last_rotate = drop_counter = 0;
   move = rotate = 0;
@@ -76,7 +76,7 @@ void GameGrid::generate(Graphics& graphics, unsigned int starting_level) {
   spawn_candy(graphics);
 }
 
-int GameGrid::update(Input& input, Audio& audio, Graphics& graphics, unsigned int elapsed) {
+int GameGrid::update(Input& input, Audio& audio, Graphics& graphics, int elapsed) {
   drop_counter += elapsed;
 
   if (winner() || loser()) return 0;
@@ -179,7 +179,7 @@ int GameGrid::update(Input& input, Audio& audio, Graphics& graphics, unsigned in
   return 0;
 }
 
-void GameGrid::draw(Graphics& graphics, unsigned int x, unsigned int y) {
+void GameGrid::draw(Graphics& graphics, int x, int y) {
   for (int iy = 0; iy < 16; ++iy) {
     for (int ix = 0; ix < 8; ++ix) {
       if (pieces[iy][ix]) pieces[iy][ix]->draw(graphics, x + 16 * ix, y + 16 * iy);
@@ -228,7 +228,7 @@ boost::shared_ptr<Tooth> GameGrid::tooth_piece(int x, int y) {
   return boost::dynamic_pointer_cast<Tooth>(piece(x, y));
 }
 
-unsigned int GameGrid::drop_threshold(bool fast) {
+int GameGrid::drop_threshold(bool fast) {
   if (fast || !active_piece) return 50;
   return level > 10 ? 150 : 1500 / level;
 }
@@ -391,8 +391,8 @@ int GameGrid::process_matches(Audio& audio, Graphics& graphics) {
       int tooth_count = 0;
 
       for (int j = 0; j < m.length; ++j) {
-        unsigned int px = m.x + (m.horizontal ? j : 0);
-        unsigned int py = m.y + (m.horizontal ? 0 : j);
+        int px = m.x + (m.horizontal ? j : 0);
+        int py = m.y + (m.horizontal ? 0 : j);
 
         if (remove_piece(graphics, px, py)) {
           candy_count++;
@@ -405,8 +405,8 @@ int GameGrid::process_matches(Audio& audio, Graphics& graphics) {
       }
 
       if (combo > 1) {
-        unsigned int fx = m.x + (m.horizontal ? m.length / 2 : 0);
-        unsigned int fy = m.y + (m.horizontal ? 0 : m.length / 2);
+        int fx = m.x + (m.horizontal ? m.length / 2 : 0);
+        int fy = m.y + (m.horizontal ? 0 : m.length / 2);
 
         floating_texts.push_back(
           boost::shared_ptr<FloatingText>(

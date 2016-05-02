@@ -28,7 +28,7 @@ void Face::reroll() {
   else nose = 2;
 }
 
-void Face::draw(Graphics& graphics, unsigned int x, unsigned int y) {
+void Face::draw(Graphics& graphics, int x, int y) {
   /* face */         draw_part(graphics, x, y, PART_WIDTH * tone, 0, PART_WIDTH, 3 * PART_HEIGHT);
   if (freckles)      draw_part(graphics, x, y, 5 * PART_WIDTH, 0, PART_WIDTH, PART_HEIGHT);
   /* nose */         draw_part(graphics, x, y, PART_WIDTH * 4, PART_HEIGHT * nose, PART_WIDTH, PART_HEIGHT);
@@ -36,7 +36,7 @@ void Face::draw(Graphics& graphics, unsigned int x, unsigned int y) {
   if (moustache > 0) draw_part(graphics, x, y, 6 * PART_WIDTH, PART_HEIGHT * (moustache - 1), PART_WIDTH, PART_HEIGHT);
 }
 
-void Face::draw_part(Graphics& graphics, unsigned int x, unsigned int y, unsigned int sx, unsigned int sy, unsigned int w, unsigned int h) {
+void Face::draw_part(Graphics& graphics, int x, int y, int sx, int sy, int w, int h) {
   SDL_Rect dest;
 
   dest.x = x;

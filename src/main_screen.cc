@@ -11,7 +11,7 @@
 #include "title_screen.h"
 
 namespace {
-  const unsigned int POINTS_PER_LEVEL = 1000;
+  const int POINTS_PER_LEVEL = 1000;
 }
 
 void MainScreen::init(Graphics& graphics) {
@@ -30,7 +30,7 @@ void MainScreen::init(Graphics& graphics) {
   backdrop.reset(new Backdrop(graphics, "game"));
 }
 
-bool MainScreen::update(Input& input, Audio& audio, Graphics& graphics, unsigned int elapsed) {
+bool MainScreen::update(Input& input, Audio& audio, Graphics& graphics, int elapsed) {
   audio.sfx_volume(Settings::get_instance().sfx_volume);
   audio.music_volume(Settings::get_instance().music_volume);
 
@@ -41,7 +41,7 @@ bool MainScreen::update(Input& input, Audio& audio, Graphics& graphics, unsigned
   if (state == PLAYING) {
     score += game_grid.update(input, audio, graphics, elapsed);
 
-    unsigned int level = 1 + score / POINTS_PER_LEVEL;
+    int level = 1 + score / POINTS_PER_LEVEL;
     if (level > game_grid.get_level()) {
       audio.play_sample("levelup");
       game_grid.level_up();
@@ -141,7 +141,7 @@ void MainScreen::draw(Graphics& graphics) {
 Screen * MainScreen::next_screen() { return new TitleScreen(); }
 
 std::string MainScreen::get_music_track() {
-  unsigned int track = Settings::get_instance().music_track;
+  int track = Settings::get_instance().music_track;
   if (track == 0) track = 1 + rand() % 3;
 
   switch (track) {

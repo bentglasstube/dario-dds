@@ -15,12 +15,12 @@
 #define SHOW_FPS false
 
 namespace {
-  const unsigned int FPS = 60;
-  const unsigned int MSPF = 1000 / FPS;
+  const int FPS = 60;
+  const int MSPF = 1000 / FPS;
 }
 
 Game::Game() {
-  srand(static_cast<unsigned int>(time(NULL)));
+  srand(static_cast<int>(time(NULL)));
   SDL_Init(SDL_INIT_EVERYTHING);
 }
 
@@ -35,14 +35,14 @@ void Game::loop() {
 
   Text text(graphics);
 
-  unsigned int last_update = SDL_GetTicks();
-  unsigned int last_frame = SDL_GetTicks();
+  int last_update = SDL_GetTicks();
+  int last_frame = SDL_GetTicks();
 
   screen.reset(new TitleScreen());
   screen->init(graphics);
 
   while (true) {
-    const unsigned int start = SDL_GetTicks();
+    const int start = SDL_GetTicks();
 
     // Start music if it's not playing
     if (Mix_PlayingMusic() == 0) audio.play_music(screen->get_music_track());
@@ -74,7 +74,7 @@ void Game::loop() {
 
     last_update = SDL_GetTicks();
 
-    const unsigned int elapsed = SDL_GetTicks() - start;
+    const int elapsed = SDL_GetTicks() - start;
     if (MSPF > elapsed) SDL_Delay(MSPF - elapsed);
   }
 }

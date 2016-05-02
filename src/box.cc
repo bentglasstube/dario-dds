@@ -15,7 +15,7 @@ SDL_Rect* _rect(SDL_Rect* rect, int x, int y, int w, int h) {
   return rect;
 }
 
-void Box::draw(Graphics& graphics, unsigned int x, unsigned int y, unsigned int w, unsigned int h) {
+void Box::draw(Graphics& graphics, int x, int y, int w, int h) {
   SDL_Rect source, dest;
 
   const int ex = x + w - 16;

@@ -8,10 +8,10 @@ class Graphics;
 class Sprite {
   public:
 
-    Sprite(Graphics& graphics, const std::string& file, unsigned int x, unsigned int y, unsigned int w, unsigned int h);
+    Sprite(Graphics& graphics, const std::string& file, int x, int y, int w, int h);
 
-    virtual void draw(Graphics& graphics, unsigned int x, unsigned int y);
-    virtual bool update(unsigned int) { return true; }
+    virtual void draw(Graphics& graphics, int x, int y);
+    virtual bool update(int) { return true; }
 
   protected:
 

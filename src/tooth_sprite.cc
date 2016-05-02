@@ -6,8 +6,8 @@
 
 ToothSprite::ToothSprite(Graphics& graphics) : Sprite(graphics, "ui", 0, 0, 16, 16) {}
 
-void ToothSprite::draw(Graphics& graphics, unsigned int x, unsigned int y) {
-  unsigned int offset = SDL_GetTicks() % 1000;
+void ToothSprite::draw(Graphics& graphics, int x, int y) {
+  int offset = SDL_GetTicks() % 1000;
 
   if (offset >= 850) {
     rect.y = (offset - 800) / 50 * 16;

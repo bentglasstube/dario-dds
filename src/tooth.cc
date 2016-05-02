@@ -1,12 +1,12 @@
 #include "tooth.h"
 
-Tooth::Tooth(Graphics& graphics, unsigned int connections, bool rotten) :
+Tooth::Tooth(Graphics& graphics, int connections, bool rotten) :
   GridPiece(graphics, connections),
   rotten(rotten) {}
 
 void Tooth::get_source(SDL_Rect* rect) {
-  unsigned int x = 0;
-  unsigned int y = 0;
+  int x = 0;
+  int y = 0;
 
   switch (connections) {
     case  0: x = 3, y = 3; break;

@@ -3,8 +3,8 @@
 #include "game.h"
 
 namespace {
-  const unsigned int width = 640;
-  const unsigned int height = 480;
+  const int width = 640;
+  const int height = 480;
 }
 
 Graphics::Graphics() {

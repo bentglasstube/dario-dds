@@ -10,11 +10,11 @@ class Face {
     Face(Graphics& graphics);
 
     void reroll();
-    void draw(Graphics& graphics, unsigned int x, unsigned int y);
+    void draw(Graphics& graphics, int x, int y);
 
   private:
 
-    void draw_part(Graphics& graphics, unsigned int x, unsigned int y, unsigned int sx, unsigned int sy, unsigned int w, unsigned int h);
+    void draw_part(Graphics& graphics, int x, int y, int sx, int sy, int w, int h);
 
     SDL_Texture* texture;
     SDL_Rect rect;

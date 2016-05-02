@@ -12,7 +12,7 @@ class Text {
 
     Text(Graphics& graphics);
 
-    void draw(Graphics& graphics, unsigned int x, unsigned int y, const std::string& text, Alignment alignment=LEFT);
+    void draw(Graphics& graphics, int x, int y, const std::string& text, Alignment alignment=LEFT);
 
   private:
 

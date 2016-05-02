@@ -4,7 +4,7 @@ Text::Text(Graphics& graphics) {
   texture = graphics.load_image("text", true);
 }
 
-void Text::draw(Graphics& graphics, unsigned int x, unsigned int y, const std::string& text, Text::Alignment alignment) {
+void Text::draw(Graphics& graphics, int x, int y, const std::string& text, Text::Alignment alignment) {
   SDL_Rect source = { 0, 0, 8, 16 };
   SDL_Rect dest = { x, y, 8, 16 };
 

@@ -44,7 +44,7 @@ CandyBlock::CandyBlock(
   pieces[1][1] = d;
 }
 
-void CandyBlock::draw(Graphics& graphics, unsigned int x, unsigned int y) {
+void CandyBlock::draw(Graphics& graphics, int x, int y) {
   for (int iy = 0; iy < 2; ++iy) {
     for (int ix = 0; ix < 2; ++ix) {
       if (pieces[iy][ix]) pieces[iy][ix]->draw(graphics, x + (this->x + ix) * 16, y + (this->y + iy) * 16);
@@ -89,6 +89,6 @@ void CandyBlock::rotate(bool clockwise) {
   }
 }
 
-boost::shared_ptr<Candy> CandyBlock::piece_at(unsigned int x, unsigned int y) {
+boost::shared_ptr<Candy> CandyBlock::piece_at(int x, int y) {
   return pieces[y][x];
 }
