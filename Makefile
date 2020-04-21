@@ -1,94 +1,121 @@
 UNAME=$(shell uname)
+ifeq ($(UNAME), Windows)
+	CROSS=x86_64-w64-mingw32.static-
+endif
 
 SOURCES=$(wildcard src/*.cc)
-CONTENT=$(wildcard conten/*)
-BUILDDIR=build
+CONTENT=$(wildcard content/*.bmp) $(wildcard content/*.ogg) $(wildcard content/*.wav)
+BUILDDIR=$(CROSS)output
 OBJECTS=$(patsubst %.cc,$(BUILDDIR)/%.o,$(SOURCES))
-NAME=dario
-APP_NAME=Dario
+NAME=dario-dds
+VERSION=$(shell git describe --tags --dirty)
 
-CC=clang++
-CFLAGS=-O3 --std=c++03 -Wall -Wextra -pedantic -Werror
-
-ifeq ($(UNAME), Linux)
-	PACKAGE=$(NAME)-linux.tgz
-	LDFLAGS=-static-libstdc++ -static-libgcc
-	LDLIBS=`sdl2-config --cflags --libs` -lSDL2_mixer
-endif
-ifeq ($(UNAME), Darwin)
-	PACKAGE=$(NAME)-osx.tgz
-	LDLIBS=-framework SDL2 -framework SDL2_mixer -rpath @executable_path/../Frameworks
-	CFLAGS+=-mmacosx-version-min=10.5
-endif
+CC=$(CROSS)g++
+LD=$(CROSS)ld
+AR=$(CROSS)ar
+PKG_CONFIG=$(CROSS)pkg-config
+CFLAGS=-O3 --std=c++14 -Wall -Wextra -pedantic -DNDEBUG
+EMFLAGS=-s USE_SDL=2 -s USE_SDL_MIXER=2 -s USE_OGG=1 -s USE_VORBIS=1
 
 EXECUTABLE=$(BUILDDIR)/$(NAME)
 
+ifeq ($(UNAME), Windows)
+	PACKAGE=$(NAME)-windows-$(VERSION).zip
+	LDFLAGS=-static-libstdc++ -static-libgcc
+	LDLIBS=`$(PKG_CONFIG) sdl2 SDL2_mixer SDL2_image --cflags --libs` -Wl,-Bstatic
+	EXECUTABLE=$(BUILDDIR)/$(NAME).exe
+endif
+ifeq ($(UNAME), Linux)
+	PACKAGE=$(NAME)-linux-$(VERSION).AppImage
+	LDFLAGS=-static-libstdc++ -static-libgcc
+	LDLIBS=`$(PKG_CONFIG) sdl2 SDL2_mixer SDL2_image --cflags --libs` -Wl,-Bstatic
+endif
+ifeq ($(UNAME), Darwin)
+	PACKAGE=$(NAME)-osx-$(VERSION).tgz
+	LDLIBS=-framework SDL2 -framework SDL2_mixer -framework SDL2_image -rpath @executable_path/../Frameworks
+	CFLAGS+=-mmacosx-version-min=10.9
+endif
+
 all: $(EXECUTABLE)
 
-$(EXECUTABLE): $(OBJECTS)
-	@mkdir -p $(BUILDDIR)
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(OBJECTS) $(LDLIBS)
-
-$(BUILDDIR)/%.o: %.cc
-	@mkdir -p $(@D)
-	$(CC) -c $(CFLAGS) -o $@ $<
+echo:
+	@echo "Content: $(CONTENT)"
+	@echo "Sources: $(SOURCES)"
+	@echo "Uname: $(UNAME)"
+	@echo "Package: $(PACKAGE)"
+	@echo "Version: $(VERSION)"
 
 run: $(EXECUTABLE)
 	./$(EXECUTABLE)
 
-clean:
-	rm -rf $(BUILDDIR) $(APP_NAME).app $(PACKAGE) $(NAME).{mkv,glc,wav}
+$(EXECUTABLE): $(OBJECTS)
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(OBJECTS) $(LDLIBS)
 
-video: $(NAME).mkv
-
-$(NAME).mkv: $(NAME).glc $(NAME).wav
-	glc-play $< -o - -y 1 |ffmpeg -i - -i $(NAME).wav -acodec flac -vcodec libx264 -y $@
-
-$(NAME).wav: $(NAME).glc
-	glc-play $< -a 1 -o $@
-
-$(NAME).glc: $(EXECUTABLE)
-	glc-capture -pso $@ $(EXECUTABLE)
-
-$(NAME)-linux.tgz: $(EXECUTABLE)
-	mkdir $(NAME)
-	cp $(EXECUTABLE) README.md $(NAME)
-	cp -R content $(NAME)/content
-	tar zcf $@ $(NAME)
-	rm -rf $(NAME)
-
-$(NAME)-osx.tgz: $(APP_NAME).app
-	mkdir $(NAME)
-	cp -r $(APP_NAME).app $(NAME)/.
-	tar zcf $@ $(NAME)
-	rm -rf $(NAME)
-
-# template.dmg: template.dmg.bz2
-# 	bunzip2 -k $<
-
-# $(APP_NAME).dmg: template.dmg $(APP_NAME).app
-# 	mkdir -p working
-# 	hdiutil attach "template.dmg" -noautoopen -quiet -mountpoint "working"
-# 	ditto -rsrc "$(APP_NAME).app" "working/$(APP_NAME).app"
-# 	hdiutil detach `hdiutil info |grep working |grep -o '/dev/disk\d\+'` -quiet -force
-# 	rm -f $(APP_NAME).dmg
-# 	hdiutil convert template.dmg -quiet -format UDZO -imagekey zlib-level=9 -o "$@"
-# 	rmdir working
+$(BUILDDIR)/%.o: %.cc
+	@mkdir -p $(BUILDDIR)/gam
+	@mkdir -p $(BUILDDIR)/src
+	$(CC) -c $(CFLAGS) -o $@ $<
 
 package: $(PACKAGE)
 
-$(APP_NAME).app: $(EXECUTABLE) launcher $(CONTENT) Info.plist build/icon.icns
-	rm -rf $(APP_NAME).app
-	mkdir -p $(APP_NAME).app/Contents/{MacOS,Frameworks,Resources}
-	cp $(EXECUTABLE) $(APP_NAME).app/Contents/MacOS/game
-	cp launcher $(APP_NAME).app/Contents/MacOS/launcher
-	cp -R content $(APP_NAME).app/Contents/MacOS/content
-	cp Info.plist $(APP_NAME).app/Contents/Info.plist
-	cp -R /Library/Frameworks/SDL2.framework $(APP_NAME).app/Contents/Frameworks/SDL2.framework
-	cp -R /Library/Frameworks/SDL2_mixer.framework $(APP_NAME).app/Contents/Frameworks/SDL2_mixer.framework
-	cp build/icon.icns $(APP_NAME).app/Contents/Resources/icon.icns
+wasm: $(NAME)-$(VERSION).html
 
-build/icon.icns: res/icon/icon.iconset/*
-	iconutil -c icns -o $@ res/icon/icon.iconset
+web: wasm $(NAME)-$(VERSION).js $(NAME)-$(VERSION).data
+	mkdir -p $(NAME)-web-$(VERSION)
+	cp $(NAME)-$(VERSION).js $(NAME)-web-$(VERSION)
+	cp $(NAME)-$(VERSION).wasm $(NAME)-web-$(VERSION)
+	cp $(NAME)-$(VERSION).data $(NAME)-web-$(VERSION)
+	cp $(NAME)-$(VERSION).html $(NAME)-web-$(VERSION)/index.html
 
-.PHONY: all clean package run video
+$(NAME)-osx-$(VERSION).tgz: $(NAME).app
+	mkdir $(NAME)
+	cp -r $(NAME).app $(NAME)/.
+	tar zcf $@ $(NAME)
+	rm -rf $(NAME)
+
+$(NAME)-windows-$(VERSION).zip: $(EXECUTABLE) $(CONTENT)
+	mkdir -p $(NAME)/content
+	cp $(EXECUTABLE) $(NAME)/`basename $(EXECUTABLE)`.exe
+	cp $(CONTENT) $(NAME)/content/.
+	zip -r $@ $(NAME)
+	rm -rf $(NAME)
+
+$(NAME)-$(VERSION).html: $(SOURCES) $(CONTENT)
+	emcc $(CFLAGS) $(EMFLAGS) -o $@ $(SOURCES) --preload-file content/
+
+$(NAME).app: $(EXECUTABLE) launcher $(CONTENT) Info.plist
+	rm -rf $(NAME).app
+	mkdir -p $(NAME).app/Contents/{MacOS,Frameworks}
+	cp $(EXECUTABLE) $(NAME).app/Contents/MacOS/game
+	cp launcher $(NAME).app/Contents/MacOS/launcher
+	cp -R content $(NAME).app/Contents/MacOS/content
+	cp Info.plist $(NAME).app/Contents/Info.plist
+	cp -R /Library/Frameworks/SDL2.framework $(NAME).app/Contents/Frameworks/SDL2.framework
+	cp -R /Library/Frameworks/SDL2_mixer.framework $(NAME).app/Contents/Frameworks/SDL2_mixer.framework
+	cp -R /Library/Frameworks/SDL2_image.framework $(NAME).app/Contents/Frameworks/SDL2_image.framework
+
+$(NAME)-linux-$(VERSION).AppDir: $(EXECUTABLE) $(CONTENT) AppRun icon.png $(NAME).desktop
+	rm -rf $@
+	mkdir -p $@/usr/{bin,lib}
+	mkdir -p $@/content
+	cp $(EXECUTABLE) $@/usr/bin
+	cp AppRun $@/.
+	cp $(NAME).desktop $@/.
+	cp icon.png $@/.
+	cp $(CONTENT) $@/content/.
+	cp /usr/lib/libSDL2{,_image,_mixer}-2.0.so.0 $@/usr/lib/.
+
+$(NAME)-linux-$(VERSION).AppImage: $(NAME)-linux-$(VERSION).AppDir
+	ARCH=x86_64 appimagetool $<
+
+clean:
+	rm -rf $(BUILDDIR)
+
+distclean: clean
+	rm -rf *.app *.tgz *.zip
+	rm -rf *.AppDir *.AppImage
+	rm -rf *.html *.js *.data *.wasm
+	rm -rf *-web-*/ *output/
+
+
+.PHONY: all echo clean distclean run package wasm web
