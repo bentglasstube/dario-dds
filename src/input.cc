@@ -24,7 +24,7 @@ void Input::joy_axis(const SDL_Event& event) {
   if (event.jaxis.value < -JOY_DEAD_ZONE) dir = -1;
   if (event.jaxis.value >  JOY_DEAD_ZONE) dir =  1;
 
-  Input::Action neg, pos;
+  Input::Action neg = Input::NONE, pos = Input::NONE;
 
   switch (event.jaxis.axis) {
     case 0:

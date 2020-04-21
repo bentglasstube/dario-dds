@@ -9,6 +9,7 @@ class ToothSprite : public Sprite {
   public:
 
     ToothSprite(Graphics& graphics);
+    virtual ~ToothSprite() {}
 
     void draw(Graphics& graphics, int x, int y);
 

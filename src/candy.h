@@ -12,6 +12,7 @@ class Candy : public GridPiece {
     };
 
     Candy(Graphics& graphics, int connections, Color color);
+    virtual ~Candy() {}
 
     Color color() { return _color; }
 

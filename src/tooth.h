@@ -6,6 +6,7 @@ class Tooth : public GridPiece {
   public:
 
     Tooth(Graphics& graphics, int connections, bool rotten);
+    virtual ~Tooth() {}
 
     bool is_rotten() { return rotten; }
     void rot() { rotten = true; }

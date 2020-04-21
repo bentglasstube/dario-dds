@@ -10,6 +10,8 @@ class Screen {
 
   public:
 
+    virtual ~Screen() {}
+
     virtual void init(Graphics&) {}
     virtual bool update(Input& input, Audio& audio, Graphics& graphics, int elapsed) = 0;
     virtual void draw(Graphics& graphics) = 0;

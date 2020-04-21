@@ -2,8 +2,10 @@
 
 #include <memory>
 
+#include "audio.h"
+#include "graphics.h"
+
 class Screen;
-class Graphics;
 
 class Game {
   public:
@@ -11,9 +13,14 @@ class Game {
     Game();
     ~Game();
 
+    void start();
+    void step();
     void loop();
 
   private:
 
     std::shared_ptr<Screen> screen;
+    Graphics graphics;
+    Audio audio;
+    int last_update, last_frame;
 };

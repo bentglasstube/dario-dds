@@ -9,6 +9,7 @@ class Crumble : public Sprite {
   public:
 
     Crumble(Graphics& graphics, int x, int y);
+    virtual ~Crumble() {}
 
     bool update(int elapsed);
     void draw(Graphics& graphics, int x, int y);

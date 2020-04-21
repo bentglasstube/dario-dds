@@ -12,6 +12,7 @@ class Menu {
   public:
 
     Menu(Graphics& graphics, std::list<std::string> options);
+    virtual ~Menu() {}
 
     void draw(Graphics& graphics, int y, int choice);
 

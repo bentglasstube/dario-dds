@@ -9,6 +9,7 @@ class Sprite {
   public:
 
     Sprite(Graphics& graphics, const std::string& file, int x, int y, int w, int h);
+    virtual ~Sprite() {}
 
     virtual void draw(Graphics& graphics, int x, int y);
     virtual bool update(int) { return true; }
