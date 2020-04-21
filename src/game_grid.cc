@@ -1,8 +1,5 @@
 #include "game_grid.h"
 
-#include <boost/format.hpp>
-#include <boost/pointer_cast.hpp>
-
 #include "audio.h"
 #include "candy.h"
 #include "graphics.h"
@@ -142,7 +139,7 @@ int GameGrid::update(Input& input, Audio& audio, Graphics& graphics, int elapsed
         active_piece.reset();
       }
     } else {
-      std::list<boost::shared_ptr<CandyBlock> >::iterator i = falling_pieces.begin();
+      std::list<std::shared_ptr<CandyBlock> >::iterator i = falling_pieces.begin();
       while (i != falling_pieces.end()) {
         (*i)->fall();
         if (collision(*i)) {
@@ -158,7 +155,7 @@ int GameGrid::update(Input& input, Audio& audio, Graphics& graphics, int elapsed
     return process_matches(audio, graphics);
   }
 
-  std::list<boost::shared_ptr<Crumble> >::iterator i = crumbles.begin();
+  std::list<std::shared_ptr<Crumble> >::iterator i = crumbles.begin();
   while (i != crumbles.end()) {
     if ((*i)->update(elapsed)) {
       ++i;
@@ -167,7 +164,7 @@ int GameGrid::update(Input& input, Audio& audio, Graphics& graphics, int elapsed
     }
   }
 
-  std::list<boost::shared_ptr<FloatingText> >::iterator j = floating_texts.begin();
+  std::list<std::shared_ptr<FloatingText> >::iterator j = floating_texts.begin();
   while (j != floating_texts.end()) {
     if ((*j)->update(elapsed)) {
       ++j;
@@ -188,15 +185,15 @@ void GameGrid::draw(Graphics& graphics, int x, int y) {
 
   if (active_piece) active_piece->draw(graphics, x, y);
 
-  for (std::list<boost::shared_ptr<CandyBlock> >::iterator i=falling_pieces.begin(); i != falling_pieces.end(); ++i) {
+  for (std::list<std::shared_ptr<CandyBlock> >::iterator i=falling_pieces.begin(); i != falling_pieces.end(); ++i) {
     (*i)->draw(graphics, x, y);
   }
 
-  for (std::list<boost::shared_ptr<Crumble> >::iterator i = crumbles.begin(); i != crumbles.end(); ++i) {
+  for (std::list<std::shared_ptr<Crumble> >::iterator i = crumbles.begin(); i != crumbles.end(); ++i) {
     (*i)->draw(graphics, x, y);
   }
 
-  for (std::list<boost::shared_ptr<FloatingText> >::iterator i = floating_texts.begin(); i != floating_texts.end(); ++i) {
+  for (std::list<std::shared_ptr<FloatingText> >::iterator i = floating_texts.begin(); i != floating_texts.end(); ++i) {
     (*i)->draw(graphics, x, y);
   }
 }
@@ -214,18 +211,18 @@ bool GameGrid::loser() {
   return piece(3, 0) || piece(4, 0);
 }
 
-boost::shared_ptr<GridPiece> GameGrid::piece(int x, int y) {
-  if (x < 0 || x >= 8) return boost::shared_ptr<GridPiece>();
-  if (y < 0 || y >= 16) return boost::shared_ptr<GridPiece>();
+std::shared_ptr<GridPiece> GameGrid::piece(int x, int y) {
+  if (x < 0 || x >= 8) return std::shared_ptr<GridPiece>();
+  if (y < 0 || y >= 16) return std::shared_ptr<GridPiece>();
   return pieces[y][x];
 }
 
-boost::shared_ptr<Candy> GameGrid::candy_piece(int x, int y) {
-  return boost::dynamic_pointer_cast<Candy>(piece(x, y));
+std::shared_ptr<Candy> GameGrid::candy_piece(int x, int y) {
+  return std::dynamic_pointer_cast<Candy>(piece(x, y));
 }
 
-boost::shared_ptr<Tooth> GameGrid::tooth_piece(int x, int y) {
-  return boost::dynamic_pointer_cast<Tooth>(piece(x, y));
+std::shared_ptr<Tooth> GameGrid::tooth_piece(int x, int y) {
+  return std::dynamic_pointer_cast<Tooth>(piece(x, y));
 }
 
 int GameGrid::drop_threshold(bool fast) {
@@ -261,7 +258,7 @@ void GameGrid::spawn_candy(Graphics& graphics) {
   active_piece.reset();
 }
 
-bool GameGrid::collision(boost::shared_ptr<CandyBlock> block) {
+bool GameGrid::collision(std::shared_ptr<CandyBlock> block) {
   if (!block) return false;
 
   for (int iy = 0; iy < 2; ++iy) {
@@ -278,30 +275,30 @@ bool GameGrid::collision(boost::shared_ptr<CandyBlock> block) {
 }
 
 void GameGrid::release(int x, int y) {
-  boost::shared_ptr<Candy> test = candy_piece(x, y);
+  std::shared_ptr<Candy> test = candy_piece(x, y);
 
   if (!test) return;
 
-  boost::shared_ptr<Candy> empty = candy_piece(-1, -1);
+  std::shared_ptr<Candy> empty = candy_piece(-1, -1);
 
   if (test->connected(8)) {
-    boost::shared_ptr<Candy> above = candy_piece(x, y - 1);
+    std::shared_ptr<Candy> above = candy_piece(x, y - 1);
 
     if (above->connected(4)) {
 
-      boost::shared_ptr<Candy> above_left = candy_piece(x - 1, y - 1);
+      std::shared_ptr<Candy> above_left = candy_piece(x - 1, y - 1);
 
-      boost::shared_ptr<CandyBlock> block(new CandyBlock(x - 1, y - 1, above_left, above, empty, test));
+      std::shared_ptr<CandyBlock> block(new CandyBlock(x - 1, y - 1, above_left, above, empty, test));
       falling_pieces.push_back(block);
 
       pieces[y - 1][x - 1].reset();
 
     } else {
 
-      boost::shared_ptr<Candy> above_right = candy_piece((above->connected(2) ? x + 1 : -1), y - 1);
-      boost::shared_ptr<Candy> right = candy_piece((test->connected(2) ? x + 1 : -1), y);
+      std::shared_ptr<Candy> above_right = candy_piece((above->connected(2) ? x + 1 : -1), y - 1);
+      std::shared_ptr<Candy> right = candy_piece((test->connected(2) ? x + 1 : -1), y);
 
-      boost::shared_ptr<CandyBlock> block(new CandyBlock(x, y - 1, above, above_right, test, right));
+      std::shared_ptr<CandyBlock> block(new CandyBlock(x, y - 1, above, above_right, test, right));
       falling_pieces.push_back(block);
 
       if (above_right) pieces[y - 1][x + 1].reset();
@@ -313,31 +310,31 @@ void GameGrid::release(int x, int y) {
 
   } else if (test->connected(2)) {
 
-    boost::shared_ptr<Candy> right = candy_piece(x + 1, y);
+    std::shared_ptr<Candy> right = candy_piece(x + 1, y);
 
     if (right->connected(8)) {
-      boost::shared_ptr<Candy> above_right = candy_piece(x + 1, y - 1);
+      std::shared_ptr<Candy> above_right = candy_piece(x + 1, y - 1);
 
-      boost::shared_ptr<CandyBlock> block(new CandyBlock(x, y - 1, empty, above_right, test, right));
+      std::shared_ptr<CandyBlock> block(new CandyBlock(x, y - 1, empty, above_right, test, right));
       falling_pieces.push_back(block);
 
       pieces[y - 1][x + 1].reset();
     } else {
-      boost::shared_ptr<CandyBlock> block(new CandyBlock(x, y, test, right, empty, empty));
+      std::shared_ptr<CandyBlock> block(new CandyBlock(x, y, test, right, empty, empty));
       falling_pieces.push_back(block);
     }
 
     pieces[y][x + 1].reset();
 
   } else {
-    boost::shared_ptr<CandyBlock> block(new CandyBlock(x, y, test, empty, empty, empty));
+    std::shared_ptr<CandyBlock> block(new CandyBlock(x, y, test, empty, empty, empty));
     falling_pieces.push_back(block);
   }
 
   pieces[y][x].reset();
 }
 
-void GameGrid::commit(boost::shared_ptr<CandyBlock> block) {
+void GameGrid::commit(std::shared_ptr<CandyBlock> block) {
   for (int iy = 0; iy < 2; ++iy) {
     for (int ix = 0; ix < 2; ++ix) {
       if (block->piece_at(ix, iy)) pieces[block->get_y() + iy][block->get_x() + ix] = block->piece_at(ix, iy);
@@ -351,12 +348,12 @@ int GameGrid::process_matches(Audio& audio, Graphics& graphics) {
 
   for (int iy = 0; iy < 16; ++iy) {
     for (int ix = 0; ix < 8; ++ix) {
-      boost::shared_ptr<Candy> start = candy_piece(ix, iy);
+      std::shared_ptr<Candy> start = candy_piece(ix, iy);
       if (!start) continue;
 
       if (ix < 5) {
         for (int j = ix; j <= 8; ++j) {
-          boost::shared_ptr<Candy> test = candy_piece(j, iy);
+          std::shared_ptr<Candy> test = candy_piece(j, iy);
           if (!test || test->color() != start->color()) {
             int length = j - ix;
             if (length >= 4) matches.push_back(Match(ix, iy, length, true));
@@ -367,7 +364,7 @@ int GameGrid::process_matches(Audio& audio, Graphics& graphics) {
 
       if (iy < 13) {
         for (int j = iy; j <= 16; ++j) {
-          boost::shared_ptr<Candy> test = candy_piece(ix, j);
+          std::shared_ptr<Candy> test = candy_piece(ix, j);
           if (!test || test->color() != start->color()) {
             int length = j - iy;
             if (length >= 4) matches.push_back(Match(ix, iy, length, false));
@@ -409,8 +406,8 @@ int GameGrid::process_matches(Audio& audio, Graphics& graphics) {
         int fy = m.y + (m.horizontal ? 0 : m.length / 2);
 
         floating_texts.push_back(
-          boost::shared_ptr<FloatingText>(
-            new FloatingText(graphics, fx, fy, boost::str(boost::format("%ux Combo") % combo))
+          std::shared_ptr<FloatingText>(
+            new FloatingText(graphics, fx, fy, std::to_string(combo) + "x Combo")
           )
         );
       }
@@ -435,7 +432,7 @@ int GameGrid::process_matches(Audio& audio, Graphics& graphics) {
 bool GameGrid::remove_piece(Graphics& graphics, int x, int y) {
   if (piece(x, y)) {
 
-    crumbles.push_back(boost::shared_ptr<Crumble>(new Crumble(graphics, x, y)));
+    crumbles.push_back(std::shared_ptr<Crumble>(new Crumble(graphics, x, y)));
 
     pieces[y][x].reset();
 
@@ -451,7 +448,7 @@ bool GameGrid::remove_piece(Graphics& graphics, int x, int y) {
 }
 
 bool GameGrid::damage_tooth(Graphics& graphics, int x, int y) {
-  boost::shared_ptr<Tooth> tooth = tooth_piece(x, y);
+  std::shared_ptr<Tooth> tooth = tooth_piece(x, y);
   if (tooth) {
     if (tooth->is_rotten()) {
       remove_piece(graphics, x, y);

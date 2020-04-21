@@ -1,6 +1,6 @@
 #pragma once
 
-#include <boost/scoped_ptr.hpp>
+#include <memory>
 
 #include "backdrop.h"
 #include "box.h"
@@ -26,10 +26,10 @@ class MainScreen : public Screen {
 
     State state;
     int score, choice, starting_level;
-    boost::scoped_ptr<Face> face;
+    std::unique_ptr<Face> face;
     GameGrid game_grid;
 
-    boost::scoped_ptr<Text> text;
-    boost::scoped_ptr<Box> box;
-    boost::scoped_ptr<Backdrop> backdrop;
+    std::unique_ptr<Text> text;
+    std::unique_ptr<Box> box;
+    std::unique_ptr<Backdrop> backdrop;
 };

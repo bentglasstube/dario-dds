@@ -1,6 +1,5 @@
 #include "game.h"
 
-#include <boost/format.hpp>
 #include <SDL2/SDL.h>
 #include <stdlib.h>
 #include <time.h>
@@ -58,8 +57,6 @@ void Game::loop() {
       screen->draw(graphics);
       float fps = 1000.0f / (SDL_GetTicks() - last_frame);
       last_frame = SDL_GetTicks();
-
-      if (SHOW_FPS) text.draw(graphics, 640, 464, boost::str(boost::format("%.1f FPS") % fps), Text::RIGHT);
 
       graphics.flip();
 

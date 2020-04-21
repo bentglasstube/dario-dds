@@ -1,7 +1,5 @@
 #include "title_screen.h"
 
-#include <boost/assign/list_of.hpp>
-
 #include "audio.h"
 #include "graphics.h"
 #include "input.h"
@@ -11,7 +9,7 @@
 void TitleScreen::init(Graphics& graphics) {
   choice = 0;
   backdrop.reset(new Backdrop(graphics, "title"));
-  menu.reset(new Menu(graphics, boost::assign::list_of("Play")("Settings")("Quit")));
+  menu.reset(new Menu(graphics, {"Play","Settings","Quit"}));
 }
 
 bool TitleScreen::update(Input& input, Audio&, Graphics&, int) {

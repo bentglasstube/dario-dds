@@ -1,7 +1,5 @@
 #include "settings_screen.h"
 
-#include <boost/format.hpp>
-
 #include "audio.h"
 #include "input.h"
 #include "settings.h"
@@ -86,10 +84,10 @@ void SettingsScreen::draw(Graphics& graphics) {
       break;
   }
 
-  text->draw(graphics, 464, 240, boost::str(boost::format("%u") % value[0]), Text::RIGHT);
-  text->draw(graphics, 464, 256, boost::str(boost::format("%u") % value[1]), Text::RIGHT);
+  text->draw(graphics, 464, 240, std::to_string(value[0]), Text::RIGHT);
+  text->draw(graphics, 464, 256, std::to_string(value[1]), Text::RIGHT);
   text->draw(graphics, 464, 272, track, Text::RIGHT);
-  text->draw(graphics, 464, 288, boost::str(boost::format("%u") % value[3]), Text::RIGHT);
+  text->draw(graphics, 464, 288, std::to_string(value[3]), Text::RIGHT);
 
   int y = 16 * choice + 240;
 

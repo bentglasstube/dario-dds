@@ -36,8 +36,8 @@ CandyBlock::CandyBlock(Graphics& graphics, CandyBlock::Shape shape, int x, int y
 
 CandyBlock::CandyBlock(
     int x, int y,
-    boost::shared_ptr<Candy> a, boost::shared_ptr<Candy> b,
-    boost::shared_ptr<Candy> c, boost::shared_ptr<Candy> d) : x(x), y(y) {
+    std::shared_ptr<Candy> a, std::shared_ptr<Candy> b,
+    std::shared_ptr<Candy> c, std::shared_ptr<Candy> d) : x(x), y(y) {
   pieces[0][0] = a;
   pieces[0][1] = b;
   pieces[1][0] = c;
@@ -53,7 +53,7 @@ void CandyBlock::draw(Graphics& graphics, int x, int y) {
 }
 
 void CandyBlock::rotate(bool clockwise) {
-  boost::shared_ptr<Candy> temp = pieces[0][0];
+  std::shared_ptr<Candy> temp = pieces[0][0];
 
   if (clockwise) {
     pieces[0][0] = pieces[1][0];
@@ -89,6 +89,6 @@ void CandyBlock::rotate(bool clockwise) {
   }
 }
 
-boost::shared_ptr<Candy> CandyBlock::piece_at(int x, int y) {
+std::shared_ptr<Candy> CandyBlock::piece_at(int x, int y) {
   return pieces[y][x];
 }

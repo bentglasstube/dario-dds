@@ -1,6 +1,6 @@
 #pragma once
 
-#include <boost/scoped_ptr.hpp>
+#include <memory>
 
 #include "menu.h"
 #include "backdrop.h"
@@ -19,7 +19,7 @@ class TitleScreen : public Screen {
   private:
 
     int choice;
-    boost::scoped_ptr<Backdrop> backdrop;
-    boost::scoped_ptr<Menu> menu;
+    std::unique_ptr<Backdrop> backdrop;
+    std::unique_ptr<Menu> menu;
 
 };

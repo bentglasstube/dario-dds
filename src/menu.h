@@ -1,6 +1,6 @@
 #pragma once
 
-#include <boost/scoped_ptr.hpp>
+#include <memory>
 #include <list>
 #include <string>
 
@@ -18,6 +18,6 @@ class Menu {
   private:
 
     std::list<std::string> options;
-    boost::scoped_ptr<Text> text;
-    boost::scoped_ptr<ToothSprite> tooth;
+    std::unique_ptr<Text> text;
+    std::unique_ptr<ToothSprite> tooth;
 };

@@ -1,8 +1,5 @@
 #include "main_screen.h"
 
-#include <boost/assign/list_of.hpp>
-#include <boost/format.hpp>
-
 #include "audio.h"
 #include "input.h"
 #include "menu.h"
@@ -92,10 +89,10 @@ void MainScreen::draw(Graphics& graphics) {
   game_grid.draw(graphics, 256, 176);
 
   text->draw(graphics, 512, 112, "Score");
-  text->draw(graphics, 560, 112, boost::str(boost::format("%u") % score));
+  text->draw(graphics, 560, 112, std::to_string(score));
 
   text->draw(graphics, 512, 96, "Level");
-  text->draw(graphics, 560, 96, boost::str(boost::format("%u") % game_grid.get_level()));
+  text->draw(graphics, 560, 96, std::to_string(game_grid.get_level()));
 
   text->draw(graphics, 512, 128, "Next");
   game_grid.draw_next_piece(graphics, 560, 128);
@@ -108,19 +105,19 @@ void MainScreen::draw(Graphics& graphics) {
     case PAUSED:
 
       title = "Paused";
-      options = boost::assign::list_of("Resume")("Quit");
+      options = { "Resume", "Quit" };
       break;
 
     case GAME_OVER:
 
       title = "Game Over";
-      options = boost::assign::list_of("Restart")("Quit");
+      options = { "Restart", "Quit" };
       break;
 
     case VICTORY:
 
       title = "You Win!";
-      options = boost::assign::list_of("Continue")("Quit");
+      options = { "Continue", "Quit" };
       break;
 
     case PLAYING: break;

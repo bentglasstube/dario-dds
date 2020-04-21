@@ -1,6 +1,6 @@
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 class Screen;
 class Graphics;
@@ -15,5 +15,5 @@ class Game {
 
   private:
 
-    boost::shared_ptr<Screen> screen;
+    std::shared_ptr<Screen> screen;
 };

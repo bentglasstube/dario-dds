@@ -1,6 +1,6 @@
 #pragma once
 
-#include <boost/scoped_ptr.hpp>
+#include <memory>
 
 #include "backdrop.h"
 #include "screen.h"
@@ -22,11 +22,11 @@ class SettingsScreen : public Screen {
 
     void change(bool increase, Audio& audio);
 
-    boost::scoped_ptr<Backdrop> backdrop;
-    boost::scoped_ptr<Text> text;
-    boost::scoped_ptr<ToothSprite> tooth;
-    boost::scoped_ptr<Sprite> left;
-    boost::scoped_ptr<Sprite> right;
+    std::unique_ptr<Backdrop> backdrop;
+    std::unique_ptr<Text> text;
+    std::unique_ptr<ToothSprite> tooth;
+    std::unique_ptr<Sprite> left;
+    std::unique_ptr<Sprite> right;
 
     int choice, value[4], min[4], max[4];
 
