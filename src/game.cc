@@ -35,7 +35,6 @@ void Game::start() {
 
 void Game::step() {
   const int start = SDL_GetTicks();
-  Input input;
 
   // Start music if it's not playing
   if (Mix_PlayingMusic() == 0) audio.play_music(screen->get_music_track());
