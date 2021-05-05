@@ -1,7 +1,5 @@
 #include "graphics.h"
 
-#include "game.h"
-
 namespace {
   const int width = 640;
   const int height = 480;
