@@ -52,7 +52,7 @@ $(EXECUTABLE): $(OBJECTS)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(OBJECTS) $(LDLIBS)
 
 $(BUILDDIR)/%.o: %.cc
-	@mkdir -p $(BUILDDIR)/gam
+	@mkdir -p $(BUILDDIR)/
 	$(CC) -c $(CFLAGS) -o $@ $<
 
 package: $(PACKAGE)
