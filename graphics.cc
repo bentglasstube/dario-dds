@@ -6,7 +6,7 @@ namespace {
 }
 
 Graphics::Graphics() {
-  int flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_FULLSCREEN_DESKTOP;
+  int flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
 
   window = SDL_CreateWindow("Dario DDS", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, flags);
   renderer = SDL_CreateRenderer(window, -1, 0);
@@ -14,7 +14,7 @@ Graphics::Graphics() {
   SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest"); // retro!
   SDL_RenderSetLogicalSize(renderer, width, height);
 
-  fullscreen = true;
+  fullscreen = false;
 }
 
 Graphics::~Graphics() {
