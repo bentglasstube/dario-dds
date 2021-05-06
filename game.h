@@ -24,5 +24,5 @@ class Game {
     Graphics graphics;
     Audio audio;
     Input input;
-    int last_update, last_frame;
+    int last_update;
 };
