@@ -16,7 +16,7 @@ LD=$(CROSS)ld
 AR=$(CROSS)ar
 PKG_CONFIG=$(CROSS)pkg-config
 CFLAGS=-O3 --std=c++17 -Wall -Wextra -Werror -pedantic -DNDEBUG
-EMFLAGS=-s USE_SDL=2 -s USE_SDL_MIXER=2 -s USE_OGG=1 -s USE_VORBIS=1 -s ALLOW_MEMORY_GROWTH=1 -fno-rtti -fno-exceptions
+EMFLAGS=-s USE_SDL=2 -s USE_SDL_MIXER=2 -s USE_OGG=1 -s USE_VORBIS=1 -s ALLOW_MEMORY_GROWTH=1 -fno-exceptions
 EXTRA=
 
 EXECUTABLE=$(BUILDDIR)/$(NAME)

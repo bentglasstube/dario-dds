@@ -20,8 +20,8 @@ class Game {
 
   private:
 
-    std::shared_ptr<Screen> screen;
-    Graphics graphics;
+    std::unique_ptr<Screen> screen;
+    std::unique_ptr<Graphics> graphics;
     Audio audio;
     Input input;
     int last_update;

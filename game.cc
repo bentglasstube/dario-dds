@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "text.h"
 #include "title_screen.h"
 #include "screen.h"
 
@@ -23,12 +22,12 @@ Game::~Game() {
 }
 
 void Game::start() {
-  Text text(graphics);
+  graphics.reset(new Graphics());
 
   last_update = SDL_GetTicks();
 
   screen.reset(new TitleScreen());
-  screen->init(graphics);
+  screen->init(static_cast<Graphics&>(*graphics));
 }
 
 void Game::step() {
@@ -43,16 +42,16 @@ void Game::step() {
   }
 
   int now = SDL_GetTicks();
-  if (screen->update(input, audio, graphics, now - last_update)) {
+  if (screen->update(input, audio, static_cast<Graphics&>(*graphics), now - last_update)) {
 
-    graphics.clear();
-    screen->draw(graphics);
-    graphics.flip();
+    graphics->clear();
+    screen->draw(static_cast<Graphics&>(*graphics));
+    graphics->flip();
 
   } else {
 
     screen.reset(screen->next_screen());
-    if (screen) screen->init(graphics);
+    if (screen) screen->init(static_cast<Graphics&>(*graphics));
 
     audio.stop_music();
   }
